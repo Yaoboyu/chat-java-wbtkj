@@ -5,7 +5,14 @@ import org.apache.commons.mail.HtmlEmail;
 import java.util.Random;
 
 public class MailUtils {
-    //三个参数分别是发件人邮箱,收件人邮箱,发件人邮箱令牌
+    /**
+     *
+     * @param EmailAdd 邮箱账号
+     * @param ToAdd    目标邮箱账号
+     * @param Au        令牌
+     * @return      返回随机四位密码
+     * @throws Exception
+     */
     public static int SendMail(String EmailAdd,String ToAdd,String Au) throws Exception{
 /*        EmailAdd = ToAdd = "1712683212@qq.com";
         Au = "ezjcvxhvxxvmfajg";*/
