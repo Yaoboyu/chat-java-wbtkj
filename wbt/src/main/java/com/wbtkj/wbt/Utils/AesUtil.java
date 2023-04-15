@@ -1,7 +1,10 @@
 package com.wbtkj.wbt.Utils;
 
 import com.wbtkj.wbt.Exception.MyException;
+import lombok.Data;
 import org.apache.commons.codec.binary.Hex;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -11,7 +14,7 @@ import java.util.Arrays;
 
 public class AesUtil {
     //秘钥设置16位
-    public static final String SECRET_KEY = "abcdeg123456!#$%";
+    public static String SECRET_KEY;
     //加密方式
     public static final String AES_TYPE = "AES";
     //秘钥最大长度16位

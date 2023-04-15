@@ -19,6 +19,10 @@ public interface UserMapper {
     String Salt(String email);
     @Select("SELECT pwd from wbt.user_info where email = #{email}")
     String Pwd(String email);
-    @Update("UPDATE user_info SET wbt.user_info.pwd = #{pwd} WHERE email = #{email}")
+    @Update("UPDATE wbt.user_info SET wbt.user_info.pwd = #{pwd} WHERE email = #{email}")
     void UpdatePwd(String pwd,String email);
+    @Update("UPDATE wbt.user_info set wbt.user_info.status = #{status} where email = #{email}")
+    void updateStatus(String email,int status);
+    @Update("update wbt.user_info set wbt.user_info.quota = quota + #{value} and id = #{id}")
+    void addQuota(int value,int id);
 }

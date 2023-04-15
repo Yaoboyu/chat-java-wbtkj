@@ -48,4 +48,5 @@ class WbtApplicationTests {
                 .compact();
         return jwt;
     }
+
 }

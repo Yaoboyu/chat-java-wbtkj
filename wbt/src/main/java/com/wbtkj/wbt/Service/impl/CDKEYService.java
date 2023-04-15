@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.wbtkj.wbt.Exception.MyException;
 import com.wbtkj.wbt.Mapper.CDKEYMapper;
+import com.wbtkj.wbt.Mapper.UserMapper;
 import com.wbtkj.wbt.Pojo.Cdkey;
 import com.wbtkj.wbt.Utils.AesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ import java.util.Map;
 public class CDKEYService implements com.wbtkj.wbt.Service.CDKEYService {
     @Autowired
     CDKEYMapper cdkeyMapper;
+    @Autowired
+    UserMapper userMapper;
     //参数是原码返回加密后密文
     String code(String rawCode) {
         return AesUtil.encryptAES(AesUtil.SECRET_KEY,rawCode);
@@ -61,6 +64,7 @@ public class CDKEYService implements com.wbtkj.wbt.Service.CDKEYService {
         if(cdkeyMapper.count(code) > 0)
             throw new MyException("激活失败:该卡密已被激活!");
         cdkeyMapper.activate(id,value,dateTime,code);
+        userMapper.addQuota(value, Math.toIntExact(id));
         return value;
     }
 
