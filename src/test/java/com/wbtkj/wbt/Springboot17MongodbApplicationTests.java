@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import java.util.List;
 @SpringBootTest
 class Springboot17MongodbApplicationTests {
-    @Autowired
+    @Resource
     private MongoTemplate mongoTemplate;
     @Test
     void contextLoads() {

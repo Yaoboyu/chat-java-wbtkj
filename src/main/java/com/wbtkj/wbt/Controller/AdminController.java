@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
+
 @Slf4j
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
-    @Autowired
+    @Resource
     AdminService adminService;
     @PutMapping()
     Result updateStatus(@RequestBody UserInfo userInfo){

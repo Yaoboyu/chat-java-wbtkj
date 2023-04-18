@@ -8,9 +8,9 @@ import com.wbtkj.wbt.Mapper.CDKEYMapper;
 import com.wbtkj.wbt.Mapper.UserMapper;
 import com.wbtkj.wbt.Pojo.Cdkey;
 import com.wbtkj.wbt.Utils.AesUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +18,9 @@ import java.util.Map;
 
 @Service
 public class CDKEYService implements com.wbtkj.wbt.Service.CDKEYService {
-    @Autowired
+    @Resource
     CDKEYMapper cdkeyMapper;
-    @Autowired
+    @Resource
     UserMapper userMapper;
     //参数是原码返回加密后密文
     String code(String rawCode) {

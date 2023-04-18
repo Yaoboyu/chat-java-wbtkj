@@ -1,13 +1,14 @@
 package com.wbtkj.wbt.Pojo;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * CDKEY
  */
-@lombok.Data
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Cdkey {

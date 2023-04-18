@@ -3,14 +3,15 @@ package com.wbtkj.wbt.Controller;
 import com.wbtkj.wbt.Pojo.Result;
 import com.wbtkj.wbt.Service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 @RestController
 @Slf4j
 @RequestMapping("/user")
 public class UserController {
-    @Autowired
+    @Resource
     UserService userService;
     @PutMapping("/pwd/{email}/{password}")
     public Result ChangePwd(@PathVariable String email,@PathVariable String password) throws Exception{

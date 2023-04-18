@@ -2,9 +2,9 @@ package com.wbtkj.wbt.Service.impl;
 
 import com.wbtkj.wbt.Exception.MyException;
 import com.wbtkj.wbt.Mapper.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +13,7 @@ import static com.wbtkj.wbt.Utils.MD5Utils.code;
 
 @Service
 public class LoginService implements com.wbtkj.wbt.Service.LoginService{
-    @Autowired
+    @Resource
     UserMapper userMapper;
 
     /**

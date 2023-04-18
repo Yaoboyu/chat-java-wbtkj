@@ -1,12 +1,13 @@
 package com.wbtkj.wbt.Pojo;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
  * Result
  */
-@lombok.Data
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Result {

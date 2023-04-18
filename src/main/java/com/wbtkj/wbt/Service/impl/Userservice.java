@@ -4,9 +4,9 @@ import com.wbtkj.wbt.Exception.MyException;
 import com.wbtkj.wbt.Mapper.UserMapper;
 import com.wbtkj.wbt.Pojo.UserInfo;
 import com.wbtkj.wbt.Service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -14,7 +14,7 @@ import static com.wbtkj.wbt.Utils.MD5Utils.code;
 
 @Service
 public class Userservice implements UserService {
-    @Autowired
+    @Resource
     private UserMapper userMapper;
     public int UserNumber(){
         return userMapper.UserNumber();
@@ -33,5 +33,10 @@ public class Userservice implements UserService {
         String str = userInfo.getPwd() + time.toString();
         userInfo.setPwd(code(str));
         userMapper.InsertUser(userInfo.getEmail(), userInfo.getPwd(),userInfo.getSalt(),userInfo.getRegDate());
+    }
+
+    @Override
+    public void ChangePwd(String email, String pwd) throws Exception {
+
     }
 }

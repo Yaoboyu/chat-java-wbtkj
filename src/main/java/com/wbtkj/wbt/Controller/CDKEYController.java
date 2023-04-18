@@ -4,9 +4,9 @@ import com.wbtkj.wbt.Pojo.Cdkey;
 import com.wbtkj.wbt.Pojo.Result;
 import com.wbtkj.wbt.Service.CDKEYService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cdkey")
 public class CDKEYController {
-    @Autowired
+    @Resource
     CDKEYService cdkeyService;
     @GetMapping("/{num}/{value}")
     Result getCDKEYS(@PathVariable int num, @PathVariable int value){
