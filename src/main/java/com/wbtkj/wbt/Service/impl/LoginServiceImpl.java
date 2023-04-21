@@ -12,7 +12,7 @@ import static com.wbtkj.wbt.Utils.JwtUtils.generateJwt;
 import static com.wbtkj.wbt.Utils.MD5Utils.code;
 
 @Service
-public class LoginService implements com.wbtkj.wbt.Service.LoginService{
+public class LoginServiceImpl implements com.wbtkj.wbt.Service.LoginService{
     @Resource
     UserMapper userMapper;
 

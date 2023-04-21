@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 @Service
-public class AdminSercive implements AdminService {
+public class AdminSerciveImpl implements AdminService {
     @Resource
     UserMapper userMapper;
     @Override

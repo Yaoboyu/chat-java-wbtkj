@@ -13,7 +13,7 @@ import java.util.Date;
 import static com.wbtkj.wbt.Utils.MD5Utils.code;
 
 @Service
-public class Userservice implements UserService {
+public class UserserviceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
     public int UserNumber(){

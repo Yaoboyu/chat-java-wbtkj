@@ -7,6 +7,7 @@ import com.wbtkj.wbt.Exception.MyException;
 import com.wbtkj.wbt.Mapper.CDKEYMapper;
 import com.wbtkj.wbt.Mapper.UserMapper;
 import com.wbtkj.wbt.Pojo.Cdkey;
+import com.wbtkj.wbt.Service.CDKEYService;
 import com.wbtkj.wbt.Utils.AesUtil;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class CDKEYService implements com.wbtkj.wbt.Service.CDKEYService {
+public class CDKEYServiceImpl implements CDKEYService {
     @Resource
     CDKEYMapper cdkeyMapper;
     @Resource

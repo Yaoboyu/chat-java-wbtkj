@@ -1,10 +1,10 @@
 package com.wbtkj.wbt;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 
+import javax.annotation.Resource;
 import java.util.List;
 @SpringBootTest
 class Springboot17MongodbApplicationTests {
