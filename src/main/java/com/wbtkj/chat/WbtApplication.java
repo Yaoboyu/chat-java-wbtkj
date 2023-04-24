@@ -1,9 +1,9 @@
 package com.wbtkj.chat;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-//@ServletComponentScan
 @SpringBootApplication
 public class WbtApplication {
 

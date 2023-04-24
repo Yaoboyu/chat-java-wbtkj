@@ -2,8 +2,9 @@ package com.wbtkj.chat.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wbtkj.chat.exception.MyServiceException;
-import com.wbtkj.chat.pojo.VO.RegisterVO;
-import com.wbtkj.chat.pojo.VO.Result;
+import com.wbtkj.chat.pojo.vo.user.LoginVO;
+import com.wbtkj.chat.pojo.vo.user.RegisterVO;
+import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.service.LoginRegisterSerevice;
 import com.wbtkj.chat.service.SendVerifyCodeService;
 import com.wbtkj.chat.service.UserService;
@@ -25,11 +26,13 @@ public class LoginRegisterController {
     SendVerifyCodeService sendVerifyCodeService;
 
 
-    @GetMapping("/login/{email}/{pwd}")
-    public Result Login(@PathVariable String email,@PathVariable String pwd) throws Exception{
-        log.info("用户{}登录,密码{}",email,pwd);
-        String jwt = loginRegisterSerevice.login(email,pwd);
-        return Result.success(new JSONObject().put("token", jwt));
+    @PostMapping("/login")
+    public Result Login(@RequestBody LoginVO loginVO) throws Exception{
+        log.info("用户 {} 登录", loginVO.getEmail());
+        String jwt = loginRegisterSerevice.login(loginVO.getEmail(), loginVO.getPwd());
+        JSONObject data = new JSONObject();
+        data.put("token", jwt);
+        return Result.success(data);
     }
 
     @PostMapping("/register")

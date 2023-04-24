@@ -1,71 +1,69 @@
 package com.wbtkj.chat.service.impl;
 
-import cn.hutool.core.date.DateTime;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.TypeReference;
-import com.wbtkj.chat.exception.MyServiceException;
-import com.wbtkj.chat.mapper.CDKEYMapper;
+import com.wbtkj.chat.config.ThreadLocalConfig;
+import com.wbtkj.chat.mapper.CdkeyActivateMapper;
 import com.wbtkj.chat.mapper.UserMapper;
-import com.wbtkj.chat.pojo.Model.Cdkey;
+import com.wbtkj.chat.exception.MyServiceException;
+import com.wbtkj.chat.pojo.model.CdkeyActivate;
+import com.wbtkj.chat.pojo.model.CdkeyActivateExample;
 import com.wbtkj.chat.service.CDKEYService;
 import com.wbtkj.chat.utils.AesUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CDKEYServiceImpl implements CDKEYService {
     @Resource
-    CDKEYMapper cdkeyMapper;
+    CdkeyActivateMapper cdkeyActivateMapper;
     @Resource
     UserMapper userMapper;
-    //参数是原码返回加密后密文
-    String code(String rawCode) {
-        return AesUtil.encryptAES(AesUtil.SECRET_KEY,rawCode);
-    }
-    //参数是密文,返回原码
-    String decode(String code) throws Exception{
-        return AesUtil.decryptAES(AesUtil.SECRET_KEY,code);
-    }
 
-    Map<String, String> JsonMap(String json) {
-        return JSON.parseObject(json, new TypeReference<Map<String, String>>() {});
-    }
 
-    int value(String CDKEY) throws Exception{
-        Map<String,String> mp = JsonMap(decode(CDKEY));
-        return Integer.parseInt(mp.get("value"));
+    private long value(String cdkey) {
+        Map<String,String> mp = AesUtil.decode(cdkey);
+        return Long.parseLong(mp.get("value"));
     }
 
     @Override
-    public List<String> publish(Integer num, Integer value) {
+    public List<String> publish(int num, long value) {
         List<String> list = new ArrayList<String>();
         for(Integer i = 0;i < num;i++) {
             HashMap<String, String> map = new HashMap<>();
-            map.put("value", value.toString());
+            map.put("value", String.valueOf(value));
             map.put("num",i.toString());
             list.add(JSON.toJSONString(map));
         }
         List<String> publish = new ArrayList<String>();
-        for(String s : list)
-            publish.add(code(s));
+        for(String s : list) {
+            publish.add(AesUtil.code(s));
+        }
         return publish;
     }
 
     @Override
-    public int activate(Cdkey cdkey) throws Exception{
-        int value = value(cdkey.getCode());
-        Long id = cdkey.getUserId();
-        DateTime dateTime = new DateTime(System.currentTimeMillis());
-        String code = cdkey.getCode();
-        if(cdkeyMapper.count(code) > 0)
+    public long activate(String cdkey) {
+        CdkeyActivateExample cdkeyActivateExample = new CdkeyActivateExample();
+        cdkeyActivateExample.createCriteria().andCdkeyEqualTo(cdkey);
+        List<CdkeyActivate> cdkeyActivates = cdkeyActivateMapper.selectByExample(cdkeyActivateExample);
+
+        if(!CollectionUtils.isEmpty(cdkeyActivates)){
             throw new MyServiceException("激活失败:该卡密已被激活!");
-        cdkeyMapper.activate(id,value,dateTime,code);
-        userMapper.addQuota(value, Math.toIntExact(id));
+        }
+
+        Long userId = ThreadLocalConfig.getUser().getId();
+        long value = value(cdkey);
+
+        CdkeyActivate cdkeyActivate = new CdkeyActivate();
+        cdkeyActivate.setUser_id(userId);
+        cdkeyActivate.setCdkey(cdkey);
+        cdkeyActivate.setValue(value);
+        cdkeyActivate.setUse_time(new Date());
+
+        cdkeyActivateMapper.insert(cdkeyActivate);
         return value;
     }
 

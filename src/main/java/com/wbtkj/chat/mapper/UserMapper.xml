@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wbtkj.chat.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.wbtkj.chat.pojo.model.User" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="salt" property="salt" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="quota" property="quota" jdbcType="BIGINT" />
+    <result column="cost" property="cost" jdbcType="BIGINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="my_inv_code" property="my_inv_code" jdbcType="VARCHAR" />
+    <result column="use_inv_code" property="use_inv_code" jdbcType="VARCHAR" />
+    <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, email, pwd, salt, `status`, quota, cost, remark, my_inv_code, use_inv_code, create_time, 
+    update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.UserExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.wbtkj.chat.pojo.model.UserExample" >
+    delete from user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.User" >
+    insert into user (id, email, pwd, 
+      salt, `status`, quota, 
+      cost, remark, my_inv_code, 
+      use_inv_code, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{email,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+      #{salt,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{quota,jdbcType=BIGINT}, 
+      #{cost,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR}, #{my_inv_code,jdbcType=VARCHAR}, 
+      #{use_inv_code,jdbcType=VARCHAR}, #{create_time,jdbcType=TIMESTAMP}, #{update_time,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="pwd != null" >
+        pwd,
+      </if>
+      <if test="salt != null" >
+        salt,
+      </if>
+      <if test="status != null" >
+        `status`,
+      </if>
+      <if test="quota != null" >
+        quota,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="my_inv_code != null" >
+        my_inv_code,
+      </if>
+      <if test="use_inv_code != null" >
+        use_inv_code,
+      </if>
+      <if test="create_time != null" >
+        create_time,
+      </if>
+      <if test="update_time != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="quota != null" >
+        #{quota,jdbcType=BIGINT},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=BIGINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="my_inv_code != null" >
+        #{my_inv_code,jdbcType=VARCHAR},
+      </if>
+      <if test="use_inv_code != null" >
+        #{use_inv_code,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null" >
+        #{create_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="update_time != null" >
+        #{update_time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.wbtkj.chat.pojo.model.UserExample" resultType="java.lang.Integer" >
+    select count(*) from user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update user
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pwd != null" >
+        pwd = #{record.pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.salt != null" >
+        salt = #{record.salt,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.quota != null" >
+        quota = #{record.quota,jdbcType=BIGINT},
+      </if>
+      <if test="record.cost != null" >
+        cost = #{record.cost,jdbcType=BIGINT},
+      </if>
+      <if test="record.remark != null" >
+        remark = #{record.remark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.my_inv_code != null" >
+        my_inv_code = #{record.my_inv_code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.use_inv_code != null" >
+        use_inv_code = #{record.use_inv_code,jdbcType=VARCHAR},
+      </if>
+      <if test="record.create_time != null" >
+        create_time = #{record.create_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.update_time != null" >
+        update_time = #{record.update_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update user
+    set id = #{record.id,jdbcType=BIGINT},
+      email = #{record.email,jdbcType=VARCHAR},
+      pwd = #{record.pwd,jdbcType=VARCHAR},
+      salt = #{record.salt,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=INTEGER},
+      quota = #{record.quota,jdbcType=BIGINT},
+      cost = #{record.cost,jdbcType=BIGINT},
+      remark = #{record.remark,jdbcType=VARCHAR},
+      my_inv_code = #{record.my_inv_code,jdbcType=VARCHAR},
+      use_inv_code = #{record.use_inv_code,jdbcType=VARCHAR},
+      create_time = #{record.create_time,jdbcType=TIMESTAMP},
+      update_time = #{record.update_time,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wbtkj.chat.pojo.model.User" >
+    update user
+    <set >
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null" >
+        salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="quota != null" >
+        quota = #{quota,jdbcType=BIGINT},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=BIGINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="my_inv_code != null" >
+        my_inv_code = #{my_inv_code,jdbcType=VARCHAR},
+      </if>
+      <if test="use_inv_code != null" >
+        use_inv_code = #{use_inv_code,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null" >
+        create_time = #{create_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="update_time != null" >
+        update_time = #{update_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wbtkj.chat.pojo.model.User" >
+    update user
+    set email = #{email,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      quota = #{quota,jdbcType=BIGINT},
+      cost = #{cost,jdbcType=BIGINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      my_inv_code = #{my_inv_code,jdbcType=VARCHAR},
+      use_inv_code = #{use_inv_code,jdbcType=VARCHAR},
+      create_time = #{create_time,jdbcType=TIMESTAMP},
+      update_time = #{update_time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

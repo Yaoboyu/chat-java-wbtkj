@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/wbtkj_chat
+    url: jdbc:mysql://localhost:3306/wbtkj_chat?serverTimezone=UTC
     username: root
     password: root
   data:
@@ -17,6 +17,7 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+  mapper-locations: classpath:com/wbtkj/chat/mapper/*.xml
 
 email:
   hostname: smtp.qq.com

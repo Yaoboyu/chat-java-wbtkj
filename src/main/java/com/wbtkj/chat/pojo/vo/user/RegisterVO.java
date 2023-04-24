@@ -1,4 +1,4 @@
-package com.wbtkj.chat.pojo.VO;
+package com.wbtkj.chat.pojo.vo.user;
 
 import lombok.Data;
 

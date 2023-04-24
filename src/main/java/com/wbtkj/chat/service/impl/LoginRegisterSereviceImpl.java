@@ -1,16 +1,20 @@
 package com.wbtkj.chat.service.impl;
 
-import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.mapper.UserMapper;
+import com.wbtkj.chat.exception.MyServiceException;
+import com.wbtkj.chat.pojo.model.User;
+import com.wbtkj.chat.pojo.model.UserExample;
 import com.wbtkj.chat.service.LoginRegisterSerevice;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static com.wbtkj.chat.utils.JwtUtils.generateJwt;
-import static com.wbtkj.chat.utils.MD5Utils.code;
+import com.wbtkj.chat.utils.JwtUtils;
+import com.wbtkj.chat.utils.MD5Utils;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class LoginRegisterSereviceImpl implements LoginRegisterSerevice {
@@ -22,25 +26,26 @@ public class LoginRegisterSereviceImpl implements LoginRegisterSerevice {
      * @param email 用户邮箱
      * @param pwd   用户密码
      * @return      返回jwt令牌
-     * @throws Exception 密码账户不匹配会抛出异常不返回token
      */
     @Override
-    public String login(String email, String pwd) throws Exception{
-        Map<String,Object> claims = new HashMap<String,Object>();
-        claims.put("email", email);
-        Long id = userMapper.id(email);
-        if(id == null) {
+    public String login(String email, String pwd){
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andEmailEqualTo(email);
+        List<User> users = userMapper.selectByExample(userExample);
+        if(CollectionUtils.isEmpty(users)) {
             throw new MyServiceException("用户名不存在");
         }
+        User user = users.get(0);
 
-        claims.put("id", id);
-        String salt = userMapper.salt(email);
-        pwd = code(pwd + salt);
+        Map<String,Object> claims = new HashMap<>();
+        claims.put("email", email);
+        claims.put("id", user.getId());
+        pwd = MD5Utils.code(pwd + user.getSalt());
 
-        if(!pwd.equals(userMapper.pwd(email))) {
+        if(!pwd.equals(user.getPwd())) {
             throw new MyServiceException("登录信息有误,请核对后输入!");
         }
 
-        return generateJwt(claims);
+        return JwtUtils.generateJwt(claims);
     }
 }

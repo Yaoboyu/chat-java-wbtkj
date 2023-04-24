@@ -1,4 +1,4 @@
-package com.wbtkj.chat.pojo.VO;
+package com.wbtkj.chat.pojo.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,9 +1,9 @@
 package com.wbtkj.chat.filter;
 
 import com.wbtkj.chat.config.ThreadLocalConfig;
-import com.wbtkj.chat.pojo.DTO.UserDTO;
+import com.wbtkj.chat.pojo.dto.user.UserDTO;
 import com.wbtkj.chat.utils.JwtUtils;
-import com.wbtkj.chat.pojo.VO.Result;
+import com.wbtkj.chat.pojo.vo.Result;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -17,6 +17,7 @@ import java.io.IOException;
 @Slf4j
 @WebFilter(urlPatterns = "/*")
 public class LoginFilter implements Filter {
+    //TODO：管理员登录和普通用户登录鉴权
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
@@ -27,7 +28,7 @@ public class LoginFilter implements Filter {
         log.info("请求的uri: {}", uri);
 
         //2.判断请求url中是否包含login，如果包含，说明是登录操作，放行。
-        if(uri.startsWith("/login") || uri.startsWith("/register")){
+        if(uri.startsWith("/login") || uri.startsWith("/register") || uri.startsWith("/sendMail")){
             log.info("登录注册操作, 放行...");
             chain.doFilter(request,response);
             return;

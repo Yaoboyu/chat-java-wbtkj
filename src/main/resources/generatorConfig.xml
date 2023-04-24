@@ -6,10 +6,10 @@
 <generatorConfiguration>
 
     <!--classPathEntry:数据库的JDBC驱动,换成你自己的驱动位置 可选 -->
-    <classPathEntry location="D:\generator\mysql-connector-java-5.1.7-bin.jar"/>
+    <classPathEntry location="D:\ProgramFiles\Maven3.6.3\repository\mysql\mysql-connector-java\8.0.27\mysql-connector-java-8.0.27.jar"/>
 
     <!-- 一个数据库一个context,defaultModelType="flat" 大数据字段，不分表 -->
-    <context id="MysqlTables" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+    <context id="MysqlTables" defaultModelType="flat">
 
         <!-- 自动识别数据库关键字，默认false，如果设置为true，根据SqlReservedWords中定义的关键字列表；一般保留默认值，遇到数据库关键字（Java关键字），使用columnOverride覆盖 -->
         <property name="autoDelimitKeywords" value="true"/>
@@ -36,9 +36,12 @@
         </commentGenerator>
 
         <!-- jdbc连接-->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://127.0.0.1:3306/ajax?serverTimezone=UTC" userId="root"
-                        password="qq123456"/>
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/wbtkj_chat?serverTimezone=UTC"
+                        userId="root"
+                        password="root">
+            <property name="nullCatalogMeansCurrent" value="true" />
+        </jdbcConnection>
 
         <!-- 类型转换 -->
         <javaTypeResolver>
@@ -47,7 +50,7 @@
         </javaTypeResolver>
 
         <!-- 生成实体类地址 -->
-        <javaModelGenerator targetPackage="com.example.ajax.entity" targetProject="src/main/java">
+        <javaModelGenerator targetPackage="com.wbtkj.chat.pojo.model" targetProject="src/main/java">
             <!-- 是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="false"/>
             <!-- 从数据库返回的值去掉前后空格 -->
@@ -55,22 +58,25 @@
         </javaModelGenerator>
 
         <!-- 生成map.xml文件存放地址 -->
-        <sqlMapGenerator targetPackage="mappers" targetProject="src/main/resources">
+        <sqlMapGenerator targetPackage="com.wbtkj.chat.mapper" targetProject="src/main/java">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- 生成接口dao -->
-        <javaClientGenerator targetPackage="com.example.ajax.dao" targetProject="src/main/java" type="XMLMAPPER">
+        <javaClientGenerator targetPackage="com.wbtkj.chat.mapper" targetProject="src/main/java" type="XMLMAPPER">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
-        <!-- table可以有多个,每个数据库中的表都可以写一个table，tableName表示要匹配的数据库表,也可以在tableName属性中通过使用%通配符来匹配所有数据库表,只有匹配的表才会自动生成文件 enableSelectByPrimaryKey相应的配置表示是否生成相应的接口 -->
-        <table tableName="user" enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
-               enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-               enableDeleteByPrimaryKey="true">
+        <!-- 每个数据库中的表都写一个table，用完就注释掉 -->
+        <table tableName="user">
+            <property name="useActualColumnNames" value="true"/>
+            <columnOverride column="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        </table>
+
+        <table tableName="cdkey_activate">
             <property name="useActualColumnNames" value="true"/>
         </table>
+
 
     </context>
 </generatorConfiguration>

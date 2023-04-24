@@ -1,6 +1,8 @@
 package com.wbtkj.chat.service;
 
+import com.wbtkj.chat.pojo.model.User;
+
 public interface AdminService {
 
-    void updateStatus(String email, int status);
+    void updateUser(User user);
 }

@@ -1,6 +1,6 @@
 package com.wbtkj.chat.controller;
 
-import com.wbtkj.chat.pojo.VO.Result;
+import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.service.SendVerifyCodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

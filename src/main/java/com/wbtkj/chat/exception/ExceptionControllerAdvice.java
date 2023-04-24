@@ -1,6 +1,6 @@
 package com.wbtkj.chat.exception;
 
-import com.wbtkj.chat.pojo.VO.Result;
+import com.wbtkj.chat.pojo.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;

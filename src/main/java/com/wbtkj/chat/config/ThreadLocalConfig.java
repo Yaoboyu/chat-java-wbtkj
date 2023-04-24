@@ -1,7 +1,7 @@
 package com.wbtkj.chat.config;
 
 import com.wbtkj.chat.exception.MyServiceException;
-import com.wbtkj.chat.pojo.DTO.UserDTO;
+import com.wbtkj.chat.pojo.dto.user.UserDTO;
 import org.springframework.stereotype.Component;
 
 @Component
