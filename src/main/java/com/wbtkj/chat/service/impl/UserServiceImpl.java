@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePwd(String pwd, String code) throws Exception {
-
+        //TODO :发邮箱校验验证码
 
 
     }

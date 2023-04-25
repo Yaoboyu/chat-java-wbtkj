@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum UserStatus {
     ENABLED(0),
-    DISABLED(1),
-    VIP(2);
+    DISABLED(-1),
+    VIP(1);
 
     private int status;
 
