@@ -1,7 +1,7 @@
-drop database wbtkj_chat;
+drop database if exists wbtkj_chat;
 CREATE DATABASE `wbtkj_chat` CHARACTER SET 'utf8mb4';
 
-drop table user;
+drop table if exists user;
 CREATE TABLE `user` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '自增主键',
     `email` VARCHAR(255) NOT NULL COMMENT '邮箱',
@@ -19,7 +19,7 @@ CREATE TABLE `user` (
     UNIQUE INDEX `idx_email`(`email`) USING BTREE
 ) ENGINE=InnoDB;
 
-drop table cdkey_activate;
+drop table if exists cdkey_activate;
 CREATE TABLE `cdkey_activate` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `user_id` BIGINT NOT NULL COMMENT '用户id',
@@ -31,7 +31,7 @@ CREATE TABLE `cdkey_activate` (
   INDEX `idx_cdkey`(`cdkey`) USING BTREE
 ) ENGINE=InnoDB;
 
-drop table openaikey;
+drop table if exists openaikey;
 CREATE TABLE `openaikey` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `key` VARCHAR(255) NOT NULL COMMENT 'sk',
