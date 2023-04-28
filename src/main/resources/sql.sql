@@ -1,7 +1,7 @@
 drop database wbtkj_chat;
 CREATE DATABASE `wbtkj_chat` CHARACTER SET 'utf8mb4';
 
-drop table user;
+drop table if exists user;
 CREATE TABLE `user` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '自增主键',
     `email` VARCHAR(255) NOT NULL COMMENT '邮箱',
