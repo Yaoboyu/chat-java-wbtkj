@@ -31,14 +31,33 @@ CREATE TABLE `cdkey_activate` (
   INDEX `idx_cdkey`(`cdkey`) USING BTREE
 ) ENGINE=InnoDB;
 
+/**
+  添加key时添加到redis list里
+ */
 drop table if exists openaikey;
 CREATE TABLE `openaikey` (
   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '自增主键',
   `key` VARCHAR(255) NOT NULL COMMENT 'sk',
   `cost` DOUBLE PRECISION NOT NULL COMMENT '余额美元',
   `quota` DOUBLE PRECISION NOT NULL COMMENT '总额美元',
-  `status` INTEGER NOT NULL COMMENT '0启用，-1禁用',
+  `status` INTEGER NOT NULL COMMENT '0启用，-1禁用，1余额耗尽或过期',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;
+
+drop table if exists admin;
+CREATE TABLE IF NOT EXISTS `admin` (
+  `id` INTEGER NOT NULL COMMENT '自增id',
+  `username` VARCHAR(255) NOT NULL COMMENT '用户名',
+  `pwd` VARCHAR(255) NOT NULL COMMENT '密码',
+  `salt` VARCHAR(255) NOT NULL COMMENT '密码盐',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `update_time` datetime NOT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
+/* 用户名：admin, 密码：admin123 */
+LOCK TABLES `admin` WRITE;
+INSERT INTO `admin` VALUES (1,'admin','45be07bc1f199c69','68723','2019-09-03 13:31:20','2023-04-06 09:54:02');
+UNLOCK TABLES;

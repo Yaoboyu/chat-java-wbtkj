@@ -68,14 +68,23 @@
         </javaClientGenerator>
 
         <!-- 每个数据库中的表都写一个table，用完就注释掉 -->
-        <table tableName="user">
-            <property name="useActualColumnNames" value="true"/>
-            <columnOverride column="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
-        </table>
+<!--        <table tableName="user">-->
+<!--            <property name="useActualColumnNames" value="true"/>-->
+<!--            <columnOverride column="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
+<!--        </table>-->
 
-        <table tableName="cdkey_activate">
-            <property name="useActualColumnNames" value="true"/>
-        </table>
+<!--        <table tableName="cdkey_activate">-->
+<!--            <property name="useActualColumnNames" value="true"/>-->
+<!--        </table>-->
+
+<!--        <table tableName="openaikey">-->
+<!--            <property name="useActualColumnNames" value="true"/>-->
+<!--        </table>-->
+
+<!--        <table tableName="admin">-->
+<!--            <property name="useActualColumnNames" value="true"/>-->
+<!--        </table>-->
+
 
 
     </context>
