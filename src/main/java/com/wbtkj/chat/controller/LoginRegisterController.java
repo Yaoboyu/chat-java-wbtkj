@@ -5,7 +5,6 @@ import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.vo.user.LoginVO;
 import com.wbtkj.chat.pojo.vo.user.RegisterVO;
 import com.wbtkj.chat.pojo.vo.Result;
-import com.wbtkj.chat.service.LoginRegisterSerevice;
 import com.wbtkj.chat.service.SendVerifyCodeService;
 import com.wbtkj.chat.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -21,22 +20,20 @@ public class LoginRegisterController {
     @Resource
     private UserService userService;
     @Resource
-    LoginRegisterSerevice loginRegisterSerevice;
-    @Resource
     SendVerifyCodeService sendVerifyCodeService;
 
 
     @PostMapping("/login")
-    public Result Login(@RequestBody LoginVO loginVO) throws Exception{
+    public Result Login(@RequestBody LoginVO loginVO) {
         log.info("用户 {} 登录", loginVO.getEmail());
-        String jwt = loginRegisterSerevice.login(loginVO.getEmail(), loginVO.getPwd());
+        String token = userService.login(loginVO.getEmail(), loginVO.getPwd());
         JSONObject data = new JSONObject();
-        data.put("token", jwt);
+        data.put("token", token);
         return Result.success(data);
     }
 
     @PostMapping("/register")
-    public Result register(@RequestBody RegisterVO registerVO) throws Exception{
+    public Result register(@RequestBody RegisterVO registerVO) {
         String codeByEmail = sendVerifyCodeService.getCodeByEmail(registerVO.getEmail());
         if(codeByEmail == null || StringUtils.isBlank(codeByEmail)) {
             throw new MyServiceException("验证码过期！");
@@ -46,8 +43,8 @@ public class LoginRegisterController {
         }
 
         log.info("用户注册：{}", registerVO.getEmail());
-        userService.save(registerVO);
-        String jwt = loginRegisterSerevice.login(registerVO.getEmail(), registerVO.getPwd());
-        return Result.success(new JSONObject().put("token", jwt));
+        userService.register(registerVO);
+        String token = userService.login(registerVO.getEmail(), registerVO.getPwd());
+        return Result.success(new JSONObject().put("token", token));
     }
 }

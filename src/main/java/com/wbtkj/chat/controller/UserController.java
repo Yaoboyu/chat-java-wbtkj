@@ -20,7 +20,7 @@ public class UserController {
     CDKEYService cdkeyService;
 
     @PutMapping("/pwd")
-    public Result changePwd(@RequestBody ChangePwdVO changePwdVO) throws Exception{
+    public Result changePwd(@RequestBody ChangePwdVO changePwdVO) {
         userService.changePwd(changePwdVO.getPwd(), changePwdVO.getCode());
         return Result.success();
     }
