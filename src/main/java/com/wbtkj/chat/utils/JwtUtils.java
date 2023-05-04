@@ -1,12 +1,23 @@
 package com.wbtkj.chat.utils;
 
+import com.alibaba.fastjson.JSONObject;
+import com.wbtkj.chat.config.ThreadLocalConfig;
+import com.wbtkj.chat.exception.MyServiceException;
+import com.wbtkj.chat.pojo.dto.user.UserDTO;
+import com.wbtkj.chat.pojo.vo.Result;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
+
 import java.util.Date;
 import java.util.Map;
 
+@Slf4j
 public class JwtUtils {
+
+
     public static final String SIGN_KEY = "yaoboyu";
     public static final Long EXPIRE = 43200000L;
 
@@ -36,4 +47,6 @@ public class JwtUtils {
                 .getBody();
         return claims;
     }
+
+
 }

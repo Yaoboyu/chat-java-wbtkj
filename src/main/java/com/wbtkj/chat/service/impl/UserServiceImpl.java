@@ -1,29 +1,56 @@
 package com.wbtkj.chat.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.mapper.UserMapper;
 import com.wbtkj.chat.exception.MyServiceException;
+import com.wbtkj.chat.pojo.dto.user.UserDTO;
 import com.wbtkj.chat.pojo.dto.user.UserStatus;
 import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.model.UserExample;
 import com.wbtkj.chat.pojo.vo.user.RegisterVO;
 import com.wbtkj.chat.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.wbtkj.chat.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.wbtkj.chat.constant.GeneralConstant;
 import com.wbtkj.chat.utils.MD5Utils;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
 
 
     @Override
-    public void save(RegisterVO registerVO){
+    public String login(String email, String pwd) {
+        User user = getCheckedUser(email);
+
+        Map<String,Object> claims = new HashMap<>();
+        claims.put("id", user.getId());
+        claims.put("email", email);
+        pwd = MD5Utils.code(pwd + user.getSalt());
+
+        if(!pwd.equals(user.getPwd())) {
+            throw new MyServiceException("登录信息有误,请核对后输入!");
+        }
+
+        return JwtUtils.generateJwt(claims);
+    }
+
+    @Override
+    public void register(RegisterVO registerVO) {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andEmailEqualTo(registerVO.getEmail());
 
@@ -52,9 +79,51 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePwd(String pwd, String code) throws Exception {
+    public void changePwd(String pwd, String code) {
         //TODO :发邮箱校验验证码
 
 
     }
+
+    @Override
+    public User getCheckedUser(String email) throws MyServiceException {
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andEmailEqualTo(email);
+        List<User> users = userMapper.selectByExample(userExample);
+        if(CollectionUtils.isEmpty(users)) {
+            throw new MyServiceException("用户邮箱不存在");
+        }
+        User user = users.get(0);
+        if(user.getStatus() == UserStatus.DISABLED.getStatus()) {
+            throw new MyServiceException("用户已禁用！请联系管理员");
+        }
+        return user;
+    }
+
+    public boolean checkToken(String token) throws MyServiceException{
+        //判断令牌是否存在，如果不存在，返回错误结果（未登录）。
+        if(!StringUtils.hasLength(token)){
+            log.info("请求头token为空,返回未登录的信息");
+            throw new MyServiceException("未登录");
+        }
+
+        //解析token，如果解析失败，返回错误结果（未登录）。
+        try {
+            Claims claims = JwtUtils.parseJWT(token);
+            User user = getCheckedUser((String) claims.get("email"));
+            if(user == null) {
+                throw new MyServiceException("用户不存在或已被禁用");
+            }
+            UserDTO userDTO = new UserDTO();
+            userDTO.setId(user.getId());
+            userDTO.setEmail(user.getEmail());
+            ThreadLocalConfig.setgetUser(userDTO);
+        } catch (MyServiceException e) {//jwt解析失败
+            log.info("解析令牌失败, 返回未登录错误信息");
+            throw e;
+        }
+
+        return true;
+    }
+
 }
