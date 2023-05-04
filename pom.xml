@@ -48,18 +48,7 @@
             <artifactId>mybatis-spring-boot-starter</artifactId>
             <version>2.3.0</version>
         </dependency>
-        <dependency>
-            <groupId>net.devh</groupId>
-            <artifactId>grpc-client-spring-boot-starter</artifactId>
-            <version>2.13.1.RELEASE</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
         <!--spring-boot-starter end-->
-
-
 
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -103,7 +92,13 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
+        <!--分页插件 pagehelper -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <!-- 特别注意版本问题 -->
+            <version>1.4.2</version>
+        </dependency>
         <dependency>
             <groupId>com.taobao.arthas</groupId>
             <artifactId>fastjson</artifactId>
@@ -141,22 +136,10 @@
             <version>1.18.20.0</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.unfbx</groupId>
-            <artifactId>chatgpt-java</artifactId>
-            <version>1.0.13</version>
-        </dependency>
 
     </dependencies>
 
     <build>
-        <extensions>
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>1.4.1.Final</version>
-            </extension>
-        </extensions>
         <resources>
             <resource>
                 <directory>src/main/java</directory>
@@ -165,6 +148,14 @@
                 </includes>
                 <filtering>false</filtering>
             </resource>
+            <!--            <resource>-->
+            <!--                <directory>src/main/resources</directory>-->
+            <!--                <includes>-->
+            <!--                    <include>**/*.xml</include>-->
+            <!--                    <include>**/*.yml</include>-->
+            <!--                </includes>-->
+            <!--                <filtering>false</filtering>-->
+            <!--            </resource>-->
         </resources>
         <plugins>
             <plugin>
@@ -188,24 +179,6 @@
                     <overwrite>true</overwrite>
                     <verbose>true</verbose>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <version>0.5.0</version>
-                <configuration>
-                    <protocArtifact>com.google.protobuf:protoc:3.0.0:exe:${os.detected.classifier}</protocArtifact>
-                    <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.0.0:exe:${os.detected.classifier}</pluginArtifact>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>compile-custom</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
