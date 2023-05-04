@@ -1,5 +1,6 @@
 package com.wbtkj.chat.controller;
 
+import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.pojo.vo.user.ChangePwdVO;
 import com.wbtkj.chat.service.CDKEYService;
@@ -18,16 +19,13 @@ public class UserController {
     UserService userService;
     @Resource
     CDKEYService cdkeyService;
-
     @PutMapping("/pwd")
-    public Result changePwd(@RequestBody ChangePwdVO changePwdVO) {
+    public Result changePwd(@RequestBody ChangePwdVO changePwdVO) throws Exception{
         userService.changePwd(changePwdVO.getPwd(), changePwdVO.getCode());
         return Result.success();
     }
-
     @PostMapping("/recharge/{cdkey}")
     Result verification(@PathVariable String cdkey) {
-        // TODO：用户余额修改
         long value = cdkeyService.activate(cdkey);
         return Result.success(value);
     }
