@@ -30,7 +30,7 @@ server:
   servlet:
     encoding:
       charset: UTF-8
-  port: 8080
+  port: 10317
 
 grpc:
   client:
@@ -41,4 +41,7 @@ grpc:
 chatgpt:
   apiKey: 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,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
   apiHost: https://openai.wbtkj.top/
+
+log:
+  path: D:/ProgramData/Springbootlog
 

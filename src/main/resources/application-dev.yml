@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active: dev
+
+log:
+  path: /home/chat-java-wbtkj/log
