@@ -58,10 +58,10 @@ public class CDKEYServiceImpl implements CDKEYService {
         long value = value(cdkey);
 
         CdkeyActivate cdkeyActivate = new CdkeyActivate();
-        cdkeyActivate.setUser_id(userId);
+        cdkeyActivate.setUserId(userId);
         cdkeyActivate.setCdkey(cdkey);
         cdkeyActivate.setValue(value);
-        cdkeyActivate.setUse_time(new Date());
+        cdkeyActivate.setUseTime(new Date());
 
         cdkeyActivateMapper.insert(cdkeyActivate);
         return value;

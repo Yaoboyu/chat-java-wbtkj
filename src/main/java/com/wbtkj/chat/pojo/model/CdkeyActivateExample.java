@@ -165,63 +165,63 @@ public class CdkeyActivateExample {
             return (Criteria) this;
         }
 
-        public Criteria andUser_idIsNull() {
+        public Criteria andUserIdIsNull() {
             addCriterion("user_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andUser_idIsNotNull() {
+        public Criteria andUserIdIsNotNull() {
             addCriterion("user_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUser_idEqualTo(Long value) {
-            addCriterion("user_id =", value, "user_id");
+        public Criteria andUserIdEqualTo(Long value) {
+            addCriterion("user_id =", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUser_idNotEqualTo(Long value) {
-            addCriterion("user_id <>", value, "user_id");
+        public Criteria andUserIdNotEqualTo(Long value) {
+            addCriterion("user_id <>", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUser_idGreaterThan(Long value) {
-            addCriterion("user_id >", value, "user_id");
+        public Criteria andUserIdGreaterThan(Long value) {
+            addCriterion("user_id >", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUser_idGreaterThanOrEqualTo(Long value) {
-            addCriterion("user_id >=", value, "user_id");
+        public Criteria andUserIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("user_id >=", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUser_idLessThan(Long value) {
-            addCriterion("user_id <", value, "user_id");
+        public Criteria andUserIdLessThan(Long value) {
+            addCriterion("user_id <", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUser_idLessThanOrEqualTo(Long value) {
-            addCriterion("user_id <=", value, "user_id");
+        public Criteria andUserIdLessThanOrEqualTo(Long value) {
+            addCriterion("user_id <=", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUser_idIn(List<Long> values) {
-            addCriterion("user_id in", values, "user_id");
+        public Criteria andUserIdIn(List<Long> values) {
+            addCriterion("user_id in", values, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUser_idNotIn(List<Long> values) {
-            addCriterion("user_id not in", values, "user_id");
+        public Criteria andUserIdNotIn(List<Long> values) {
+            addCriterion("user_id not in", values, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUser_idBetween(Long value1, Long value2) {
-            addCriterion("user_id between", value1, value2, "user_id");
+        public Criteria andUserIdBetween(Long value1, Long value2) {
+            addCriterion("user_id between", value1, value2, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUser_idNotBetween(Long value1, Long value2) {
-            addCriterion("user_id not between", value1, value2, "user_id");
+        public Criteria andUserIdNotBetween(Long value1, Long value2) {
+            addCriterion("user_id not between", value1, value2, "userId");
             return (Criteria) this;
         }
 
@@ -355,63 +355,63 @@ public class CdkeyActivateExample {
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeIsNull() {
+        public Criteria andUseTimeIsNull() {
             addCriterion("use_time is null");
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeIsNotNull() {
+        public Criteria andUseTimeIsNotNull() {
             addCriterion("use_time is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeEqualTo(Date value) {
-            addCriterion("use_time =", value, "use_time");
+        public Criteria andUseTimeEqualTo(Date value) {
+            addCriterion("use_time =", value, "useTime");
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeNotEqualTo(Date value) {
-            addCriterion("use_time <>", value, "use_time");
+        public Criteria andUseTimeNotEqualTo(Date value) {
+            addCriterion("use_time <>", value, "useTime");
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeGreaterThan(Date value) {
-            addCriterion("use_time >", value, "use_time");
+        public Criteria andUseTimeGreaterThan(Date value) {
+            addCriterion("use_time >", value, "useTime");
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeGreaterThanOrEqualTo(Date value) {
-            addCriterion("use_time >=", value, "use_time");
+        public Criteria andUseTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("use_time >=", value, "useTime");
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeLessThan(Date value) {
-            addCriterion("use_time <", value, "use_time");
+        public Criteria andUseTimeLessThan(Date value) {
+            addCriterion("use_time <", value, "useTime");
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeLessThanOrEqualTo(Date value) {
-            addCriterion("use_time <=", value, "use_time");
+        public Criteria andUseTimeLessThanOrEqualTo(Date value) {
+            addCriterion("use_time <=", value, "useTime");
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeIn(List<Date> values) {
-            addCriterion("use_time in", values, "use_time");
+        public Criteria andUseTimeIn(List<Date> values) {
+            addCriterion("use_time in", values, "useTime");
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeNotIn(List<Date> values) {
-            addCriterion("use_time not in", values, "use_time");
+        public Criteria andUseTimeNotIn(List<Date> values) {
+            addCriterion("use_time not in", values, "useTime");
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeBetween(Date value1, Date value2) {
-            addCriterion("use_time between", value1, value2, "use_time");
+        public Criteria andUseTimeBetween(Date value1, Date value2) {
+            addCriterion("use_time between", value1, value2, "useTime");
             return (Criteria) this;
         }
 
-        public Criteria andUse_timeNotBetween(Date value1, Date value2) {
-            addCriterion("use_time not between", value1, value2, "use_time");
+        public Criteria andUseTimeNotBetween(Date value1, Date value2) {
+            addCriterion("use_time not between", value1, value2, "useTime");
             return (Criteria) this;
         }
     }

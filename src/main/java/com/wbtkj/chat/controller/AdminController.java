@@ -4,6 +4,7 @@ import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.service.AdminService;
 import com.wbtkj.chat.service.CDKEYService;
+import com.wbtkj.chat.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +19,12 @@ public class AdminController {
     AdminService adminService;
     @Resource
     CDKEYService cdkeyService;
+    @Resource
+    UserService userService;
 
     @PutMapping("/user")
     Result updateStatus(@RequestBody User user){
-        adminService.updateUser(user);
+        userService.updateUser(user);
         return Result.success();
     }
 

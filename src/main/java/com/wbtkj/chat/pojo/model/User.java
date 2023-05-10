@@ -14,19 +14,21 @@ public class User implements Serializable {
 
     private Integer status;
 
-    private Long quota;
+    private Date vipStartTime;
 
-    private Long cost;
+    private Date vipEndTime;
+
+    private Integer balance;
 
     private String remark;
 
-    private String my_inv_code;
+    private String myInvCode;
 
-    private String use_inv_code;
+    private String useInvCode;
 
-    private Date create_time;
+    private Date createTime;
 
-    private Date update_time;
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -70,20 +72,28 @@ public class User implements Serializable {
         this.status = status;
     }
 
-    public Long getQuota() {
-        return quota;
+    public Date getVipStartTime() {
+        return vipStartTime;
     }
 
-    public void setQuota(Long quota) {
-        this.quota = quota;
+    public void setVipStartTime(Date vipStartTime) {
+        this.vipStartTime = vipStartTime;
     }
 
-    public Long getCost() {
-        return cost;
+    public Date getVipEndTime() {
+        return vipEndTime;
     }
 
-    public void setCost(Long cost) {
-        this.cost = cost;
+    public void setVipEndTime(Date vipEndTime) {
+        this.vipEndTime = vipEndTime;
+    }
+
+    public Integer getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Integer balance) {
+        this.balance = balance;
     }
 
     public String getRemark() {
@@ -94,36 +104,36 @@ public class User implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public String getMy_inv_code() {
-        return my_inv_code;
+    public String getMyInvCode() {
+        return myInvCode;
     }
 
-    public void setMy_inv_code(String my_inv_code) {
-        this.my_inv_code = my_inv_code == null ? null : my_inv_code.trim();
+    public void setMyInvCode(String myInvCode) {
+        this.myInvCode = myInvCode == null ? null : myInvCode.trim();
     }
 
-    public String getUse_inv_code() {
-        return use_inv_code;
+    public String getUseInvCode() {
+        return useInvCode;
     }
 
-    public void setUse_inv_code(String use_inv_code) {
-        this.use_inv_code = use_inv_code == null ? null : use_inv_code.trim();
+    public void setUseInvCode(String useInvCode) {
+        this.useInvCode = useInvCode == null ? null : useInvCode.trim();
     }
 
-    public Date getCreate_time() {
-        return create_time;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Date getUpdate_time() {
-        return update_time;
+    public Date getUpdateTime() {
+        return updateTime;
     }
 
-    public void setUpdate_time(Date update_time) {
-        this.update_time = update_time;
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     @Override
@@ -137,13 +147,14 @@ public class User implements Serializable {
         sb.append(", pwd=").append(pwd);
         sb.append(", salt=").append(salt);
         sb.append(", status=").append(status);
-        sb.append(", quota=").append(quota);
-        sb.append(", cost=").append(cost);
+        sb.append(", vipStartTime=").append(vipStartTime);
+        sb.append(", vipEndTime=").append(vipEndTime);
+        sb.append(", balance=").append(balance);
         sb.append(", remark=").append(remark);
-        sb.append(", my_inv_code=").append(my_inv_code);
-        sb.append(", use_inv_code=").append(use_inv_code);
-        sb.append(", create_time=").append(create_time);
-        sb.append(", update_time=").append(update_time);
+        sb.append(", myInvCode=").append(myInvCode);
+        sb.append(", useInvCode=").append(useInvCode);
+        sb.append(", createTime=").append(createTime);
+        sb.append(", updateTime=").append(updateTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

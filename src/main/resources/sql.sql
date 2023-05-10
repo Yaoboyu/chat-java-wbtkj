@@ -1,5 +1,6 @@
 drop database if exists wbtkj_chat;
 CREATE DATABASE `wbtkj_chat` CHARACTER SET 'utf8mb4';
+use wbtkj_chat;
 
 drop table if exists user;
 CREATE TABLE `user` (
@@ -7,16 +8,18 @@ CREATE TABLE `user` (
     `email` VARCHAR(255) NOT NULL COMMENT '邮箱',
     `pwd` VARCHAR(255) NOT NULL COMMENT '加盐后并md5加密后的密码',
     `salt` VARCHAR(5) NOT NULL COMMENT '固定5位字符串',
-    `status` INT NOT NULL COMMENT '0有效,-1封禁',
-    `quota` BIGINT NOT NULL COMMENT '总额度',
-    `cost` BIGINT NOT NULL COMMENT '已花费额度',
+    `status` INT NOT NULL COMMENT '0有效，-1封禁，1VIP',
+    `vip_start_time` datetime COMMENT '会员开始时间',
+    `vip_end_time` datetime COMMENT '会员结束时间',
+    `balance` INT NOT NULL COMMENT '余额',
     `remark` text COMMENT '默认空字符串',
-    `my_inv_code` VARCHAR(6) COMMENT '我的邀请码（二期）',
-    `use_inv_code` VARCHAR(6) COMMENT '使用的邀请码（二期）',
+    `my_inv_code` VARCHAR(15) NOT NULL COMMENT '我的邀请码',
+    `use_inv_code` VARCHAR(15) COMMENT '使用的邀请码',
     `create_time` datetime NOT NULL COMMENT '创建时间',
     `update_time` datetime NOT NULL COMMENT '修改时间',
     PRIMARY KEY (`id`),
-    UNIQUE INDEX `idx_email`(`email`) USING BTREE
+    UNIQUE INDEX `idx_email`(`email`) USING BTREE,
+    UNIQUE INDEX `idx_my_inv_code`(`my_inv_code`) USING BTREE
 ) ENGINE=InnoDB;
 
 drop table if exists cdkey_activate;
@@ -51,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
   `id` INTEGER NOT NULL COMMENT '自增id',
   `username` VARCHAR(255) NOT NULL COMMENT '用户名',
   `pwd` VARCHAR(255) NOT NULL COMMENT '密码',
-  `salt` VARCHAR(255) NOT NULL COMMENT '密码盐',
+  `salt` VARCHAR(5) NOT NULL COMMENT '密码盐',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)

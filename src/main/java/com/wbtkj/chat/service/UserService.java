@@ -13,9 +13,19 @@ public interface UserService {
      */
     String login(String email, String pwd);
 
+    /**
+     * 注册
+     * @param registerVO
+     */
     void register(RegisterVO registerVO);
 
     void changePwd(String pwd,String code);
+
+    /**
+     * 可以修改密码，状态，会员有效期，余额，备注
+     * @param user
+     */
+    void updateUser(User user);
 
     /**
      * 检查用户是否存在，是否已被禁用
@@ -25,7 +35,7 @@ public interface UserService {
     User getCheckedUser(String email) throws MyServiceException;
 
     /**
-     * 解析tokn并将用户信息存入ThreadLocal
+     * 解析token并将用户信息存入ThreadLocal
      * @param token
      * @return
      */

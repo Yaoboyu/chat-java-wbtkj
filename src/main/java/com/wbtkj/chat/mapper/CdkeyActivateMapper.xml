@@ -3,10 +3,10 @@
 <mapper namespace="com.wbtkj.chat.mapper.CdkeyActivateMapper" >
   <resultMap id="BaseResultMap" type="com.wbtkj.chat.pojo.model.CdkeyActivate" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="user_id" property="user_id" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="cdkey" property="cdkey" jdbcType="VARCHAR" />
     <result column="value" property="value" jdbcType="BIGINT" />
-    <result column="use_time" property="use_time" jdbcType="TIMESTAMP" />
+    <result column="use_time" property="useTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -102,8 +102,8 @@
   <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.CdkeyActivate" >
     insert into cdkey_activate (id, user_id, cdkey, 
       `value`, use_time)
-    values (#{id,jdbcType=BIGINT}, #{user_id,jdbcType=BIGINT}, #{cdkey,jdbcType=VARCHAR}, 
-      #{value,jdbcType=BIGINT}, #{use_time,jdbcType=TIMESTAMP})
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{cdkey,jdbcType=VARCHAR}, 
+      #{value,jdbcType=BIGINT}, #{useTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.CdkeyActivate" >
     insert into cdkey_activate
@@ -111,7 +111,7 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="user_id != null" >
+      <if test="userId != null" >
         user_id,
       </if>
       <if test="cdkey != null" >
@@ -120,7 +120,7 @@
       <if test="value != null" >
         `value`,
       </if>
-      <if test="use_time != null" >
+      <if test="useTime != null" >
         use_time,
       </if>
     </trim>
@@ -128,8 +128,8 @@
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="user_id != null" >
-        #{user_id,jdbcType=BIGINT},
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
       </if>
       <if test="cdkey != null" >
         #{cdkey,jdbcType=VARCHAR},
@@ -137,8 +137,8 @@
       <if test="value != null" >
         #{value,jdbcType=BIGINT},
       </if>
-      <if test="use_time != null" >
-        #{use_time,jdbcType=TIMESTAMP},
+      <if test="useTime != null" >
+        #{useTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -154,8 +154,8 @@
       <if test="record.id != null" >
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.user_id != null" >
-        user_id = #{record.user_id,jdbcType=BIGINT},
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=BIGINT},
       </if>
       <if test="record.cdkey != null" >
         cdkey = #{record.cdkey,jdbcType=VARCHAR},
@@ -163,8 +163,8 @@
       <if test="record.value != null" >
         `value` = #{record.value,jdbcType=BIGINT},
       </if>
-      <if test="record.use_time != null" >
-        use_time = #{record.use_time,jdbcType=TIMESTAMP},
+      <if test="record.useTime != null" >
+        use_time = #{record.useTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -174,10 +174,10 @@
   <update id="updateByExample" parameterType="map" >
     update cdkey_activate
     set id = #{record.id,jdbcType=BIGINT},
-      user_id = #{record.user_id,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
       cdkey = #{record.cdkey,jdbcType=VARCHAR},
       `value` = #{record.value,jdbcType=BIGINT},
-      use_time = #{record.use_time,jdbcType=TIMESTAMP}
+      use_time = #{record.useTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -185,8 +185,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.wbtkj.chat.pojo.model.CdkeyActivate" >
     update cdkey_activate
     <set >
-      <if test="user_id != null" >
-        user_id = #{user_id,jdbcType=BIGINT},
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
       </if>
       <if test="cdkey != null" >
         cdkey = #{cdkey,jdbcType=VARCHAR},
@@ -194,18 +194,18 @@
       <if test="value != null" >
         `value` = #{value,jdbcType=BIGINT},
       </if>
-      <if test="use_time != null" >
-        use_time = #{use_time,jdbcType=TIMESTAMP},
+      <if test="useTime != null" >
+        use_time = #{useTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.wbtkj.chat.pojo.model.CdkeyActivate" >
     update cdkey_activate
-    set user_id = #{user_id,jdbcType=BIGINT},
+    set user_id = #{userId,jdbcType=BIGINT},
       cdkey = #{cdkey,jdbcType=VARCHAR},
       `value` = #{value,jdbcType=BIGINT},
-      use_time = #{use_time,jdbcType=TIMESTAMP}
+      use_time = #{useTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

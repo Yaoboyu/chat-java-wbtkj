@@ -3,16 +3,14 @@ package com.wbtkj.chat.controller;
 import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.service.SendVerifyCodeService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 @Slf4j
 @RestController
 @ResponseBody
+@RequestMapping("/utils")
 public class UtilsController {
 
     @Resource

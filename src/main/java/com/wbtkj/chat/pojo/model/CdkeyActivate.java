@@ -6,13 +6,13 @@ import java.util.Date;
 public class CdkeyActivate implements Serializable {
     private Long id;
 
-    private Long user_id;
+    private Long userId;
 
     private String cdkey;
 
     private Long value;
 
-    private Date use_time;
+    private Date useTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -24,12 +24,12 @@ public class CdkeyActivate implements Serializable {
         this.id = id;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getCdkey() {
@@ -48,12 +48,12 @@ public class CdkeyActivate implements Serializable {
         this.value = value;
     }
 
-    public Date getUse_time() {
-        return use_time;
+    public Date getUseTime() {
+        return useTime;
     }
 
-    public void setUse_time(Date use_time) {
-        this.use_time = use_time;
+    public void setUseTime(Date useTime) {
+        this.useTime = useTime;
     }
 
     @Override
@@ -63,10 +63,10 @@ public class CdkeyActivate implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", user_id=").append(user_id);
+        sb.append(", userId=").append(userId);
         sb.append(", cdkey=").append(cdkey);
         sb.append(", value=").append(value);
-        sb.append(", use_time=").append(use_time);
+        sb.append(", useTime=").append(useTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

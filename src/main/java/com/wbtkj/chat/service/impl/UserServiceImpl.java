@@ -1,6 +1,6 @@
 package com.wbtkj.chat.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
+import cn.hutool.core.util.RandomUtil;
 import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.mapper.UserMapper;
 import com.wbtkj.chat.exception.MyServiceException;
@@ -59,7 +59,6 @@ public class UserServiceImpl implements UserService {
         }
 
         Long time = System.currentTimeMillis();
-//        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(time);
 
         User newUser = new User();
@@ -67,21 +66,65 @@ public class UserServiceImpl implements UserService {
         newUser.setSalt(String.valueOf((time % 100000)));
         newUser.setPwd(MD5Utils.code(registerVO.getPwd() + newUser.getSalt()));
         newUser.setStatus(UserStatus.ENABLED.getStatus());
-        newUser.setQuota(GeneralConstant.USER_INIT_QUOTA);
-        newUser.setCost(0L);
+        newUser.setBalance(GeneralConstant.USER_INIT_BALANCE);
         newUser.setRemark("");
-        newUser.setMy_inv_code("");
-        newUser.setUse_inv_code("");
-        newUser.setCreate_time(date);
-        newUser.setUpdate_time(date);
+        newUser.setMyInvCode("");
+        newUser.setUseInvCode(registerVO.getInvCode());
+        newUser.setCreateTime(date);
+        newUser.setUpdateTime(date);
 
         userMapper.insert(newUser);
+
+        // 设置全局唯一邀请码
+        newUser = userMapper.selectByExample(userExample).get(0);
+        newUser.setMyInvCode(RandomUtil.randomStringUpper(3) + newUser.getId() + RandomUtil.randomStringUpper(3));
+
+        userMapper.updateByPrimaryKey(newUser);
     }
 
     @Override
     public void changePwd(String pwd, String code) {
         //TODO :发邮箱校验验证码
 
+
+    }
+
+    @Override
+    public void updateUser(User user) {
+        Long id = user.getId();
+        if(id == null) {
+            throw new MyServiceException("缺少user id");
+        }
+
+        User oldUser = userMapper.selectByPrimaryKey(id);
+
+        if(user.getPwd() != null) {
+            oldUser.setPwd(MD5Utils.code(user.getPwd() + oldUser.getSalt()));
+        }
+
+        if(user.getStatus() != null) {
+            oldUser.setStatus(user.getStatus());
+        }
+
+        if(user.getVipStartTime() != null) {
+            oldUser.setVipStartTime(user.getVipStartTime());
+        }
+
+        if(user.getVipEndTime() != null) {
+            oldUser.setVipEndTime(user.getVipEndTime());
+        }
+
+        if(user.getBalance() != null) {
+            oldUser.setBalance(user.getBalance());
+        }
+
+        if(user.getRemark() != null) {
+            oldUser.setRemark(user.getRemark());
+        }
+
+        oldUser.setUpdateTime(new Date());
+
+        userMapper.updateByPrimaryKey(oldUser);
 
     }
 

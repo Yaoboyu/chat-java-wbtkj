@@ -7,8 +7,8 @@
     <result column="cost" property="cost" jdbcType="DOUBLE" />
     <result column="quota" property="quota" jdbcType="DOUBLE" />
     <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -106,8 +106,8 @@
       quota, `status`, create_time, 
       update_time)
     values (#{id,jdbcType=BIGINT}, #{key,jdbcType=VARCHAR}, #{cost,jdbcType=DOUBLE}, 
-      #{quota,jdbcType=DOUBLE}, #{status,jdbcType=INTEGER}, #{create_time,jdbcType=TIMESTAMP}, 
-      #{update_time,jdbcType=TIMESTAMP})
+      #{quota,jdbcType=DOUBLE}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.Openaikey" >
     insert into openaikey
@@ -127,10 +127,10 @@
       <if test="status != null" >
         `status`,
       </if>
-      <if test="create_time != null" >
+      <if test="createTime != null" >
         create_time,
       </if>
-      <if test="update_time != null" >
+      <if test="updateTime != null" >
         update_time,
       </if>
     </trim>
@@ -150,11 +150,11 @@
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
       </if>
-      <if test="create_time != null" >
-        #{create_time,jdbcType=TIMESTAMP},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="update_time != null" >
-        #{update_time,jdbcType=TIMESTAMP},
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -182,11 +182,11 @@
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=INTEGER},
       </if>
-      <if test="record.create_time != null" >
-        create_time = #{record.create_time,jdbcType=TIMESTAMP},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.update_time != null" >
-        update_time = #{record.update_time,jdbcType=TIMESTAMP},
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -200,8 +200,8 @@
       cost = #{record.cost,jdbcType=DOUBLE},
       quota = #{record.quota,jdbcType=DOUBLE},
       `status` = #{record.status,jdbcType=INTEGER},
-      create_time = #{record.create_time,jdbcType=TIMESTAMP},
-      update_time = #{record.update_time,jdbcType=TIMESTAMP}
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -221,11 +221,11 @@
       <if test="status != null" >
         `status` = #{status,jdbcType=INTEGER},
       </if>
-      <if test="create_time != null" >
-        create_time = #{create_time,jdbcType=TIMESTAMP},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="update_time != null" >
-        update_time = #{update_time,jdbcType=TIMESTAMP},
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -236,8 +236,8 @@
       cost = #{cost,jdbcType=DOUBLE},
       quota = #{quota,jdbcType=DOUBLE},
       `status` = #{status,jdbcType=INTEGER},
-      create_time = #{create_time,jdbcType=TIMESTAMP},
-      update_time = #{update_time,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

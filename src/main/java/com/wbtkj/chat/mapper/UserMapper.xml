@@ -7,13 +7,14 @@
     <result column="pwd" property="pwd" jdbcType="VARCHAR" />
     <result column="salt" property="salt" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="quota" property="quota" jdbcType="BIGINT" />
-    <result column="cost" property="cost" jdbcType="BIGINT" />
+    <result column="vip_start_time" property="vipStartTime" jdbcType="TIMESTAMP" />
+    <result column="vip_end_time" property="vipEndTime" jdbcType="TIMESTAMP" />
+    <result column="balance" property="balance" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="my_inv_code" property="my_inv_code" jdbcType="VARCHAR" />
-    <result column="use_inv_code" property="use_inv_code" jdbcType="VARCHAR" />
-    <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+    <result column="my_inv_code" property="myInvCode" jdbcType="VARCHAR" />
+    <result column="use_inv_code" property="useInvCode" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -74,8 +75,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, email, pwd, salt, `status`, quota, cost, remark, my_inv_code, use_inv_code, create_time, 
-    update_time
+    id, email, pwd, salt, `status`, vip_start_time, vip_end_time, balance, remark, my_inv_code, 
+    use_inv_code, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.UserExample" >
     select
@@ -109,15 +110,15 @@
   </delete>
   <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.User" >
     insert into user (id, email, pwd, 
-      salt, `status`, quota, 
-      cost, remark, my_inv_code, 
-      use_inv_code, create_time, update_time
-      )
+      salt, `status`, vip_start_time, 
+      vip_end_time, balance, remark, 
+      my_inv_code, use_inv_code, create_time, 
+      update_time)
     values (#{id,jdbcType=BIGINT}, #{email,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
-      #{salt,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{quota,jdbcType=BIGINT}, 
-      #{cost,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR}, #{my_inv_code,jdbcType=VARCHAR}, 
-      #{use_inv_code,jdbcType=VARCHAR}, #{create_time,jdbcType=TIMESTAMP}, #{update_time,jdbcType=TIMESTAMP}
-      )
+      #{salt,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{vipStartTime,jdbcType=TIMESTAMP}, 
+      #{vipEndTime,jdbcType=TIMESTAMP}, #{balance,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{myInvCode,jdbcType=VARCHAR}, #{useInvCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.User" >
     insert into user
@@ -137,25 +138,28 @@
       <if test="status != null" >
         `status`,
       </if>
-      <if test="quota != null" >
-        quota,
+      <if test="vipStartTime != null" >
+        vip_start_time,
       </if>
-      <if test="cost != null" >
-        cost,
+      <if test="vipEndTime != null" >
+        vip_end_time,
+      </if>
+      <if test="balance != null" >
+        balance,
       </if>
       <if test="remark != null" >
         remark,
       </if>
-      <if test="my_inv_code != null" >
+      <if test="myInvCode != null" >
         my_inv_code,
       </if>
-      <if test="use_inv_code != null" >
+      <if test="useInvCode != null" >
         use_inv_code,
       </if>
-      <if test="create_time != null" >
+      <if test="createTime != null" >
         create_time,
       </if>
-      <if test="update_time != null" >
+      <if test="updateTime != null" >
         update_time,
       </if>
     </trim>
@@ -175,26 +179,29 @@
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
       </if>
-      <if test="quota != null" >
-        #{quota,jdbcType=BIGINT},
+      <if test="vipStartTime != null" >
+        #{vipStartTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="cost != null" >
-        #{cost,jdbcType=BIGINT},
+      <if test="vipEndTime != null" >
+        #{vipEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="balance != null" >
+        #{balance,jdbcType=INTEGER},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="my_inv_code != null" >
-        #{my_inv_code,jdbcType=VARCHAR},
+      <if test="myInvCode != null" >
+        #{myInvCode,jdbcType=VARCHAR},
       </if>
-      <if test="use_inv_code != null" >
-        #{use_inv_code,jdbcType=VARCHAR},
+      <if test="useInvCode != null" >
+        #{useInvCode,jdbcType=VARCHAR},
       </if>
-      <if test="create_time != null" >
-        #{create_time,jdbcType=TIMESTAMP},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="update_time != null" >
-        #{update_time,jdbcType=TIMESTAMP},
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -222,26 +229,29 @@
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=INTEGER},
       </if>
-      <if test="record.quota != null" >
-        quota = #{record.quota,jdbcType=BIGINT},
+      <if test="record.vipStartTime != null" >
+        vip_start_time = #{record.vipStartTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.cost != null" >
-        cost = #{record.cost,jdbcType=BIGINT},
+      <if test="record.vipEndTime != null" >
+        vip_end_time = #{record.vipEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.balance != null" >
+        balance = #{record.balance,jdbcType=INTEGER},
       </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.my_inv_code != null" >
-        my_inv_code = #{record.my_inv_code,jdbcType=VARCHAR},
+      <if test="record.myInvCode != null" >
+        my_inv_code = #{record.myInvCode,jdbcType=VARCHAR},
       </if>
-      <if test="record.use_inv_code != null" >
-        use_inv_code = #{record.use_inv_code,jdbcType=VARCHAR},
+      <if test="record.useInvCode != null" >
+        use_inv_code = #{record.useInvCode,jdbcType=VARCHAR},
       </if>
-      <if test="record.create_time != null" >
-        create_time = #{record.create_time,jdbcType=TIMESTAMP},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.update_time != null" >
-        update_time = #{record.update_time,jdbcType=TIMESTAMP},
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -255,13 +265,14 @@
       pwd = #{record.pwd,jdbcType=VARCHAR},
       salt = #{record.salt,jdbcType=VARCHAR},
       `status` = #{record.status,jdbcType=INTEGER},
-      quota = #{record.quota,jdbcType=BIGINT},
-      cost = #{record.cost,jdbcType=BIGINT},
+      vip_start_time = #{record.vipStartTime,jdbcType=TIMESTAMP},
+      vip_end_time = #{record.vipEndTime,jdbcType=TIMESTAMP},
+      balance = #{record.balance,jdbcType=INTEGER},
       remark = #{record.remark,jdbcType=VARCHAR},
-      my_inv_code = #{record.my_inv_code,jdbcType=VARCHAR},
-      use_inv_code = #{record.use_inv_code,jdbcType=VARCHAR},
-      create_time = #{record.create_time,jdbcType=TIMESTAMP},
-      update_time = #{record.update_time,jdbcType=TIMESTAMP}
+      my_inv_code = #{record.myInvCode,jdbcType=VARCHAR},
+      use_inv_code = #{record.useInvCode,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -281,26 +292,29 @@
       <if test="status != null" >
         `status` = #{status,jdbcType=INTEGER},
       </if>
-      <if test="quota != null" >
-        quota = #{quota,jdbcType=BIGINT},
+      <if test="vipStartTime != null" >
+        vip_start_time = #{vipStartTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="cost != null" >
-        cost = #{cost,jdbcType=BIGINT},
+      <if test="vipEndTime != null" >
+        vip_end_time = #{vipEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="balance != null" >
+        balance = #{balance,jdbcType=INTEGER},
       </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="my_inv_code != null" >
-        my_inv_code = #{my_inv_code,jdbcType=VARCHAR},
+      <if test="myInvCode != null" >
+        my_inv_code = #{myInvCode,jdbcType=VARCHAR},
       </if>
-      <if test="use_inv_code != null" >
-        use_inv_code = #{use_inv_code,jdbcType=VARCHAR},
+      <if test="useInvCode != null" >
+        use_inv_code = #{useInvCode,jdbcType=VARCHAR},
       </if>
-      <if test="create_time != null" >
-        create_time = #{create_time,jdbcType=TIMESTAMP},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="update_time != null" >
-        update_time = #{update_time,jdbcType=TIMESTAMP},
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -311,13 +325,14 @@
       pwd = #{pwd,jdbcType=VARCHAR},
       salt = #{salt,jdbcType=VARCHAR},
       `status` = #{status,jdbcType=INTEGER},
-      quota = #{quota,jdbcType=BIGINT},
-      cost = #{cost,jdbcType=BIGINT},
+      vip_start_time = #{vipStartTime,jdbcType=TIMESTAMP},
+      vip_end_time = #{vipEndTime,jdbcType=TIMESTAMP},
+      balance = #{balance,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
-      my_inv_code = #{my_inv_code,jdbcType=VARCHAR},
-      use_inv_code = #{use_inv_code,jdbcType=VARCHAR},
-      create_time = #{create_time,jdbcType=TIMESTAMP},
-      update_time = #{update_time,jdbcType=TIMESTAMP}
+      my_inv_code = #{myInvCode,jdbcType=VARCHAR},
+      use_inv_code = #{useInvCode,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
