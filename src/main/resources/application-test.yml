@@ -37,4 +37,4 @@ chatgpt:
   apiHost: https://openai.wbtkj.top/
 
 log:
-  path: D:/ProgramData/Springbootlog
+  path: /root/chat-java-wbtkj/log
