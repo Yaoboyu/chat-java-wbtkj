@@ -62,7 +62,7 @@ public class CDKEYServiceImpl implements CDKEYService {
         cdkeyActivate.setCdkey(cdkey);
         cdkeyActivate.setValue(value);
         cdkeyActivate.setUseTime(new Date());
-
+        userMapper.addBanlance(value,ThreadLocalConfig.getUser().getId());
         cdkeyActivateMapper.insert(cdkeyActivate);
         return value;
     }
