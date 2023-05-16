@@ -1,4 +1,4 @@
-package com.wbtkj.chat.pojo.dto.openai;
+package com.wbtkj.chat.pojo.dto.openai.common;
 
 import lombok.Data;
 

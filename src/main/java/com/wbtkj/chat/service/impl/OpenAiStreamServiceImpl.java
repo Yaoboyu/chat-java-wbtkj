@@ -6,11 +6,20 @@ import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wbtkj.chat.exception.MyException;
+import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.filter.OpenAiAuthInterceptor;
 import com.wbtkj.chat.function.KeyRandomStrategy;
 import com.wbtkj.chat.function.KeyStrategyFunction;
+import com.wbtkj.chat.pojo.dto.openai.CommonError;
+import com.wbtkj.chat.pojo.dto.openai.billing.BillingUsage;
+import com.wbtkj.chat.pojo.dto.openai.billing.CreditGrantsResponse;
+import com.wbtkj.chat.pojo.dto.openai.billing.Subscription;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
+import com.wbtkj.chat.pojo.dto.openai.chat.Message;
+import com.wbtkj.chat.pojo.dto.openai.common.OpenAiResponse;
+import com.wbtkj.chat.pojo.dto.openai.completions.Completion;
 import com.wbtkj.chat.service.OpenAiApi;
+import com.wbtkj.chat.service.OpenAiStreamService;
 import com.wbtkj.chat.service.ThirdPartyModelKeyService;
 import io.reactivex.Single;
 import lombok.Getter;
@@ -45,7 +54,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
-public class OpenAiStreamServiceImpl {
+public class OpenAiStreamServiceImpl implements OpenAiStreamService {
 
     @Value("${chatgpt.apiHost}")
     private String apiHost;
@@ -73,15 +82,6 @@ public class OpenAiStreamServiceImpl {
      * 构造实例对象
      */
     public OpenAiStreamServiceImpl() {
-        apiKey = new CopyOnWriteArrayList<>();
-
-        authInterceptor.setApiKey(apiKey);
-        authInterceptor.setKeyStrategy(new KeyRandomStrategy());
-
-
-//        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new OpenAILogger());
-        //!!!!!!千万不要配置Level == BODY!!!!
-//        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
         okHttpClient = new OkHttpClient
                 .Builder()
                 .addInterceptor(authInterceptor)
@@ -99,21 +99,15 @@ public class OpenAiStreamServiceImpl {
                 .build().create(OpenAiApi.class);
     }
 
-    /**
-     * 问答接口 stream 形式
-     *
-     * @param completion          open ai 参数
-     * @param eventSourceListener sse监听器
-     * @see ConsoleEventSourceListener
-     */
+
     public void streamCompletions(Completion completion, EventSourceListener eventSourceListener) {
         if (Objects.isNull(eventSourceListener)) {
             log.error("参数异常：EventSourceListener不能为空，可以参考：com.unfbx.chatgpt.sse.ConsoleEventSourceListener");
-            throw new BaseException(CommonError.PARAM_ERROR);
+            throw new MyException();
         }
         if (StrUtil.isBlank(completion.getPrompt())) {
             log.error("参数异常：Prompt不能为空");
-            throw new BaseException(CommonError.PARAM_ERROR);
+            throw new MyServiceException("参数异常：Prompt不能为空");
         }
         if (!completion.isStream()) {
             completion.setStream(true);
@@ -124,7 +118,7 @@ public class OpenAiStreamServiceImpl {
             String requestBody = mapper.writeValueAsString(completion);
             Request request = new Request.Builder()
                     .url(this.apiHost + "v1/completions")
-                    .post(RequestBody.create(MediaType.parse(ContentType.JSON.getValue()), requestBody))
+                    .post(RequestBody.create(requestBody, MediaType.parse(ContentType.JSON.getValue())))
                     .build();
             //创建事件
             EventSource eventSource = factory.newEventSource(request, eventSourceListener);
@@ -137,13 +131,7 @@ public class OpenAiStreamServiceImpl {
         }
     }
 
-    /**
-     * 问答接口-简易版
-     *
-     * @param question            请求参数
-     * @param eventSourceListener sse监听器
-     * @see ConsoleEventSourceListener
-     */
+
     public void streamCompletions(String question, EventSourceListener eventSourceListener) {
         Completion q = Completion.builder()
                 .prompt(question)
@@ -152,12 +140,7 @@ public class OpenAiStreamServiceImpl {
         this.streamCompletions(q, eventSourceListener);
     }
 
-    /**
-     * 流式输出，最新版的GPT-3.5 chat completion 更加贴近官方网站的问答模型
-     *
-     * @param chatCompletion      问答参数
-     * @param eventSourceListener sse监听器
-     */
+
     public void streamChatCompletion(ChatCompletion chatCompletion, EventSourceListener eventSourceListener) {
         if (Objects.isNull(eventSourceListener)) {
             log.error("参数异常：EventSourceListener不能为空，可以参考：com.unfbx.chatgpt.sse.ConsoleEventSourceListener");
@@ -174,21 +157,14 @@ public class OpenAiStreamServiceImpl {
                     .build();
             //创建事件
             EventSource eventSource = factory.newEventSource(request, eventSourceListener);
-        } catch (JsonProcessingException e) {
-            log.error("请求参数解析异常：{}", e);
-            e.printStackTrace();
         } catch (Exception e) {
             log.error("请求参数解析异常：{}", e);
             e.printStackTrace();
+            throw new MyException();
         }
     }
 
-    /**
-     * 流式输出，最新版的GPT-3.5 chat completion 更加贴近官方网站的问答模型
-     *
-     * @param messages            问答列表
-     * @param eventSourceListener sse监听器
-     */
+
     public void streamChatCompletion(List<Message> messages, EventSourceListener eventSourceListener) {
         ChatCompletion chatCompletion = ChatCompletion.builder()
                 .messages(messages)
@@ -197,51 +173,47 @@ public class OpenAiStreamServiceImpl {
         this.streamChatCompletion(chatCompletion, eventSourceListener);
     }
 
-    /**
-     * ## 官方已经禁止使用此api
-     * OpenAi账户余额查询
-     *
-     * @return 余额信息
-     */
-    @SneakyThrows
-    @Deprecated
-    public CreditGrantsResponse creditGrants() {
-        Request request = new Request.Builder()
-                .url(this.apiHost + "dashboard/billing/credit_grants")
-                .get()
-                .build();
-        Response response = this.okHttpClient.newCall(request).execute();
-        ResponseBody body = response.body();
-        String bodyStr = body.string();
-//        log.info("调用查询余额请求返回值：{}", bodyStr);
-        if (!response.isSuccessful()) {
-            if (response.code() == CommonError.OPENAI_AUTHENTICATION_ERROR.code()
-                    || response.code() == CommonError.OPENAI_LIMIT_ERROR.code()
-                    || response.code() == CommonError.OPENAI_SERVER_ERROR.code()) {
-                OpenAiResponse openAiResponse = JSONUtil.toBean(bodyStr, OpenAiResponse.class);
-                log.error(openAiResponse.getError().getMessage());
-                throw new BaseException(openAiResponse.getError().getMessage());
-            }
-            String errorMsg = bodyStr;
-            log.error("询余额请求异常：{}", errorMsg);
-            OpenAiResponse openAiResponse = JSONUtil.toBean(errorMsg, OpenAiResponse.class);
-            if (Objects.nonNull(openAiResponse.getError())) {
-                log.error(openAiResponse.getError().getMessage());
-                throw new BaseException(openAiResponse.getError().getMessage());
-            }
-            throw new BaseException(CommonError.RETRY_ERROR);
-        }
-        ObjectMapper mapper = new ObjectMapper();
-        // 读取Json 返回值
-        CreditGrantsResponse completionResponse = mapper.readValue(bodyStr, CreditGrantsResponse.class);
-        return completionResponse;
-    }
+//    /**
+//     * ## 官方已经禁止使用此api
+//     * OpenAi账户余额查询
+//     *
+//     * @return 余额信息
+//     */
+//    @SneakyThrows
+//    @Deprecated
+//    public CreditGrantsResponse creditGrants() {
+//        Request request = new Request.Builder()
+//                .url(this.apiHost + "dashboard/billing/credit_grants")
+//                .get()
+//                .build();
+//        Response response = this.okHttpClient.newCall(request).execute();
+//        ResponseBody body = response.body();
+//        String bodyStr = body.string();
+////        log.info("调用查询余额请求返回值：{}", bodyStr);
+//        if (!response.isSuccessful()) {
+//            if (response.code() == CommonError.OPENAI_AUTHENTICATION_ERROR.getCode()
+//                    || response.code() == CommonError.OPENAI_LIMIT_ERROR.getCode()
+//                    || response.code() == CommonError.OPENAI_SERVER_ERROR.getCode()) {
+//                OpenAiResponse openAiResponse = JSONUtil.toBean(bodyStr, OpenAiResponse.class);
+//                log.error(openAiResponse.getError().getMessage());
+//                throw new BaseException(openAiResponse.getError().getMessage());
+//            }
+//            String errorMsg = bodyStr;
+//            log.error("询余额请求异常：{}", errorMsg);
+//            OpenAiResponse openAiResponse = JSONUtil.toBean(errorMsg, OpenAiResponse.class);
+//            if (Objects.nonNull(openAiResponse.getError())) {
+//                log.error(openAiResponse.getError().getMessage());
+//                throw new BaseException(openAiResponse.getError().getMessage());
+//            }
+//            throw new BaseException(CommonError.RETRY_ERROR);
+//        }
+//        ObjectMapper mapper = new ObjectMapper();
+//        // 读取Json 返回值
+//        CreditGrantsResponse completionResponse = mapper.readValue(bodyStr, CreditGrantsResponse.class);
+//        return completionResponse;
+//    }
 
-    /**
-     * 账户信息查询：里面包含总金额等信息
-     *
-     * @return 个人账户信息
-     */
+
     public Subscription subscription() {
         Single<Subscription> subscription = this.openAiApi.subscription();
         return subscription.blockingGet();
@@ -260,75 +232,4 @@ public class OpenAiStreamServiceImpl {
         return billingUsage.blockingGet();
     }
 
-    /**
-     * 构造
-     *
-     * @return
-     */
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static final class Builder {
-        private @NotNull List<String> apiKey;
-        /**
-         * api请求地址，结尾处有斜杠
-         *
-         * @see OpenAIConst
-         */
-        private String apiHost;
-
-        /**
-         * 自定义OkhttpClient
-         */
-        private OkHttpClient okHttpClient;
-
-
-        /**
-         * api key的获取策略
-         */
-        private KeyStrategyFunction keyStrategy;
-
-        /**
-         * 自定义鉴权拦截器
-         */
-        private OpenAiAuthInterceptor authInterceptor;
-
-        public Builder() {
-        }
-
-        public Builder apiKey(@NotNull List<String> val) {
-            apiKey = val;
-            return this;
-        }
-
-        /**
-         * @param val api请求地址，结尾处有斜杠
-         * @return
-         * @see OpenAIConst
-         */
-        public Builder apiHost(String val) {
-            apiHost = val;
-            return this;
-        }
-
-        public Builder keyStrategy(KeyStrategyFunction val) {
-            keyStrategy = val;
-            return this;
-        }
-
-        public Builder okHttpClient(OkHttpClient val) {
-            okHttpClient = val;
-            return this;
-        }
-
-        public Builder authInterceptor(OpenAiAuthInterceptor val) {
-            authInterceptor = val;
-            return this;
-        }
-
-        public OpenAiStreamServiceImpl build() {
-            return new OpenAiStreamServiceImpl(this);
-        }
-    }
 }

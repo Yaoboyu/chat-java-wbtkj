@@ -2,18 +2,18 @@ package com.wbtkj.chat.websocket;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
-import com.unfbx.chatgpt.OpenAiStreamClient;
-import com.unfbx.chatgpt.entity.chat.Message;
 import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.listener.OpenAIWebSocketEventSourceListener;
+import com.wbtkj.chat.pojo.dto.openai.chat.Message;
+import com.wbtkj.chat.service.OpenAiStreamService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,15 +21,17 @@ import java.util.List;
 @Component
 @Slf4j
 public class ChatHandler extends TextWebSocketHandler {
-    private static OpenAiStreamClient openAiStreamClient;
-
-    @Autowired
-    public void setOrderService(OpenAiStreamClient openAiStreamClient) {
-        this.openAiStreamClient = openAiStreamClient;
-    }
-
     private Long id; // 用户id
     private String email; // 用户email
+
+    private OpenAiStreamService openAiStreamService;
+
+    @Resource
+    public void setOpenAiStreamService(OpenAiStreamService openAiStreamService) {
+        openAiStreamService = openAiStreamService;
+    }
+
+
 
     /**
      * socket 建立成功事件
@@ -72,7 +74,7 @@ public class ChatHandler extends TextWebSocketHandler {
             Message currentMessage = Message.builder().content(message.getPayload()).role(Message.Role.USER).build();
             messages.add(currentMessage);
         }
-        openAiStreamClient.streamChatCompletion(messages, eventSourceListener);
+        openAiStreamService.streamChatCompletion(messages, eventSourceListener);
 //        LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
     }
 
