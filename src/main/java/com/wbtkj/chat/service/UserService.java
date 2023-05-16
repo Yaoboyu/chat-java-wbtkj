@@ -1,8 +1,9 @@
 package com.wbtkj.chat.service;
 
+import com.github.pagehelper.PageInfo;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.model.User;
-import com.wbtkj.chat.pojo.vo.user.RegisterVO;
+import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 
 public interface UserService {
     /**
@@ -15,9 +16,9 @@ public interface UserService {
 
     /**
      * 注册
-     * @param registerVO
+     * @param userRegisterVO
      */
-    void register(RegisterVO registerVO);
+    void register(UserRegisterVO userRegisterVO);
 
     void changePwd(String pwd,String code);
 
@@ -40,4 +41,13 @@ public interface UserService {
      * @return
      */
     boolean checkToken(String token) throws MyServiceException;
+
+    /**
+     * 分页并模糊查询email
+     * @param page
+     * @param pageSize
+     * @param email
+     * @return
+     */
+    PageInfo<User> getUsersByPage(Integer page, Integer pageSize, String email);
 }

@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.wbtkj.chat.mapper.OpenaikeyMapper" >
-  <resultMap id="BaseResultMap" type="com.wbtkj.chat.pojo.model.Openaikey" >
+<mapper namespace="com.wbtkj.chat.mapper.RechargeRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.wbtkj.chat.pojo.model.RechargeRecord" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="key" property="key" jdbcType="VARCHAR" />
-    <result column="cost" property="cost" jdbcType="DOUBLE" />
-    <result column="quota" property="quota" jdbcType="DOUBLE" />
-    <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="cdkey" property="cdkey" jdbcType="VARCHAR" />
+    <result column="value" property="value" jdbcType="INTEGER" />
+    <result column="use_time" property="useTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -69,15 +68,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `key`, cost, quota, `status`, create_time, update_time
+    id, user_id, `type`, cdkey, `value`, use_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.OpenaikeyExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.RechargeRecordExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from openaikey
+    from recharge_record
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -88,105 +87,96 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from openaikey
+    from recharge_record
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from openaikey
+    delete from recharge_record
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.wbtkj.chat.pojo.model.OpenaikeyExample" >
-    delete from openaikey
+  <delete id="deleteByExample" parameterType="com.wbtkj.chat.pojo.model.RechargeRecordExample" >
+    delete from recharge_record
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.Openaikey" >
-    insert into openaikey (id, `key`, cost, 
-      quota, `status`, create_time, 
-      update_time)
-    values (#{id,jdbcType=BIGINT}, #{key,jdbcType=VARCHAR}, #{cost,jdbcType=DOUBLE}, 
-      #{quota,jdbcType=DOUBLE}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.RechargeRecord" >
+    insert into recharge_record (id, user_id, `type`, 
+      cdkey, `value`, use_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
+      #{cdkey,jdbcType=VARCHAR}, #{value,jdbcType=INTEGER}, #{useTime,jdbcType=TIMESTAMP}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.Openaikey" >
-    insert into openaikey
+  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.RechargeRecord" >
+    insert into recharge_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
       </if>
-      <if test="key != null" >
-        `key`,
+      <if test="userId != null" >
+        user_id,
       </if>
-      <if test="cost != null" >
-        cost,
+      <if test="type != null" >
+        `type`,
       </if>
-      <if test="quota != null" >
-        quota,
+      <if test="cdkey != null" >
+        cdkey,
       </if>
-      <if test="status != null" >
-        `status`,
+      <if test="value != null" >
+        `value`,
       </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
+      <if test="useTime != null" >
+        use_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="key != null" >
-        #{key,jdbcType=VARCHAR},
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
       </if>
-      <if test="cost != null" >
-        #{cost,jdbcType=DOUBLE},
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
       </if>
-      <if test="quota != null" >
-        #{quota,jdbcType=DOUBLE},
+      <if test="cdkey != null" >
+        #{cdkey,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+      <if test="value != null" >
+        #{value,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
+      <if test="useTime != null" >
+        #{useTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.wbtkj.chat.pojo.model.OpenaikeyExample" resultType="java.lang.Integer" >
-    select count(*) from openaikey
+  <select id="countByExample" parameterType="com.wbtkj.chat.pojo.model.RechargeRecordExample" resultType="java.lang.Integer" >
+    select count(*) from recharge_record
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update openaikey
+    update recharge_record
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.key != null" >
-        `key` = #{record.key,jdbcType=VARCHAR},
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=BIGINT},
       </if>
-      <if test="record.cost != null" >
-        cost = #{record.cost,jdbcType=DOUBLE},
+      <if test="record.type != null" >
+        `type` = #{record.type,jdbcType=INTEGER},
       </if>
-      <if test="record.quota != null" >
-        quota = #{record.quota,jdbcType=DOUBLE},
+      <if test="record.cdkey != null" >
+        cdkey = #{record.cdkey,jdbcType=VARCHAR},
       </if>
-      <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=INTEGER},
+      <if test="record.value != null" >
+        `value` = #{record.value,jdbcType=INTEGER},
       </if>
-      <if test="record.createTime != null" >
-        create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.updateTime != null" >
-        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      <if test="record.useTime != null" >
+        use_time = #{record.useTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -194,50 +184,45 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update openaikey
+    update recharge_record
     set id = #{record.id,jdbcType=BIGINT},
-      `key` = #{record.key,jdbcType=VARCHAR},
-      cost = #{record.cost,jdbcType=DOUBLE},
-      quota = #{record.quota,jdbcType=DOUBLE},
-      `status` = #{record.status,jdbcType=INTEGER},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+      user_id = #{record.userId,jdbcType=BIGINT},
+      `type` = #{record.type,jdbcType=INTEGER},
+      cdkey = #{record.cdkey,jdbcType=VARCHAR},
+      `value` = #{record.value,jdbcType=INTEGER},
+      use_time = #{record.useTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.wbtkj.chat.pojo.model.Openaikey" >
-    update openaikey
+  <update id="updateByPrimaryKeySelective" parameterType="com.wbtkj.chat.pojo.model.RechargeRecord" >
+    update recharge_record
     <set >
-      <if test="key != null" >
-        `key` = #{key,jdbcType=VARCHAR},
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
       </if>
-      <if test="cost != null" >
-        cost = #{cost,jdbcType=DOUBLE},
+      <if test="type != null" >
+        `type` = #{type,jdbcType=INTEGER},
       </if>
-      <if test="quota != null" >
-        quota = #{quota,jdbcType=DOUBLE},
+      <if test="cdkey != null" >
+        cdkey = #{cdkey,jdbcType=VARCHAR},
       </if>
-      <if test="status != null" >
-        `status` = #{status,jdbcType=INTEGER},
+      <if test="value != null" >
+        `value` = #{value,jdbcType=INTEGER},
       </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      <if test="useTime != null" >
+        use_time = #{useTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.wbtkj.chat.pojo.model.Openaikey" >
-    update openaikey
-    set `key` = #{key,jdbcType=VARCHAR},
-      cost = #{cost,jdbcType=DOUBLE},
-      quota = #{quota,jdbcType=DOUBLE},
-      `status` = #{status,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+  <update id="updateByPrimaryKey" parameterType="com.wbtkj.chat.pojo.model.RechargeRecord" >
+    update recharge_record
+    set user_id = #{userId,jdbcType=BIGINT},
+      `type` = #{type,jdbcType=INTEGER},
+      cdkey = #{cdkey,jdbcType=VARCHAR},
+      `value` = #{value,jdbcType=INTEGER},
+      use_time = #{useTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

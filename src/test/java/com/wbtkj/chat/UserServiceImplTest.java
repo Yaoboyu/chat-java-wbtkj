@@ -1,7 +1,6 @@
 package com.wbtkj.chat;
 
-import com.wbtkj.chat.pojo.vo.user.RegisterVO;
-import com.wbtkj.chat.service.SendVerifyCodeService;
+import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 import com.wbtkj.chat.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -20,10 +19,10 @@ public class UserServiceImplTest {
 
     @Test
     public void registerTest(){
-        RegisterVO registerVO = new RegisterVO();
-        registerVO.setEmail("12345@qq.com");
-        registerVO.setPwd("123456");
-        registerVO.setCode("123567");
-        userService.register(registerVO);
+        UserRegisterVO userRegisterVO = new UserRegisterVO();
+        userRegisterVO.setEmail("12345@qq.com");
+        userRegisterVO.setPwd("123456");
+        userRegisterVO.setCode("123567");
+        userService.register(userRegisterVO);
     }
 }

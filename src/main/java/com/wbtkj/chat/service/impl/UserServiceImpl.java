@@ -1,14 +1,16 @@
 package com.wbtkj.chat.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.mapper.UserMapper;
 import com.wbtkj.chat.exception.MyServiceException;
-import com.wbtkj.chat.pojo.dto.user.UserDTO;
+import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.dto.user.UserStatus;
 import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.model.UserExample;
-import com.wbtkj.chat.pojo.vo.user.RegisterVO;
+import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 import com.wbtkj.chat.service.UserService;
 import com.wbtkj.chat.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
@@ -36,40 +38,38 @@ public class UserServiceImpl implements UserService {
     @Override
     public String login(String email, String pwd) {
         User user = getCheckedUser(email);
+        if(!user.getPwd().equals(MD5Utils.code(pwd + user.getSalt()))) {
+            throw new MyServiceException("密码错误！");
+        }
 
         Map<String,Object> claims = new HashMap<>();
         claims.put("id", user.getId());
         claims.put("email", email);
-        pwd = MD5Utils.code(pwd + user.getSalt());
-
-        if(!pwd.equals(user.getPwd())) {
-            throw new MyServiceException("登录信息有误,请核对后输入!");
-        }
 
         return JwtUtils.generateJwt(claims);
     }
 
     @Override
-    public void register(RegisterVO registerVO) {
+    public void register(UserRegisterVO userRegisterVO) {
         UserExample userExample = new UserExample();
-        userExample.createCriteria().andEmailEqualTo(registerVO.getEmail());
+        userExample.createCriteria().andEmailEqualTo(userRegisterVO.getEmail());
 
         if(userMapper.countByExample(userExample) > 0) {
-            throw new MyServiceException("注册失败:账号已被注册!");
+            throw new MyServiceException("账号已被注册!");
         }
 
         Long time = System.currentTimeMillis();
         Date date = new Date(time);
 
         User newUser = new User();
-        newUser.setEmail(registerVO.getEmail());
+        newUser.setEmail(userRegisterVO.getEmail());
         newUser.setSalt(String.valueOf((time % 100000)));
-        newUser.setPwd(MD5Utils.code(registerVO.getPwd() + newUser.getSalt()));
+        newUser.setPwd(MD5Utils.code(userRegisterVO.getPwd() + newUser.getSalt()));
         newUser.setStatus(UserStatus.ENABLED.getStatus());
         newUser.setBalance(GeneralConstant.USER_INIT_BALANCE);
         newUser.setRemark("");
         newUser.setMyInvCode("");
-        newUser.setUseInvCode(registerVO.getInvCode());
+        newUser.setUseInvCode(userRegisterVO.getInvCode());
         newUser.setCreateTime(date);
         newUser.setUpdateTime(date);
 
@@ -140,6 +140,7 @@ public class UserServiceImpl implements UserService {
         if(user.getStatus() == UserStatus.DISABLED.getStatus()) {
             throw new MyServiceException("用户已禁用！请联系管理员");
         }
+
         return user;
     }
 
@@ -154,19 +155,32 @@ public class UserServiceImpl implements UserService {
         try {
             Claims claims = JwtUtils.parseJWT(token);
             User user = getCheckedUser((String) claims.get("email"));
-            if(user == null) {
-                throw new MyServiceException("用户不存在或已被禁用");
-            }
-            UserDTO userDTO = new UserDTO();
-            userDTO.setId(user.getId());
-            userDTO.setEmail(user.getEmail());
-            ThreadLocalConfig.setgetUser(userDTO);
+            UserLocalDTO userLocalDTO = new UserLocalDTO();
+            userLocalDTO.setId(user.getId());
+            userLocalDTO.setEmail(user.getEmail());
+            ThreadLocalConfig.setUser(userLocalDTO);
         } catch (MyServiceException e) {//jwt解析失败
             log.info("解析令牌失败, 返回未登录错误信息");
             throw e;
         }
 
         return true;
+    }
+
+    @Override
+    public PageInfo<User> getUsersByPage(Integer page, Integer pageSize, String email) {
+        PageHelper.startPage(page, pageSize);
+        UserExample userExample = new UserExample();
+        if(StringUtils.hasLength(email)) {
+            userExample.createCriteria().andEmailLike(email);
+        }
+
+        List<User> users = userMapper.selectByExample(userExample);
+
+        //把查询的结果封装到PageInfo类中。
+        PageInfo<User> pageInfo = new PageInfo<User>(users);
+
+        return pageInfo;
     }
 
 }

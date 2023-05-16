@@ -68,22 +68,33 @@
         </javaClientGenerator>
 
         <!-- 每个数据库中的表都写一个table，用完就注释掉 -->
-<!--        <table tableName="user">-->
+        <table tableName="user">
+            <property name="useActualColumnNames" value="false"/>
+            <columnOverride column="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+        </table>
+
+<!--        <table tableName="recharge_record">-->
 <!--            <property name="useActualColumnNames" value="false"/>-->
-<!--            <columnOverride column="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
 <!--        </table>-->
 
-<!--        <table tableName="cdkey_activate">-->
-<!--            <property name="useActualColumnNames" value="false"/>-->
-<!--        </table>-->
-
-<!--        <table tableName="openaikey">-->
+<!--        <table tableName="third_party_model_key">-->
 <!--            <property name="useActualColumnNames" value="false"/>-->
 <!--        </table>-->
 
 <!--        <table tableName="admin">-->
 <!--            <property name="useActualColumnNames" value="false"/>-->
 <!--        </table>-->
+
+<!--        <table tableName="role">-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <columnOverride column="greeting" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
+<!--            <columnOverride column="system" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
+<!--            <columnOverride column="logit_bias" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
+<!--        </table>-->
+
+        <table tableName="user_role">
+            <property name="useActualColumnNames" value="false"/>
+        </table>
 
 
 

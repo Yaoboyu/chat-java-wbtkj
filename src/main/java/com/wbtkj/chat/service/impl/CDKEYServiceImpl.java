@@ -67,4 +67,23 @@ public class CDKEYServiceImpl implements CDKEYService {
         return value;
     }
 
+    @Override
+    public CdkeyActivate getCdkeyInfo(String cdkey) {
+        CdkeyActivateExample cdkeyActivateExample = new CdkeyActivateExample();
+        cdkeyActivateExample.createCriteria().andCdkeyEqualTo(cdkey);
+        List<CdkeyActivate> cdkeyActivates = cdkeyActivateMapper.selectByExample(cdkeyActivateExample);
+
+        CdkeyActivate cdkeyActivate;
+
+        if(!CollectionUtils.isEmpty(cdkeyActivates)){
+            cdkeyActivate = cdkeyActivates.get(0);
+        } else {
+            cdkeyActivate = new CdkeyActivate();
+            cdkeyActivate.setValue(value(cdkey));
+            cdkeyActivate.setCdkey(cdkey);
+        }
+
+        return cdkeyActivate;
+    }
+
 }

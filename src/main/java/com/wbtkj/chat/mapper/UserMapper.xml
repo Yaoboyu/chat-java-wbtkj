@@ -10,6 +10,8 @@
     <result column="vip_start_time" property="vipStartTime" jdbcType="TIMESTAMP" />
     <result column="vip_end_time" property="vipEndTime" jdbcType="TIMESTAMP" />
     <result column="balance" property="balance" jdbcType="INTEGER" />
+    <result column="cash" property="cash" jdbcType="DOUBLE" />
+    <result column="roles" property="roles" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="my_inv_code" property="myInvCode" jdbcType="VARCHAR" />
     <result column="use_inv_code" property="useInvCode" jdbcType="VARCHAR" />
@@ -75,8 +77,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, email, pwd, salt, `status`, vip_start_time, vip_end_time, balance, remark, my_inv_code, 
-    use_inv_code, create_time, update_time
+    id, email, pwd, salt, `status`, vip_start_time, vip_end_time, balance, cash, roles, 
+    remark, my_inv_code, use_inv_code, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.UserExample" >
     select
@@ -111,14 +113,16 @@
   <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.User" >
     insert into user (id, email, pwd, 
       salt, `status`, vip_start_time, 
-      vip_end_time, balance, remark, 
-      my_inv_code, use_inv_code, create_time, 
-      update_time)
+      vip_end_time, balance, cash, 
+      roles, remark, my_inv_code, 
+      use_inv_code, create_time, update_time
+      )
     values (#{id,jdbcType=BIGINT}, #{email,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
       #{salt,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{vipStartTime,jdbcType=TIMESTAMP}, 
-      #{vipEndTime,jdbcType=TIMESTAMP}, #{balance,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
-      #{myInvCode,jdbcType=VARCHAR}, #{useInvCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+      #{vipEndTime,jdbcType=TIMESTAMP}, #{balance,jdbcType=INTEGER}, #{cash,jdbcType=DOUBLE}, 
+      #{roles,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{myInvCode,jdbcType=VARCHAR}, 
+      #{useInvCode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.User" >
     insert into user
@@ -146,6 +150,12 @@
       </if>
       <if test="balance != null" >
         balance,
+      </if>
+      <if test="cash != null" >
+        cash,
+      </if>
+      <if test="roles != null" >
+        roles,
       </if>
       <if test="remark != null" >
         remark,
@@ -187,6 +197,12 @@
       </if>
       <if test="balance != null" >
         #{balance,jdbcType=INTEGER},
+      </if>
+      <if test="cash != null" >
+        #{cash,jdbcType=DOUBLE},
+      </if>
+      <if test="roles != null" >
+        #{roles,jdbcType=VARCHAR},
       </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
@@ -238,6 +254,12 @@
       <if test="record.balance != null" >
         balance = #{record.balance,jdbcType=INTEGER},
       </if>
+      <if test="record.cash != null" >
+        cash = #{record.cash,jdbcType=DOUBLE},
+      </if>
+      <if test="record.roles != null" >
+        roles = #{record.roles,jdbcType=VARCHAR},
+      </if>
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
@@ -268,6 +290,8 @@
       vip_start_time = #{record.vipStartTime,jdbcType=TIMESTAMP},
       vip_end_time = #{record.vipEndTime,jdbcType=TIMESTAMP},
       balance = #{record.balance,jdbcType=INTEGER},
+      cash = #{record.cash,jdbcType=DOUBLE},
+      roles = #{record.roles,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
       my_inv_code = #{record.myInvCode,jdbcType=VARCHAR},
       use_inv_code = #{record.useInvCode,jdbcType=VARCHAR},
@@ -301,6 +325,12 @@
       <if test="balance != null" >
         balance = #{balance,jdbcType=INTEGER},
       </if>
+      <if test="cash != null" >
+        cash = #{cash,jdbcType=DOUBLE},
+      </if>
+      <if test="roles != null" >
+        roles = #{roles,jdbcType=VARCHAR},
+      </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
@@ -328,6 +358,8 @@
       vip_start_time = #{vipStartTime,jdbcType=TIMESTAMP},
       vip_end_time = #{vipEndTime,jdbcType=TIMESTAMP},
       balance = #{balance,jdbcType=INTEGER},
+      cash = #{cash,jdbcType=DOUBLE},
+      roles = #{roles,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       my_inv_code = #{myInvCode,jdbcType=VARCHAR},
       use_inv_code = #{useInvCode,jdbcType=VARCHAR},

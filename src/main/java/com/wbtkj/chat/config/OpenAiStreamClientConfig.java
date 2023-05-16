@@ -20,29 +20,29 @@ public class OpenAiStreamClientConfig {
     @Value("${chatgpt.apiHost}")
     private String apiHost;
 
-    @Bean
-    public OpenAiStreamClient openAiStreamClient() {
-        //本地开发需要配置代理地址
-//        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 7890));
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new OpenAILogger());
-        //!!!!!!测试或者发布到服务器千万不要配置Level == BODY!!!!
-        //!!!!!!测试或者发布到服务器千万不要配置Level == BODY!!!!
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
-        OkHttpClient okHttpClient = new OkHttpClient
-                .Builder()
-//                .proxy(proxy)
-                .addInterceptor(httpLoggingInterceptor)
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .writeTimeout(600, TimeUnit.SECONDS)
-                .readTimeout(600, TimeUnit.SECONDS)
-                .build();
-        return OpenAiStreamClient
-                .builder()
-                .apiHost(apiHost)
-                .apiKey(apiKey)
-                //自定义key使用策略 默认随机策略
-                .keyStrategy(new KeyRandomStrategy())
-                .okHttpClient(okHttpClient)
-                .build();
-    }
+//    @Bean
+//    public OpenAiStreamClient openAiStreamClient() {
+//        //本地开发需要配置代理地址
+////        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 7890));
+//        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new OpenAILogger());
+//        //!!!!!!测试或者发布到服务器千万不要配置Level == BODY!!!!
+//        //!!!!!!测试或者发布到服务器千万不要配置Level == BODY!!!!
+//        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+//        OkHttpClient okHttpClient = new OkHttpClient
+//                .Builder()
+////                .proxy(proxy)
+//                .addInterceptor(httpLoggingInterceptor)
+//                .connectTimeout(30, TimeUnit.SECONDS)
+//                .writeTimeout(600, TimeUnit.SECONDS)
+//                .readTimeout(600, TimeUnit.SECONDS)
+//                .build();
+//        return OpenAiStreamClient
+//                .builder()
+//                .apiHost(apiHost)
+//                .apiKey(apiKey)
+//                //自定义key使用策略 默认随机策略
+//                .keyStrategy(new KeyRandomStrategy())
+//                .okHttpClient(okHttpClient)
+//                .build();
+//    }
 }

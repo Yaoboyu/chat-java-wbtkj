@@ -38,6 +38,19 @@ public class MailUtils {
      * @return 是否发送成功
      */
     public static boolean SendCodeMail(String emailTo, String code, int exp){
+        String subject = "乌邦图科技:您好,请查收您的注册验证码";
+        String msg = "您的验证码是：" + code + "，" + exp + "分钟有效，请注意查收。";
+        return SendMail(emailTo, subject, msg);
+    }
+
+    /**
+     * 发送邮件
+     * @param emailTo 目标邮箱账号
+     * @param subject 主题
+     * @param msg 发送消息
+     * @return 是否发送成功
+     */
+    public static boolean SendMail(String emailTo, String subject, String msg){
         try {
             HtmlEmail email = new HtmlEmail();
             email.setHostName(hostname);
@@ -45,11 +58,11 @@ public class MailUtils {
             email.addTo(emailTo);
             email.setFrom(emailFrom);
             email.setAuthentication(emailFrom,Au);
-            email.setSubject("乌邦图科技:您好,请查收您的注册验证码");//设置发送主题
-            email.setMsg("您的验证码是：" + code + "，" + exp + "分钟有效，请注意查收。");//设置发送内容
+            email.setSubject(subject);//设置发送主题
+            email.setMsg(msg);//设置发送内容
             email.send();//进行发送
         } catch (Exception e) {
-            log.error("邮件发送失败。from: {}, to: {}, code: {}", emailFrom, emailTo, code);
+            log.error("邮件发送失败。from: {}, to: {}", emailFrom, emailTo);
             return false;
         }
         return true;

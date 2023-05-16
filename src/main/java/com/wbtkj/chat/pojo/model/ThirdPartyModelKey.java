@@ -3,14 +3,12 @@ package com.wbtkj.chat.pojo.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Openaikey implements Serializable {
+public class ThirdPartyModelKey implements Serializable {
     private Long id;
 
     private String key;
 
-    private Double cost;
-
-    private Double quota;
+    private String model;
 
     private Integer status;
 
@@ -36,20 +34,12 @@ public class Openaikey implements Serializable {
         this.key = key == null ? null : key.trim();
     }
 
-    public Double getCost() {
-        return cost;
+    public String getModel() {
+        return model;
     }
 
-    public void setCost(Double cost) {
-        this.cost = cost;
-    }
-
-    public Double getQuota() {
-        return quota;
-    }
-
-    public void setQuota(Double quota) {
-        this.quota = quota;
+    public void setModel(String model) {
+        this.model = model == null ? null : model.trim();
     }
 
     public Integer getStatus() {
@@ -84,8 +74,7 @@ public class Openaikey implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", key=").append(key);
-        sb.append(", cost=").append(cost);
-        sb.append(", quota=").append(quota);
+        sb.append(", model=").append(model);
         sb.append(", status=").append(status);
         sb.append(", createTime=").append(createTime);
         sb.append(", updateTime=").append(updateTime);

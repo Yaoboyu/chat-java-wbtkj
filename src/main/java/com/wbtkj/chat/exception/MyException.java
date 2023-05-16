@@ -4,7 +4,9 @@ package com.wbtkj.chat.exception;
 public class MyException extends RuntimeException{
     private int code = 500;
 
-    public MyException() { }
+    public MyException() {
+        super("请求出错，请联系管理员");
+    }
     public MyException(String message) {
         super(message);
     }

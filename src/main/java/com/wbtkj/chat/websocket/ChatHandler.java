@@ -6,7 +6,6 @@ import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.entity.chat.Message;
 import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.listener.OpenAIWebSocketEventSourceListener;
-import com.wbtkj.chat.websocket.WsSessionManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,8 +14,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import javax.websocket.Session;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

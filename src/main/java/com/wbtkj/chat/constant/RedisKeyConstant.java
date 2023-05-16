@@ -6,7 +6,8 @@ import lombok.Getter;
 @Getter
 public enum RedisKeyConstant {
 
-    verify_code("verify_code:", "验证码", 2);
+    verify_code("verify_code:", "验证码", 2),
+    openaiKey("openai_key:", "thirdPartyModelKey", -1);
 
     private String key;
     private String desc;

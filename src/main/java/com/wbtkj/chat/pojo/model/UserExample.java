@@ -615,6 +615,136 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andCashIsNull() {
+            addCriterion("cash is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCashIsNotNull() {
+            addCriterion("cash is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCashEqualTo(Double value) {
+            addCriterion("cash =", value, "cash");
+            return (Criteria) this;
+        }
+
+        public Criteria andCashNotEqualTo(Double value) {
+            addCriterion("cash <>", value, "cash");
+            return (Criteria) this;
+        }
+
+        public Criteria andCashGreaterThan(Double value) {
+            addCriterion("cash >", value, "cash");
+            return (Criteria) this;
+        }
+
+        public Criteria andCashGreaterThanOrEqualTo(Double value) {
+            addCriterion("cash >=", value, "cash");
+            return (Criteria) this;
+        }
+
+        public Criteria andCashLessThan(Double value) {
+            addCriterion("cash <", value, "cash");
+            return (Criteria) this;
+        }
+
+        public Criteria andCashLessThanOrEqualTo(Double value) {
+            addCriterion("cash <=", value, "cash");
+            return (Criteria) this;
+        }
+
+        public Criteria andCashIn(List<Double> values) {
+            addCriterion("cash in", values, "cash");
+            return (Criteria) this;
+        }
+
+        public Criteria andCashNotIn(List<Double> values) {
+            addCriterion("cash not in", values, "cash");
+            return (Criteria) this;
+        }
+
+        public Criteria andCashBetween(Double value1, Double value2) {
+            addCriterion("cash between", value1, value2, "cash");
+            return (Criteria) this;
+        }
+
+        public Criteria andCashNotBetween(Double value1, Double value2) {
+            addCriterion("cash not between", value1, value2, "cash");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesIsNull() {
+            addCriterion("roles is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesIsNotNull() {
+            addCriterion("roles is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesEqualTo(String value) {
+            addCriterion("roles =", value, "roles");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesNotEqualTo(String value) {
+            addCriterion("roles <>", value, "roles");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesGreaterThan(String value) {
+            addCriterion("roles >", value, "roles");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesGreaterThanOrEqualTo(String value) {
+            addCriterion("roles >=", value, "roles");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesLessThan(String value) {
+            addCriterion("roles <", value, "roles");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesLessThanOrEqualTo(String value) {
+            addCriterion("roles <=", value, "roles");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesLike(String value) {
+            addCriterion("roles like", value, "roles");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesNotLike(String value) {
+            addCriterion("roles not like", value, "roles");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesIn(List<String> values) {
+            addCriterion("roles in", values, "roles");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesNotIn(List<String> values) {
+            addCriterion("roles not in", values, "roles");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesBetween(String value1, String value2) {
+            addCriterion("roles between", value1, value2, "roles");
+            return (Criteria) this;
+        }
+
+        public Criteria andRolesNotBetween(String value1, String value2) {
+            addCriterion("roles not between", value1, value2, "roles");
+            return (Criteria) this;
+        }
+
         public Criteria andRemarkIsNull() {
             addCriterion("remark is null");
             return (Criteria) this;

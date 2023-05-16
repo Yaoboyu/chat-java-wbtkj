@@ -3,14 +3,16 @@ package com.wbtkj.chat.pojo.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class CdkeyActivate implements Serializable {
+public class RechargeRecord implements Serializable {
     private Long id;
 
     private Long userId;
 
+    private Integer type;
+
     private String cdkey;
 
-    private Long value;
+    private Integer value;
 
     private Date useTime;
 
@@ -32,6 +34,14 @@ public class CdkeyActivate implements Serializable {
         this.userId = userId;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     public String getCdkey() {
         return cdkey;
     }
@@ -40,11 +50,11 @@ public class CdkeyActivate implements Serializable {
         this.cdkey = cdkey == null ? null : cdkey.trim();
     }
 
-    public Long getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(Long value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 
@@ -64,6 +74,7 @@ public class CdkeyActivate implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
+        sb.append(", type=").append(type);
         sb.append(", cdkey=").append(cdkey);
         sb.append(", value=").append(value);
         sb.append(", useTime=").append(useTime);

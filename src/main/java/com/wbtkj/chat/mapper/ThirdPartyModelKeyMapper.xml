@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.wbtkj.chat.mapper.CdkeyActivateMapper" >
-  <resultMap id="BaseResultMap" type="com.wbtkj.chat.pojo.model.CdkeyActivate" >
+<mapper namespace="com.wbtkj.chat.mapper.ThirdPartyModelKeyMapper" >
+  <resultMap id="BaseResultMap" type="com.wbtkj.chat.pojo.model.ThirdPartyModelKey" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="user_id" property="userId" jdbcType="BIGINT" />
-    <result column="cdkey" property="cdkey" jdbcType="VARCHAR" />
-    <result column="value" property="value" jdbcType="BIGINT" />
-    <result column="use_time" property="useTime" jdbcType="TIMESTAMP" />
+    <result column="key" property="key" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -67,15 +68,15 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, cdkey, `value`, use_time
+    id, `key`, model, `status`, create_time, update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.CdkeyActivateExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKeyExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from cdkey_activate
+    from third_party_model_key
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -86,85 +87,96 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from cdkey_activate
+    from third_party_model_key
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from cdkey_activate
+    delete from third_party_model_key
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.wbtkj.chat.pojo.model.CdkeyActivateExample" >
-    delete from cdkey_activate
+  <delete id="deleteByExample" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKeyExample" >
+    delete from third_party_model_key
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.CdkeyActivate" >
-    insert into cdkey_activate (id, user_id, cdkey, 
-      `value`, use_time)
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{cdkey,jdbcType=VARCHAR}, 
-      #{value,jdbcType=BIGINT}, #{useTime,jdbcType=TIMESTAMP})
+  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKey" >
+    insert into third_party_model_key (id, `key`, model, 
+      `status`, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{key,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
-  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.CdkeyActivate" >
-    insert into cdkey_activate
+  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKey" >
+    insert into third_party_model_key
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
       </if>
-      <if test="userId != null" >
-        user_id,
+      <if test="key != null" >
+        `key`,
       </if>
-      <if test="cdkey != null" >
-        cdkey,
+      <if test="model != null" >
+        model,
       </if>
-      <if test="value != null" >
-        `value`,
+      <if test="status != null" >
+        `status`,
       </if>
-      <if test="useTime != null" >
-        use_time,
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=BIGINT},
+      <if test="key != null" >
+        #{key,jdbcType=VARCHAR},
       </if>
-      <if test="cdkey != null" >
-        #{cdkey,jdbcType=VARCHAR},
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
       </if>
-      <if test="value != null" >
-        #{value,jdbcType=BIGINT},
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
       </if>
-      <if test="useTime != null" >
-        #{useTime,jdbcType=TIMESTAMP},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.wbtkj.chat.pojo.model.CdkeyActivateExample" resultType="java.lang.Integer" >
-    select count(*) from cdkey_activate
+  <select id="countByExample" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKeyExample" resultType="java.lang.Integer" >
+    select count(*) from third_party_model_key
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update cdkey_activate
+    update third_party_model_key
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.userId != null" >
-        user_id = #{record.userId,jdbcType=BIGINT},
+      <if test="record.key != null" >
+        `key` = #{record.key,jdbcType=VARCHAR},
       </if>
-      <if test="record.cdkey != null" >
-        cdkey = #{record.cdkey,jdbcType=VARCHAR},
+      <if test="record.model != null" >
+        model = #{record.model,jdbcType=VARCHAR},
       </if>
-      <if test="record.value != null" >
-        `value` = #{record.value,jdbcType=BIGINT},
+      <if test="record.status != null" >
+        `status` = #{record.status,jdbcType=INTEGER},
       </if>
-      <if test="record.useTime != null" >
-        use_time = #{record.useTime,jdbcType=TIMESTAMP},
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -172,40 +184,45 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update cdkey_activate
+    update third_party_model_key
     set id = #{record.id,jdbcType=BIGINT},
-      user_id = #{record.userId,jdbcType=BIGINT},
-      cdkey = #{record.cdkey,jdbcType=VARCHAR},
-      `value` = #{record.value,jdbcType=BIGINT},
-      use_time = #{record.useTime,jdbcType=TIMESTAMP}
+      `key` = #{record.key,jdbcType=VARCHAR},
+      model = #{record.model,jdbcType=VARCHAR},
+      `status` = #{record.status,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.wbtkj.chat.pojo.model.CdkeyActivate" >
-    update cdkey_activate
+  <update id="updateByPrimaryKeySelective" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKey" >
+    update third_party_model_key
     <set >
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=BIGINT},
+      <if test="key != null" >
+        `key` = #{key,jdbcType=VARCHAR},
       </if>
-      <if test="cdkey != null" >
-        cdkey = #{cdkey,jdbcType=VARCHAR},
+      <if test="model != null" >
+        model = #{model,jdbcType=VARCHAR},
       </if>
-      <if test="value != null" >
-        `value` = #{value,jdbcType=BIGINT},
+      <if test="status != null" >
+        `status` = #{status,jdbcType=INTEGER},
       </if>
-      <if test="useTime != null" >
-        use_time = #{useTime,jdbcType=TIMESTAMP},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.wbtkj.chat.pojo.model.CdkeyActivate" >
-    update cdkey_activate
-    set user_id = #{userId,jdbcType=BIGINT},
-      cdkey = #{cdkey,jdbcType=VARCHAR},
-      `value` = #{value,jdbcType=BIGINT},
-      use_time = #{useTime,jdbcType=TIMESTAMP}
+  <update id="updateByPrimaryKey" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKey" >
+    update third_party_model_key
+    set `key` = #{key,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      `status` = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

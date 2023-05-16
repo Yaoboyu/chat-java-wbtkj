@@ -2,8 +2,8 @@ package com.wbtkj.chat.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wbtkj.chat.exception.MyServiceException;
-import com.wbtkj.chat.pojo.vo.user.LoginVO;
-import com.wbtkj.chat.pojo.vo.user.RegisterVO;
+import com.wbtkj.chat.pojo.vo.user.UserLoginVO;
+import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.service.SendVerifyCodeService;
 import com.wbtkj.chat.service.UserService;
@@ -24,27 +24,27 @@ public class LoginRegisterController {
 
 
     @PostMapping("/login")
-    public Result Login(@RequestBody LoginVO loginVO) {
-        log.info("用户 {} 登录", loginVO.getEmail());
-        String token = userService.login(loginVO.getEmail(), loginVO.getPwd());
+    public Result Login(@RequestBody UserLoginVO userLoginVO) {
+        log.info("用户 {} 登录", userLoginVO.getEmail());
+        String token = userService.login(userLoginVO.getEmail(), userLoginVO.getPwd());
         JSONObject data = new JSONObject();
         data.put("token", token);
         return Result.success(data);
     }
 
     @PostMapping("/register")
-    public Result register(@RequestBody RegisterVO registerVO) {
-        String codeByEmail = sendVerifyCodeService.getCodeByEmail(registerVO.getEmail());
+    public Result register(@RequestBody UserRegisterVO userRegisterVO) {
+        String codeByEmail = sendVerifyCodeService.getCodeByEmail(userRegisterVO.getEmail());
         if(codeByEmail == null || StringUtils.isBlank(codeByEmail)) {
             throw new MyServiceException("验证码过期！");
         }
-        if(!codeByEmail.equals(registerVO.getCode())) {
+        if(!codeByEmail.equals(userRegisterVO.getCode())) {
             throw new MyServiceException("验证码错误！");
         }
 
-        log.info("用户注册：{}", registerVO.getEmail());
-        userService.register(registerVO);
-        String token = userService.login(registerVO.getEmail(), registerVO.getPwd());
+        log.info("用户注册：{}", userRegisterVO.getEmail());
+        userService.register(userRegisterVO);
+        String token = userService.login(userRegisterVO.getEmail(), userRegisterVO.getPwd());
         return Result.success(new JSONObject().put("token", token));
     }
 }

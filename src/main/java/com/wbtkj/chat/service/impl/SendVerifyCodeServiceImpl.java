@@ -2,6 +2,7 @@ package com.wbtkj.chat.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import com.wbtkj.chat.constant.RedisKeyConstant;
+import com.wbtkj.chat.exception.MyException;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.service.SendVerifyCodeService;
 import com.wbtkj.chat.utils.MailUtils;
@@ -20,7 +21,7 @@ public class SendVerifyCodeServiceImpl implements SendVerifyCodeService {
     private RedisTemplate<String, String> redisTemplate;
 
     @Override
-    public boolean sendMail(String email){
+    public void sendMail(String email){
         if(checkCodeIsExist(email)) {
             throw new MyServiceException("请勿重复获取验证码");
         }
@@ -29,7 +30,10 @@ public class SendVerifyCodeServiceImpl implements SendVerifyCodeService {
         // 发送成功，将 code 保存至 Redis
         String key = RedisKeyConstant.verify_code.getKey() + email;
         redisTemplate.opsForValue().set(key, code, RedisKeyConstant.verify_code.getExp(), TimeUnit.MINUTES);
-        return MailUtils.SendCodeMail(email, code, RedisKeyConstant.verify_code.getExp());
+        boolean res = MailUtils.SendCodeMail(email, code, RedisKeyConstant.verify_code.getExp());
+        if(!res) {
+            throw new MyException();
+        }
     }
 
     @Override
