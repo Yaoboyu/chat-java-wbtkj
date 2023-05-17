@@ -2,7 +2,7 @@ package com.wbtkj.chat.controller;
 
 import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.vo.Result;
-import com.wbtkj.chat.pojo.vo.user.UserLoginVO;
+import com.wbtkj.chat.pojo.vo.admin.AdminLoginVO;
 import com.wbtkj.chat.service.AdminService;
 import com.wbtkj.chat.service.CDKEYService;
 import com.wbtkj.chat.service.ThirdPartyModelKeyService;
@@ -27,9 +27,9 @@ public class AdminController {
     ThirdPartyModelKeyService thirdPartyModelKeyService;
 
     @PostMapping("/login")
-    public Result adminLogin(@RequestBody UserLoginVO userLoginVO){
+    public Result adminLogin(@RequestBody AdminLoginVO adminLoginVO){
         log.info("管理员登录");
-        return Result.success(userService.login(userLoginVO.getEmail(), userLoginVO.getPwd()));
+        return Result.success(adminService.login(adminLoginVO.getUsername(), adminLoginVO.getPassword()));
     }
 
     @GetMapping("/user")

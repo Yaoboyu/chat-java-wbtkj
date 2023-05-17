@@ -12,6 +12,7 @@ import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.model.UserExample;
 import com.wbtkj.chat.service.CDKEYService;
 import com.wbtkj.chat.utils.AesUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -20,6 +21,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 @Service
+@Slf4j
 public class CDKEYServiceImpl implements CDKEYService {
     @Resource
     RechargeRecordMapper rechargeRecordMapper;
@@ -28,6 +30,7 @@ public class CDKEYServiceImpl implements CDKEYService {
 
 
     private int value(String cdkey) {
+        //TODO:解析失败处理
         Map<String,String> mp = AesUtil.decode(cdkey);
         return Integer.parseInt(mp.get("value"));
     }
@@ -78,6 +81,7 @@ public class CDKEYServiceImpl implements CDKEYService {
     }
 
     @Override
+    @Transactional
     public RechargeRecord getRechargeRecord(String cdkey) {
         RechargeRecordExample rechargeRecordExample = new RechargeRecordExample();
         rechargeRecordExample.createCriteria().andCdkeyEqualTo(cdkey);

@@ -2,36 +2,32 @@ package com.wbtkj.chat.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
-import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wbtkj.chat.config.StaticContextAccessor;
 import com.wbtkj.chat.exception.MyException;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.filter.OpenAiAuthInterceptor;
-import com.wbtkj.chat.function.KeyRandomStrategy;
-import com.wbtkj.chat.function.KeyStrategyFunction;
-import com.wbtkj.chat.pojo.dto.openai.CommonError;
 import com.wbtkj.chat.pojo.dto.openai.billing.BillingUsage;
-import com.wbtkj.chat.pojo.dto.openai.billing.CreditGrantsResponse;
 import com.wbtkj.chat.pojo.dto.openai.billing.Subscription;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
-import com.wbtkj.chat.pojo.dto.openai.common.OpenAiResponse;
 import com.wbtkj.chat.pojo.dto.openai.completions.Completion;
 import com.wbtkj.chat.service.OpenAiApi;
 import com.wbtkj.chat.service.OpenAiStreamService;
 import com.wbtkj.chat.service.ThirdPartyModelKeyService;
 import io.reactivex.Single;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
 import okhttp3.sse.EventSources;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -41,7 +37,6 @@ import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 
@@ -56,11 +51,10 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class OpenAiStreamServiceImpl implements OpenAiStreamService {
 
-    @Value("${chatgpt.apiHost}")
+//    @Value("${chatgpt.apiHost}")
     private String apiHost;
     /**
      * 自定义的okHttpClient
-     * 如果不自定义 ，就是用sdk默认的OkHttpClient实例
      */
     private OkHttpClient okHttpClient;
 
@@ -70,21 +64,22 @@ public class OpenAiStreamServiceImpl implements OpenAiStreamService {
     /**
      * 自定义鉴权处理拦截器
      */
-    @Resource
-    private OpenAiAuthInterceptor authInterceptor;
+    private OpenAiAuthInterceptor openAiAuthInterceptor;
 
     @Resource
     ThirdPartyModelKeyService thirdPartyModelKeyService;
-
 
 
     /**
      * 构造实例对象
      */
     public OpenAiStreamServiceImpl() {
+        openAiAuthInterceptor = StaticContextAccessor.getBean(OpenAiAuthInterceptor.class);
+        apiHost = StaticContextAccessor.getBean(Environment.class).getProperty("chatgpt.apiHost");
+
         okHttpClient = new OkHttpClient
                 .Builder()
-                .addInterceptor(authInterceptor)
+                .addInterceptor(openAiAuthInterceptor)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(50, TimeUnit.SECONDS)
                 .readTimeout(50, TimeUnit.SECONDS)

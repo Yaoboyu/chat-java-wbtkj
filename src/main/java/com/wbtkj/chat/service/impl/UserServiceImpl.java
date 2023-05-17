@@ -25,6 +25,7 @@ import java.util.Map;
 
 import com.wbtkj.chat.constant.GeneralConstant;
 import com.wbtkj.chat.utils.MD5Utils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -50,6 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void register(UserRegisterVO userRegisterVO) {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andEmailEqualTo(userRegisterVO.getEmail());
@@ -90,6 +92,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUser(User user) {
         Long id = user.getId();
         if(id == null) {
@@ -129,6 +132,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User getCheckedUser(String email) throws MyServiceException {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andEmailEqualTo(email);
@@ -144,6 +148,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    @Override
     public boolean checkToken(String token) throws MyServiceException{
         //判断令牌是否存在，如果不存在，返回错误结果（未登录）。
         if(!StringUtils.hasLength(token)){
@@ -168,6 +173,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public PageInfo<User> getUsersByPage(Integer page, Integer pageSize, String email) {
         PageHelper.startPage(page, pageSize);
         UserExample userExample = new UserExample();

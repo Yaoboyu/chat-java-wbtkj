@@ -5,11 +5,12 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
 import cn.hutool.json.JSONUtil;
+import com.wbtkj.chat.config.StaticContextAccessor;
 import com.wbtkj.chat.exception.MyException;
 import com.wbtkj.chat.pojo.dto.openai.CommonError;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.common.OpenAiResponse;
-import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.OpenAIKeyStatus;
+import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyStatus;
 import com.wbtkj.chat.service.ThirdPartyModelKeyService;
 import com.wbtkj.chat.utils.MailUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ import java.util.function.Predicate;
 
 @Slf4j
 @Component
-public abstract class OpenAiAuthInterceptor implements Interceptor {
+public class OpenAiAuthInterceptor implements Interceptor {
 
     /**
      * key 集合
@@ -52,17 +53,36 @@ public abstract class OpenAiAuthInterceptor implements Interceptor {
 
     private ThirdPartyModelKeyService thirdPartyModelKeyService;
 
-    @Resource
-    public void setThirdPartyModelKeyService(ThirdPartyModelKeyService thirdPartyModelKeyService) {
-        this.thirdPartyModelKeyService = thirdPartyModelKeyService;
-    }
 
     public OpenAiAuthInterceptor() {
+        thirdPartyModelKeyService = StaticContextAccessor.getBean(ThirdPartyModelKeyService.class);
+
         gpt3Key = new CopyOnWriteArrayList<>(thirdPartyModelKeyService.getEnableGpt3Keys());
         gpt4Key = new CopyOnWriteArrayList<>(thirdPartyModelKeyService.getEnableGpt4Keys());
         gpt3KeyIndex = 0;
         gpt4KeyIndex = 0;
     }
+
+    public boolean addKey(String key, String model) {
+        if(model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())) {
+            return gpt3Key.addIfAbsent(key);
+        } else if(model.equals(ChatCompletion.Model.GPT_4.getName())) {
+            return gpt4Key.addIfAbsent(key);
+        } else {
+            return false;
+        }
+    }
+
+    public boolean delKey(String key, String model) {
+        if(model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())) {
+            return gpt3Key.removeIf(Predicate.isEqual(key));
+        } else if(model.equals(ChatCompletion.Model.GPT_4.getName())) {
+            return gpt4Key.removeIf(Predicate.isEqual(key));
+        } else {
+            return false;
+        }
+    }
+
 
 
     @Override
@@ -102,7 +122,7 @@ public abstract class OpenAiAuthInterceptor implements Interceptor {
                 log.error("--------> 请求异常：{}", errorMsg);
                 //账号被封或者key不正确就移除掉
                 if (ACCOUNT_DEACTIVATED.equals(errorCode) || INVALID_API_KEY.equals(errorCode)) {
-                    onErrorDealApiKeys(model, key);
+                    thirdPartyModelKeyService.changeStatus(key, ThirdPartyModelKeyStatus.INVALID.getStatus());
                 }
                 // 其他情况尝试其他key
                 return intercept(chain, depth + 1);
@@ -126,22 +146,22 @@ public abstract class OpenAiAuthInterceptor implements Interceptor {
         return response;
     }
 
-    /**
-     * 自定义apiKeys的处理逻辑
-     *
-     * @param model
-     * @param errorKey 错误的key
-     */
-    public void onErrorDealApiKeys(String model, String errorKey) {
-        if(model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())) {
-            gpt3Key.removeIf(Predicate.isEqual(errorKey));
-        } else if (model.equals(ChatCompletion.Model.GPT_4.getName())) {
-            gpt4Key.removeIf(Predicate.isEqual(errorKey));
-        }
-        thirdPartyModelKeyService.changeStatus(errorKey, OpenAIKeyStatus.INVALID.getStatus());
-
-        log.info("--------> 当前ApiKey：[{}] 失效了，移除！", errorKey);
-    }
+//    /**
+//     * 自定义apiKeys的处理逻辑
+//     *
+//     * @param model
+//     * @param errorKey 错误的key
+//     */
+//    private void onErrorDealApiKeys(String model, String errorKey) {
+//        if(model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())) {
+//            gpt3Key.removeIf(Predicate.isEqual(errorKey));
+//        } else if (model.equals(ChatCompletion.Model.GPT_4.getName())) {
+//            gpt4Key.removeIf(Predicate.isEqual(errorKey));
+//        }
+//
+//
+//        log.info("--------> 当前ApiKey：[{}] 失效了，移除！", errorKey);
+//    }
 
     /**
      * 获取请求key
@@ -187,7 +207,7 @@ public abstract class OpenAiAuthInterceptor implements Interceptor {
      * @param original 源请求体
      * @return 请求体
      */
-    public Request auth(String key, Request original) {
+    private Request auth(String key, Request original) {
         Request request = original.newBuilder()
                 .header(Header.AUTHORIZATION.getValue(), "Bearer " + key)
                 .header(Header.CONTENT_TYPE.getValue(), ContentType.JSON.getValue())

@@ -4,5 +4,5 @@ public class OpenAIKeyInfoDTO {
     String key;
     Double cost;
     Double quota;
-    OpenAIKeyStatus status;
+    ThirdPartyModelKeyStatus status;
 }
