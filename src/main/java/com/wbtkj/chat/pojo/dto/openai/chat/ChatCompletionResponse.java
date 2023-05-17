@@ -1,6 +1,6 @@
 package com.wbtkj.chat.pojo.dto.openai.chat;
 
-import com.wbtkj.chat.pojo.dto.entity.common.Usage;
+import com.wbtkj.chat.pojo.dto.openai.common.Usage;
 import lombok.Data;
 
 import java.io.Serializable;

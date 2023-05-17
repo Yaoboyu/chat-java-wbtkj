@@ -6,9 +6,7 @@ import com.wbtkj.chat.service.ThirdPartyModelKeyService;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService {
     @Resource
@@ -24,23 +22,24 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
 
     @Override
     public boolean addKey(String key, String model) {
-        Openaikey openaikey = new Openaikey();
-        openaikey.setKey(key);
-
-
-        return null;
+        return true;
     }
 
     @Override
     public boolean delKey(long id) {
 
-        return null;
+        return true;
+    }
+
+    @Override
+    public boolean changeStatus(long id, int status) {
+
+        return true;
     }
 
     @Override
     public boolean changeStatus(String key, int status) {
-
-        return null;
+        return false;
     }
 
     @Override

@@ -12,6 +12,8 @@ public interface ThirdPartyModelKeyService {
 
     boolean delKey(long id);
 
+    boolean changeStatus(long id, int status);
+
     boolean changeStatus(String key, int status);
 
     List<String> getEnableGpt3Keys();

@@ -2,14 +2,18 @@ package com.wbtkj.chat.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.wbtkj.chat.config.ThreadLocalConfig;
-import com.wbtkj.chat.mapper.CdkeyActivateMapper;
+import com.wbtkj.chat.mapper.RechargeRecordMapper;
 import com.wbtkj.chat.mapper.UserMapper;
 import com.wbtkj.chat.exception.MyServiceException;
-import com.wbtkj.chat.pojo.model.CdkeyActivate;
-import com.wbtkj.chat.pojo.model.CdkeyActivateExample;
+import com.wbtkj.chat.pojo.dto.rechargeRecord.RechargeRecordType;
+import com.wbtkj.chat.pojo.model.RechargeRecord;
+import com.wbtkj.chat.pojo.model.RechargeRecordExample;
+import com.wbtkj.chat.pojo.model.User;
+import com.wbtkj.chat.pojo.model.UserExample;
 import com.wbtkj.chat.service.CDKEYService;
 import com.wbtkj.chat.utils.AesUtil;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -18,18 +22,18 @@ import java.util.*;
 @Service
 public class CDKEYServiceImpl implements CDKEYService {
     @Resource
-    CdkeyActivateMapper cdkeyActivateMapper;
+    RechargeRecordMapper rechargeRecordMapper;
     @Resource
     UserMapper userMapper;
 
 
-    private long value(String cdkey) {
+    private int value(String cdkey) {
         Map<String,String> mp = AesUtil.decode(cdkey);
-        return Long.parseLong(mp.get("value"));
+        return Integer.parseInt(mp.get("value"));
     }
 
     @Override
-    public List<String> publish(int num, long value) {
+    public List<String> publish(int num, int value) {
         List<String> list = new ArrayList<String>();
         for(Integer i = 0;i < num;i++) {
             HashMap<String, String> map = new HashMap<>();
@@ -45,45 +49,51 @@ public class CDKEYServiceImpl implements CDKEYService {
     }
 
     @Override
+    @Transactional
     public long activate(String cdkey) {
-        CdkeyActivateExample cdkeyActivateExample = new CdkeyActivateExample();
-        cdkeyActivateExample.createCriteria().andCdkeyEqualTo(cdkey);
-        List<CdkeyActivate> cdkeyActivates = cdkeyActivateMapper.selectByExample(cdkeyActivateExample);
+        RechargeRecordExample rechargeRecordExample = new RechargeRecordExample();
+        rechargeRecordExample.createCriteria().andCdkeyEqualTo(cdkey);
+        List<RechargeRecord> rechargeRecords = rechargeRecordMapper.selectByExample(rechargeRecordExample);
 
-        if(!CollectionUtils.isEmpty(cdkeyActivates)){
+        if(!CollectionUtils.isEmpty(rechargeRecords)){
             throw new MyServiceException("激活失败:该卡密已被激活!");
         }
 
         Long userId = ThreadLocalConfig.getUser().getId();
-        long value = value(cdkey);
+        int value = value(cdkey);
 
-        CdkeyActivate cdkeyActivate = new CdkeyActivate();
-        cdkeyActivate.setUserId(userId);
-        cdkeyActivate.setCdkey(cdkey);
-        cdkeyActivate.setValue(value);
-        cdkeyActivate.setUseTime(new Date());
-        userMapper.addBanlance(value,ThreadLocalConfig.getUser().getId());
-        cdkeyActivateMapper.insert(cdkeyActivate);
+        RechargeRecord rechargeRecord = new RechargeRecord();
+        rechargeRecord.setUserId(userId);
+        rechargeRecord.setType(RechargeRecordType.BALANCE.getType());
+        rechargeRecord.setCdkey(cdkey);
+        rechargeRecord.setValue(value);
+        rechargeRecord.setUseTime(new Date());
+        rechargeRecordMapper.insert(rechargeRecord);
+
+        User user = userMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
+        user.setBalance(user.getBalance() + value);
+        userMapper.updateByPrimaryKey(user);
+
         return value;
     }
 
     @Override
-    public CdkeyActivate getCdkeyInfo(String cdkey) {
-        CdkeyActivateExample cdkeyActivateExample = new CdkeyActivateExample();
-        cdkeyActivateExample.createCriteria().andCdkeyEqualTo(cdkey);
-        List<CdkeyActivate> cdkeyActivates = cdkeyActivateMapper.selectByExample(cdkeyActivateExample);
+    public RechargeRecord getRechargeRecord(String cdkey) {
+        RechargeRecordExample rechargeRecordExample = new RechargeRecordExample();
+        rechargeRecordExample.createCriteria().andCdkeyEqualTo(cdkey);
+        List<RechargeRecord> cdkeyActivates = rechargeRecordMapper.selectByExample(rechargeRecordExample);
 
-        CdkeyActivate cdkeyActivate;
+        RechargeRecord rechargeRecord;
 
         if(!CollectionUtils.isEmpty(cdkeyActivates)){
-            cdkeyActivate = cdkeyActivates.get(0);
+            rechargeRecord = cdkeyActivates.get(0);
         } else {
-            cdkeyActivate = new CdkeyActivate();
-            cdkeyActivate.setValue(value(cdkey));
-            cdkeyActivate.setCdkey(cdkey);
+            rechargeRecord = new RechargeRecord();
+            rechargeRecord.setValue(value(cdkey));
+            rechargeRecord.setCdkey(cdkey);
         }
 
-        return cdkeyActivate;
+        return rechargeRecord;
     }
 
 }

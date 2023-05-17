@@ -5,6 +5,7 @@ import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.pojo.vo.user.UserLoginVO;
 import com.wbtkj.chat.service.AdminService;
 import com.wbtkj.chat.service.CDKEYService;
+import com.wbtkj.chat.service.ThirdPartyModelKeyService;
 import com.wbtkj.chat.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,8 @@ public class AdminController {
     CDKEYService cdkeyService;
     @Resource
     UserService userService;
+    @Resource
+    ThirdPartyModelKeyService thirdPartyModelKeyService;
 
     @PostMapping("/login")
     public Result adminLogin(@RequestBody UserLoginVO userLoginVO){
@@ -30,7 +33,7 @@ public class AdminController {
     }
 
     @GetMapping("/user")
-    Result getUsers(@RequestParam Integer page, @RequestParam Integer pageSize, @RequestParam String email){
+    Result getUsers(@RequestParam int page, @RequestParam int pageSize, @RequestParam String email){
         log.info("模糊分页查询");
         return Result.success(userService.getUsersByPage(page, pageSize, email));
     }
@@ -43,38 +46,38 @@ public class AdminController {
     }
 
     @GetMapping("/cdkey/{num}/{value}")
-    Result getCDKEYS(@PathVariable int num, @PathVariable long value){
+    Result getCDKEYS(@PathVariable int num, @PathVariable int value){
         log.info("准备发放{}张卡密,价值{}",num,value);
         return Result.success(cdkeyService.publish(num, value));
     }
 
     @GetMapping("/cdkey/info/{cdkey}")
     Result getCDKEYS(@PathVariable String cdkey){
-        return Result.success(cdkeyService.getCdkeyInfo(cdkey));
+        return Result.success(cdkeyService.getRechargeRecord(cdkey));
     }
 
-    @PostMapping("/openaikey/{key}")
-    public Result addOpenAiKey(@PathVariable String key){
-        log.info("添加openaikey");
-        return Result.success(adminService.addOpenAiKey(key));
+    @PostMapping("/thirdPartyModelKey/{key}/{model}")
+    public Result addOpenAiKey(@PathVariable String key, @PathVariable String model){
+        log.info("添加key");
+        return Result.success(thirdPartyModelKeyService.addKey(key, model));
     }
 
-    @DeleteMapping("/openaikey/{key}")
-    public Result delOpenAiKey(@PathVariable String key){
-        log.info(" 删除openaikey");
-        return Result.success(adminService.delOpenAiKey(key));
+    @DeleteMapping("/thirdPartyModelKey/{id}")
+    public Result delOpenAiKey(@PathVariable Long id){
+        log.info(" 删除key");
+        return Result.success(thirdPartyModelKeyService.delKey(id));
     }
 
-    @PutMapping("/openaikey/{key}/{status}")
-    public Result changeStatus(String key,int status){
+    @PutMapping("/thirdPartyModelKey/{id}/{status}")
+    public Result changeStatus(@PathVariable long id, @PathVariable int status){
         log.info("修改key状态");
-        return Result.success(adminService.changeStatus(key,status));
+        return Result.success(thirdPartyModelKeyService.changeStatus(id, status));
     }
 
-    @GetMapping("/openaikey")
+    @GetMapping("/thirdPartyModelKey")
     public Result getKey(){
-        log.info("获取所有openaikey");
-        return Result.success(adminService.getKeys());
+        log.info("获取所有key");
+        return Result.success(thirdPartyModelKeyService.getAllKey());
     }
 
 }
