@@ -27,4 +27,6 @@ public interface ThirdPartyModelKeyMapper {
     int updateByPrimaryKeySelective(ThirdPartyModelKey record);
 
     int updateByPrimaryKey(ThirdPartyModelKey record);
+
+    List<ThirdPartyModelKey>
 }
