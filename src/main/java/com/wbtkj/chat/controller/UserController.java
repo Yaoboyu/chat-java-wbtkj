@@ -29,4 +29,9 @@ public class UserController {
         long value = cdkeyService.activate(cdkey);
         return Result.success(value);
     }
+
+    @GetMapping("/recharge/history")
+    Result getHistory() {
+        return Result.success(cdkeyService.getRechargeRecord());
+    }
 }

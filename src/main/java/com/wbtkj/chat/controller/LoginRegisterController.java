@@ -29,7 +29,7 @@ public class LoginRegisterController {
         String token = userService.login(userLoginVO.getEmail(), userLoginVO.getPwd());
         JSONObject data = new JSONObject();
         data.put("token", token);
-        return Result.success(data);
+        return Result.success();
     }
 
     @PostMapping("/register")

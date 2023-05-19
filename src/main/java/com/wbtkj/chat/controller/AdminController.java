@@ -31,6 +31,7 @@ public class AdminController {
         log.info("管理员登录");
         //TODO：几乎所有的请求失败的msg都会出现乱码，看下是什么原因
         return Result.success(adminService.login(adminLoginVO.getUsername(), adminLoginVO.getPassword()));
+        //return Result.error("测试");
     }
 
     @GetMapping("/user")

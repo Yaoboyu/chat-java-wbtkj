@@ -11,4 +11,6 @@ public interface CDKEYService {
     long activate(String cdkey);
 
     RechargeRecord getRechargeRecord(String cdkey);
+
+    List<RechargeRecord> getRechargeRecord();
 }

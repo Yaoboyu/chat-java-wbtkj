@@ -1,2 +1,36 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://42.192.145.155:3306/wbtkj_chat?serverTimezone=UTC
+    username: root
+    password: R/oot123
+  data:
+    mongodb:
+      uri: mongodb://wbtkj:wbtkjjktbw@42.192.145.155:27017/chat-wbtkj
+      authentication-database:
+  redis:
+    host: localhost
+    port: 6379
+    password:
+  application:
+    name: chat-java-wbtkj
 
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:com/wbtkj/chat/mapper/*.xml
 
+email:
+  hostname: smtp.qq.com
+  email-from: 1712683212@qq.com
+  au: ezjcvxhvxxvmfajg
+
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+  port: 10317
+
+chatgpt:
+  apiHost: https://openai.wbtkj.top/

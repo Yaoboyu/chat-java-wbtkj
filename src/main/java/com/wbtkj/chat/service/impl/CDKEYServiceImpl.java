@@ -6,10 +6,10 @@ import com.wbtkj.chat.mapper.RechargeRecordMapper;
 import com.wbtkj.chat.mapper.UserMapper;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.dto.rechargeRecord.RechargeRecordType;
+import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.RechargeRecord;
 import com.wbtkj.chat.pojo.model.RechargeRecordExample;
 import com.wbtkj.chat.pojo.model.User;
-import com.wbtkj.chat.pojo.model.UserExample;
 import com.wbtkj.chat.service.CDKEYService;
 import com.wbtkj.chat.utils.AesUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -98,6 +98,15 @@ public class CDKEYServiceImpl implements CDKEYService {
         }
 
         return rechargeRecord;
+    }
+
+    @Override
+    public List<RechargeRecord> getRechargeRecord() {
+        UserLocalDTO user = ThreadLocalConfig.getUser();
+        RechargeRecordExample rechargeRecordExample = new RechargeRecordExample();
+        rechargeRecordExample.createCriteria().andUserIdEqualTo(user.getId());
+        List<RechargeRecord> cdkeys = rechargeRecordMapper.selectByExample(rechargeRecordExample);
+        return cdkeys;
     }
 
 }
