@@ -165,63 +165,63 @@ public class RoleExample {
             return (Criteria) this;
         }
 
-        public Criteria andUseridIsNull() {
-            addCriterion("userId is null");
+        public Criteria andUserIdIsNull() {
+            addCriterion("user_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andUseridIsNotNull() {
-            addCriterion("userId is not null");
+        public Criteria andUserIdIsNotNull() {
+            addCriterion("user_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andUseridEqualTo(Long value) {
-            addCriterion("userId =", value, "userid");
+        public Criteria andUserIdEqualTo(Long value) {
+            addCriterion("user_id =", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUseridNotEqualTo(Long value) {
-            addCriterion("userId <>", value, "userid");
+        public Criteria andUserIdNotEqualTo(Long value) {
+            addCriterion("user_id <>", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUseridGreaterThan(Long value) {
-            addCriterion("userId >", value, "userid");
+        public Criteria andUserIdGreaterThan(Long value) {
+            addCriterion("user_id >", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUseridGreaterThanOrEqualTo(Long value) {
-            addCriterion("userId >=", value, "userid");
+        public Criteria andUserIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("user_id >=", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUseridLessThan(Long value) {
-            addCriterion("userId <", value, "userid");
+        public Criteria andUserIdLessThan(Long value) {
+            addCriterion("user_id <", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUseridLessThanOrEqualTo(Long value) {
-            addCriterion("userId <=", value, "userid");
+        public Criteria andUserIdLessThanOrEqualTo(Long value) {
+            addCriterion("user_id <=", value, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUseridIn(List<Long> values) {
-            addCriterion("userId in", values, "userid");
+        public Criteria andUserIdIn(List<Long> values) {
+            addCriterion("user_id in", values, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUseridNotIn(List<Long> values) {
-            addCriterion("userId not in", values, "userid");
+        public Criteria andUserIdNotIn(List<Long> values) {
+            addCriterion("user_id not in", values, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUseridBetween(Long value1, Long value2) {
-            addCriterion("userId between", value1, value2, "userid");
+        public Criteria andUserIdBetween(Long value1, Long value2) {
+            addCriterion("user_id between", value1, value2, "userId");
             return (Criteria) this;
         }
 
-        public Criteria andUseridNotBetween(Long value1, Long value2) {
-            addCriterion("userId not between", value1, value2, "userid");
+        public Criteria andUserIdNotBetween(Long value1, Long value2) {
+            addCriterion("user_id not between", value1, value2, "userId");
             return (Criteria) this;
         }
 
@@ -432,6 +432,66 @@ public class RoleExample {
 
         public Criteria andGreetingNotBetween(String value1, String value2) {
             addCriterion("greeting not between", value1, value2, "greeting");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelIsNull() {
+            addCriterion("model is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelIsNotNull() {
+            addCriterion("model is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelEqualTo(Integer value) {
+            addCriterion("model =", value, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelNotEqualTo(Integer value) {
+            addCriterion("model <>", value, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelGreaterThan(Integer value) {
+            addCriterion("model >", value, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelGreaterThanOrEqualTo(Integer value) {
+            addCriterion("model >=", value, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelLessThan(Integer value) {
+            addCriterion("model <", value, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelLessThanOrEqualTo(Integer value) {
+            addCriterion("model <=", value, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelIn(List<Integer> values) {
+            addCriterion("model in", values, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelNotIn(List<Integer> values) {
+            addCriterion("model not in", values, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelBetween(Integer value1, Integer value2) {
+            addCriterion("model between", value1, value2, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelNotBetween(Integer value1, Integer value2) {
+            addCriterion("model not between", value1, value2, "model");
             return (Criteria) this;
         }
 
@@ -1062,6 +1122,66 @@ public class RoleExample {
 
         public Criteria andIsMarketNotBetween(Boolean value1, Boolean value2) {
             addCriterion("is_market not between", value1, value2, "isMarket");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeIsNull() {
+            addCriterion("market_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeIsNotNull() {
+            addCriterion("market_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeEqualTo(Integer value) {
+            addCriterion("market_type =", value, "marketType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeNotEqualTo(Integer value) {
+            addCriterion("market_type <>", value, "marketType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeGreaterThan(Integer value) {
+            addCriterion("market_type >", value, "marketType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("market_type >=", value, "marketType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeLessThan(Integer value) {
+            addCriterion("market_type <", value, "marketType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("market_type <=", value, "marketType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeIn(List<Integer> values) {
+            addCriterion("market_type in", values, "marketType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeNotIn(List<Integer> values) {
+            addCriterion("market_type not in", values, "marketType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeBetween(Integer value1, Integer value2) {
+            addCriterion("market_type between", value1, value2, "marketType");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("market_type not between", value1, value2, "marketType");
             return (Criteria) this;
         }
 

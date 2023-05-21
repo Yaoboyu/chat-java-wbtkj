@@ -23,6 +23,10 @@ public class AdminLoginInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
+        if (request.getMethod().equals("OPTIONS")) {
+            return true;
+        }
+
         String uri = request.getRequestURI();
         log.info("请求的uri: {}", uri);
 
@@ -35,6 +39,7 @@ public class AdminLoginInterceptor implements HandlerInterceptor {
         } catch (MyServiceException e) {
             log.info(e.getMessage());
             Result error = Result.error(e.getMessage());
+            response.setHeader("Content-Type", "text/html;charset=UTF-8");
             response.getWriter().write(JSONObject.toJSONString(error));
             return false;
         }

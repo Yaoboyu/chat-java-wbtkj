@@ -1,5 +1,6 @@
 package com.wbtkj.chat.service.impl;
 
+import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.filter.OpenAiAuthInterceptor;
 import com.wbtkj.chat.mapper.ThirdPartyModelKeyMapper;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
@@ -37,6 +38,12 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
     @Override
     @Transactional
     public boolean addKey(String key, String model) {
+        ThirdPartyModelKeyExample thirdPartyModelKeyExample = new ThirdPartyModelKeyExample();
+        thirdPartyModelKeyExample.createCriteria().andKeyEqualTo(key).andModelEqualTo(model);
+        if(thirdPartyModelKeyMapper.countByExample(thirdPartyModelKeyExample) > 0) {
+            throw new MyServiceException("第三方key已存在");
+        }
+
         ThirdPartyModelKey thirdPartyModelKey = new ThirdPartyModelKey();
         thirdPartyModelKey.setModel(model);
         thirdPartyModelKey.setKey(key);
@@ -54,6 +61,10 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
     @Transactional
     public boolean delKey(long id) {
         ThirdPartyModelKey thirdPartyModelKey = thirdPartyModelKeyMapper.selectByPrimaryKey(id);
+        if(thirdPartyModelKey == null) {
+            throw new MyServiceException("未找到第三方key");
+        }
+
         int deleteByPrimaryKey = thirdPartyModelKeyMapper.deleteByPrimaryKey(id);
         openAiAuthInterceptor.delKey(thirdPartyModelKey.getKey(), thirdPartyModelKey.getModel());
         return deleteByPrimaryKey != 0;
@@ -63,6 +74,10 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
     @Transactional
     public boolean changeStatus(long id, int status) {
         ThirdPartyModelKey thirdPartyModelKey = thirdPartyModelKeyMapper.selectByPrimaryKey(id);
+        if(thirdPartyModelKey == null) {
+            throw new MyServiceException("未找到第三方key");
+        }
+
         thirdPartyModelKey.setStatus(status);
         thirdPartyModelKeyMapper.updateByPrimaryKey(thirdPartyModelKey);
         if (status == ThirdPartyModelKeyStatus.ENABLED.getStatus()) {
@@ -82,6 +97,7 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
         List<ThirdPartyModelKey> thirdPartyModelKeys = thirdPartyModelKeyMapper.selectByExample(thirdPartyModelKeyExample);
         if (CollectionUtils.isEmpty(thirdPartyModelKeys)) {
             return false;
+//            throw new MyServiceException("未找到第三方key");
         }
 
         return changeStatus(thirdPartyModelKeys.get(0).getId(), status);

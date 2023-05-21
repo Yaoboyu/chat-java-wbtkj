@@ -26,10 +26,7 @@ public class LoginRegisterController {
     @PostMapping("/login")
     public Result Login(@RequestBody UserLoginVO userLoginVO) {
         log.info("用户 {} 登录", userLoginVO.getEmail());
-        String token = userService.login(userLoginVO.getEmail(), userLoginVO.getPwd());
-        JSONObject data = new JSONObject();
-        data.put("token", token);
-        return Result.success();
+        return Result.success(userService.login(userLoginVO.getEmail(), userLoginVO.getPwd()));
     }
 
     @PostMapping("/register")

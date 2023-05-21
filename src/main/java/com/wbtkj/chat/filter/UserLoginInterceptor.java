@@ -36,6 +36,7 @@ public class UserLoginInterceptor implements HandlerInterceptor {
         } catch (MyServiceException e) {
             log.info(e.getMessage());
             Result error = Result.error(e.getMessage());
+            response.setHeader("Content-Type", "text/html;charset=UTF-8");
             response.getWriter().write(JSONObject.toJSONString(error));
             return false;
         }

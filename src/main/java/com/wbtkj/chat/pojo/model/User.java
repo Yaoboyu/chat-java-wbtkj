@@ -22,8 +22,6 @@ public class User implements Serializable {
 
     private Double cash;
 
-    private String roles;
-
     private String remark;
 
     private String myInvCode;
@@ -108,14 +106,6 @@ public class User implements Serializable {
         this.cash = cash;
     }
 
-    public String getRoles() {
-        return roles;
-    }
-
-    public void setRoles(String roles) {
-        this.roles = roles == null ? null : roles.trim();
-    }
-
     public String getRemark() {
         return remark;
     }
@@ -171,7 +161,6 @@ public class User implements Serializable {
         sb.append(", vipEndTime=").append(vipEndTime);
         sb.append(", balance=").append(balance);
         sb.append(", cash=").append(cash);
-        sb.append(", roles=").append(roles);
         sb.append(", remark=").append(remark);
         sb.append(", myInvCode=").append(myInvCode);
         sb.append(", useInvCode=").append(useInvCode);

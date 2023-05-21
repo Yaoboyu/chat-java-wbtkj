@@ -20,7 +20,7 @@ public interface UserService {
      */
     void register(UserRegisterVO userRegisterVO);
 
-    void changePwd(String pwd,String code);
+    void changePwd(String pwd);
 
     /**
      * 可以修改密码，状态，会员有效期，余额，备注

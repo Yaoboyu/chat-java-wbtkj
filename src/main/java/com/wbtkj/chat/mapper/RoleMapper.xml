@@ -3,10 +3,11 @@
 <mapper namespace="com.wbtkj.chat.mapper.RoleMapper" >
   <resultMap id="BaseResultMap" type="com.wbtkj.chat.pojo.model.Role" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="userId" property="userid" jdbcType="BIGINT" />
+    <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="avatar" property="avatar" jdbcType="VARCHAR" />
     <result column="nickname" property="nickname" jdbcType="VARCHAR" />
     <result column="greeting" property="greeting" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="INTEGER" />
     <result column="system" property="system" jdbcType="VARCHAR" />
     <result column="context_n" property="contextN" jdbcType="INTEGER" />
     <result column="max_tokens" property="maxTokens" jdbcType="INTEGER" />
@@ -17,6 +18,7 @@
     <result column="logit_bias" property="logitBias" jdbcType="VARCHAR" />
     <result column="stop" property="stop" jdbcType="VARCHAR" />
     <result column="is_market" property="isMarket" jdbcType="BIT" />
+    <result column="market_type" property="marketType" jdbcType="INTEGER" />
     <result column="likes" property="likes" jdbcType="INTEGER" />
     <result column="hot" property="hot" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -81,9 +83,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, userId, avatar, nickname, greeting, `system`, context_n, max_tokens, temperature, 
-    top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, likes, hot, 
-    create_time, update_time
+    id, user_id, avatar, nickname, greeting, model, `system`, context_n, max_tokens, 
+    temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, 
+    market_type, likes, hot, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.RoleExample" >
     select
@@ -116,20 +118,22 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.Role" >
-    insert into role (id, userId, avatar, 
-      nickname, greeting, `system`, 
-      context_n, max_tokens, temperature, 
-      top_p, frequency_penalty, presence_penalty, 
-      logit_bias, stop, is_market, 
-      likes, hot, create_time, 
-      update_time)
-    values (#{id,jdbcType=BIGINT}, #{userid,jdbcType=BIGINT}, #{avatar,jdbcType=VARCHAR}, 
-      #{nickname,jdbcType=VARCHAR}, #{greeting,jdbcType=VARCHAR}, #{system,jdbcType=VARCHAR}, 
-      #{contextN,jdbcType=INTEGER}, #{maxTokens,jdbcType=INTEGER}, #{temperature,jdbcType=DOUBLE}, 
-      #{topP,jdbcType=DOUBLE}, #{frequencyPenalty,jdbcType=DOUBLE}, #{presencePenalty,jdbcType=DOUBLE}, 
-      #{logitBias,jdbcType=VARCHAR}, #{stop,jdbcType=VARCHAR}, #{isMarket,jdbcType=BIT}, 
-      #{likes,jdbcType=INTEGER}, #{hot,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP})
+    insert into role (id, user_id, avatar, 
+      nickname, greeting, model, 
+      `system`, context_n, max_tokens, 
+      temperature, top_p, frequency_penalty, 
+      presence_penalty, logit_bias, stop, 
+      is_market, market_type, likes, 
+      hot, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{avatar,jdbcType=VARCHAR}, 
+      #{nickname,jdbcType=VARCHAR}, #{greeting,jdbcType=VARCHAR}, #{model,jdbcType=INTEGER}, 
+      #{system,jdbcType=VARCHAR}, #{contextN,jdbcType=INTEGER}, #{maxTokens,jdbcType=INTEGER}, 
+      #{temperature,jdbcType=DOUBLE}, #{topP,jdbcType=DOUBLE}, #{frequencyPenalty,jdbcType=DOUBLE}, 
+      #{presencePenalty,jdbcType=DOUBLE}, #{logitBias,jdbcType=VARCHAR}, #{stop,jdbcType=VARCHAR}, 
+      #{isMarket,jdbcType=BIT}, #{marketType,jdbcType=INTEGER}, #{likes,jdbcType=INTEGER}, 
+      #{hot,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.Role" >
     insert into role
@@ -137,8 +141,8 @@
       <if test="id != null" >
         id,
       </if>
-      <if test="userid != null" >
-        userId,
+      <if test="userId != null" >
+        user_id,
       </if>
       <if test="avatar != null" >
         avatar,
@@ -148,6 +152,9 @@
       </if>
       <if test="greeting != null" >
         greeting,
+      </if>
+      <if test="model != null" >
+        model,
       </if>
       <if test="system != null" >
         `system`,
@@ -179,6 +186,9 @@
       <if test="isMarket != null" >
         is_market,
       </if>
+      <if test="marketType != null" >
+        market_type,
+      </if>
       <if test="likes != null" >
         likes,
       </if>
@@ -196,8 +206,8 @@
       <if test="id != null" >
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="userid != null" >
-        #{userid,jdbcType=BIGINT},
+      <if test="userId != null" >
+        #{userId,jdbcType=BIGINT},
       </if>
       <if test="avatar != null" >
         #{avatar,jdbcType=VARCHAR},
@@ -207,6 +217,9 @@
       </if>
       <if test="greeting != null" >
         #{greeting,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=INTEGER},
       </if>
       <if test="system != null" >
         #{system,jdbcType=VARCHAR},
@@ -238,6 +251,9 @@
       <if test="isMarket != null" >
         #{isMarket,jdbcType=BIT},
       </if>
+      <if test="marketType != null" >
+        #{marketType,jdbcType=INTEGER},
+      </if>
       <if test="likes != null" >
         #{likes,jdbcType=INTEGER},
       </if>
@@ -264,8 +280,8 @@
       <if test="record.id != null" >
         id = #{record.id,jdbcType=BIGINT},
       </if>
-      <if test="record.userid != null" >
-        userId = #{record.userid,jdbcType=BIGINT},
+      <if test="record.userId != null" >
+        user_id = #{record.userId,jdbcType=BIGINT},
       </if>
       <if test="record.avatar != null" >
         avatar = #{record.avatar,jdbcType=VARCHAR},
@@ -275,6 +291,9 @@
       </if>
       <if test="record.greeting != null" >
         greeting = #{record.greeting,jdbcType=VARCHAR},
+      </if>
+      <if test="record.model != null" >
+        model = #{record.model,jdbcType=INTEGER},
       </if>
       <if test="record.system != null" >
         `system` = #{record.system,jdbcType=VARCHAR},
@@ -306,6 +325,9 @@
       <if test="record.isMarket != null" >
         is_market = #{record.isMarket,jdbcType=BIT},
       </if>
+      <if test="record.marketType != null" >
+        market_type = #{record.marketType,jdbcType=INTEGER},
+      </if>
       <if test="record.likes != null" >
         likes = #{record.likes,jdbcType=INTEGER},
       </if>
@@ -326,10 +348,11 @@
   <update id="updateByExample" parameterType="map" >
     update role
     set id = #{record.id,jdbcType=BIGINT},
-      userId = #{record.userid,jdbcType=BIGINT},
+      user_id = #{record.userId,jdbcType=BIGINT},
       avatar = #{record.avatar,jdbcType=VARCHAR},
       nickname = #{record.nickname,jdbcType=VARCHAR},
       greeting = #{record.greeting,jdbcType=VARCHAR},
+      model = #{record.model,jdbcType=INTEGER},
       `system` = #{record.system,jdbcType=VARCHAR},
       context_n = #{record.contextN,jdbcType=INTEGER},
       max_tokens = #{record.maxTokens,jdbcType=INTEGER},
@@ -340,6 +363,7 @@
       logit_bias = #{record.logitBias,jdbcType=VARCHAR},
       stop = #{record.stop,jdbcType=VARCHAR},
       is_market = #{record.isMarket,jdbcType=BIT},
+      market_type = #{record.marketType,jdbcType=INTEGER},
       likes = #{record.likes,jdbcType=INTEGER},
       hot = #{record.hot,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -351,8 +375,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.wbtkj.chat.pojo.model.Role" >
     update role
     <set >
-      <if test="userid != null" >
-        userId = #{userid,jdbcType=BIGINT},
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=BIGINT},
       </if>
       <if test="avatar != null" >
         avatar = #{avatar,jdbcType=VARCHAR},
@@ -362,6 +386,9 @@
       </if>
       <if test="greeting != null" >
         greeting = #{greeting,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        model = #{model,jdbcType=INTEGER},
       </if>
       <if test="system != null" >
         `system` = #{system,jdbcType=VARCHAR},
@@ -393,6 +420,9 @@
       <if test="isMarket != null" >
         is_market = #{isMarket,jdbcType=BIT},
       </if>
+      <if test="marketType != null" >
+        market_type = #{marketType,jdbcType=INTEGER},
+      </if>
       <if test="likes != null" >
         likes = #{likes,jdbcType=INTEGER},
       </if>
@@ -410,10 +440,11 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.wbtkj.chat.pojo.model.Role" >
     update role
-    set userId = #{userid,jdbcType=BIGINT},
+    set user_id = #{userId,jdbcType=BIGINT},
       avatar = #{avatar,jdbcType=VARCHAR},
       nickname = #{nickname,jdbcType=VARCHAR},
       greeting = #{greeting,jdbcType=VARCHAR},
+      model = #{model,jdbcType=INTEGER},
       `system` = #{system,jdbcType=VARCHAR},
       context_n = #{contextN,jdbcType=INTEGER},
       max_tokens = #{maxTokens,jdbcType=INTEGER},
@@ -424,6 +455,7 @@
       logit_bias = #{logitBias,jdbcType=VARCHAR},
       stop = #{stop,jdbcType=VARCHAR},
       is_market = #{isMarket,jdbcType=BIT},
+      market_type = #{marketType,jdbcType=INTEGER},
       likes = #{likes,jdbcType=INTEGER},
       hot = #{hot,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},

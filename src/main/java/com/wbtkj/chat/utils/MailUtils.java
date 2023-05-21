@@ -38,7 +38,7 @@ public class MailUtils {
      * @return 是否发送成功
      */
     public static boolean SendCodeMail(String emailTo, String code, int exp){
-        String subject = "乌邦图科技:您好,请查收您的注册验证码";
+        String subject = "乌邦图科技:您好,请查收您的验证码";
         String msg = "您的验证码是：" + code + "，" + exp + "分钟有效，请注意查收。";
         return SendMail(emailTo, subject, msg);
     }

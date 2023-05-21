@@ -30,9 +30,12 @@ public class CDKEYServiceImpl implements CDKEYService {
 
 
     private int value(String cdkey) {
-        //TODO:解析失败处理
-        Map<String,String> mp = AesUtil.decode(cdkey);
-        return Integer.parseInt(mp.get("value"));
+        try {
+            Map<String,String> mp = AesUtil.decode(cdkey);
+            return Integer.parseInt(mp.get("value"));
+        } catch (Exception e) {
+            throw new MyServiceException("卡密错误");
+        }
     }
 
     @Override

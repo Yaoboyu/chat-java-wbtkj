@@ -9,9 +9,9 @@ spring:
       uri: mongodb://wbtkj:wbtkjjktbw@42.192.145.155:27017/chat-wbtkj
       authentication-database:
   redis:
-    host: localhost
+    host: 42.192.145.155
     port: 6379
-    password:
+    password: wbtkjjktbw
   application:
     name: chat-java-wbtkj
 

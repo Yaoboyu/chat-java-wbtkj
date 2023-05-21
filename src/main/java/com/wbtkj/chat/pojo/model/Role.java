@@ -6,13 +6,15 @@ import java.util.Date;
 public class Role implements Serializable {
     private Long id;
 
-    private Long userid;
+    private Long userId;
 
     private String avatar;
 
     private String nickname;
 
     private String greeting;
+
+    private Integer model;
 
     private String system;
 
@@ -34,6 +36,8 @@ public class Role implements Serializable {
 
     private Boolean isMarket;
 
+    private Integer marketType;
+
     private Integer likes;
 
     private Integer hot;
@@ -52,12 +56,12 @@ public class Role implements Serializable {
         this.id = id;
     }
 
-    public Long getUserid() {
-        return userid;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserid(Long userid) {
-        this.userid = userid;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getAvatar() {
@@ -82,6 +86,14 @@ public class Role implements Serializable {
 
     public void setGreeting(String greeting) {
         this.greeting = greeting == null ? null : greeting.trim();
+    }
+
+    public Integer getModel() {
+        return model;
+    }
+
+    public void setModel(Integer model) {
+        this.model = model;
     }
 
     public String getSystem() {
@@ -164,6 +176,14 @@ public class Role implements Serializable {
         this.isMarket = isMarket;
     }
 
+    public Integer getMarketType() {
+        return marketType;
+    }
+
+    public void setMarketType(Integer marketType) {
+        this.marketType = marketType;
+    }
+
     public Integer getLikes() {
         return likes;
     }
@@ -203,10 +223,11 @@ public class Role implements Serializable {
         sb.append(" [");
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
-        sb.append(", userid=").append(userid);
+        sb.append(", userId=").append(userId);
         sb.append(", avatar=").append(avatar);
         sb.append(", nickname=").append(nickname);
         sb.append(", greeting=").append(greeting);
+        sb.append(", model=").append(model);
         sb.append(", system=").append(system);
         sb.append(", contextN=").append(contextN);
         sb.append(", maxTokens=").append(maxTokens);
@@ -217,6 +238,7 @@ public class Role implements Serializable {
         sb.append(", logitBias=").append(logitBias);
         sb.append(", stop=").append(stop);
         sb.append(", isMarket=").append(isMarket);
+        sb.append(", marketType=").append(marketType);
         sb.append(", likes=").append(likes);
         sb.append(", hot=").append(hot);
         sb.append(", createTime=").append(createTime);

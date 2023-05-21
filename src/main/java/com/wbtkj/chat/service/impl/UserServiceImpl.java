@@ -60,6 +60,17 @@ public class UserServiceImpl implements UserService {
             throw new MyServiceException("账号已被注册!");
         }
 
+        if(userRegisterVO.getPwd().length() < 8) {
+            throw new MyServiceException("密码至少8位！");
+        }
+
+        userExample.clear();
+        userExample.createCriteria().andMyInvCodeEqualTo(userRegisterVO.getInvCode());
+
+        if(userMapper.countByExample(userExample) == 0) {
+            throw new MyServiceException("邀请码不存在");
+        }
+
         Long time = System.currentTimeMillis();
         Date date = new Date(time);
 
@@ -69,6 +80,7 @@ public class UserServiceImpl implements UserService {
         newUser.setPwd(MD5Utils.code(userRegisterVO.getPwd() + newUser.getSalt()));
         newUser.setStatus(UserStatus.ENABLED.getStatus());
         newUser.setBalance(GeneralConstant.USER_INIT_BALANCE);
+        newUser.setCash(0.);
         newUser.setRemark("");
         newUser.setMyInvCode("");
         newUser.setUseInvCode(userRegisterVO.getInvCode());
@@ -85,10 +97,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePwd(String pwd, String code) {
-        //TODO :发邮箱校验验证码
+    public void changePwd(String pwd) {
+        if(pwd.length() < 8) {
+            throw new MyServiceException("密码至少8位！");
+        }
 
+        UserExample userExample = new UserExample();
+        userExample.createCriteria().andIdEqualTo(ThreadLocalConfig.getUser().getId());
 
+        User newUser = userMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
+
+        if(newUser.getPwd().equals(MD5Utils.code(pwd + newUser.getSalt()))) {
+            throw new MyServiceException("新密码与原密码不能相同！");
+        }
+
+        newUser.setPwd(MD5Utils.code(pwd + newUser.getSalt()));
+        newUser.setUpdateTime(new Date());
+
+        userMapper.updateByPrimaryKey(newUser);
     }
 
     @Override
@@ -178,7 +204,7 @@ public class UserServiceImpl implements UserService {
         PageHelper.startPage(page, pageSize);
         UserExample userExample = new UserExample();
         if(StringUtils.hasLength(email)) {
-            userExample.createCriteria().andEmailLike(email);
+            userExample.createCriteria().andEmailLike("%" + email + "%");
         }
 
         List<User> users = userMapper.selectByExample(userExample);

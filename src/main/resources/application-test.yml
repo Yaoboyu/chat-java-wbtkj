@@ -4,16 +4,19 @@ spring:
     url: jdbc:mysql://42.192.145.155:3306/wbtkj_chat?serverTimezone=UTC
     username: root
     password: R/oot123
+    hikari:
+      max-lifetime: 0
   data:
     mongodb:
       uri: mongodb://wbtkj:wbtkjjktbw@42.192.145.155:27017/chat-wbtkj
       authentication-database:
   redis:
-    host: localhost
+    host: 42.192.145.155
     port: 6379
-    password:
+    password: wbtkjjktbw
   application:
     name: chat-java-wbtkj
+
 
 mybatis:
   configuration:

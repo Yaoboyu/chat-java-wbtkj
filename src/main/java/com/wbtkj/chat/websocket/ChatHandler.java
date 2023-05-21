@@ -24,12 +24,13 @@ public class ChatHandler extends TextWebSocketHandler {
     private Long id; // 用户id
     private String email; // 用户email
 
+    @Resource
     private OpenAiStreamService openAiStreamService;
 
-    @Resource
-    public void setOpenAiStreamService(OpenAiStreamService openAiStreamService) {
-        openAiStreamService = openAiStreamService;
-    }
+//    @Resource
+//    public void setOpenAiStreamService(OpenAiStreamService openAiStreamService) {
+//        openAiStreamService = openAiStreamService;
+//    }
 
 
 
