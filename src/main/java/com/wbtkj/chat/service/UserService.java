@@ -3,6 +3,7 @@ package com.wbtkj.chat.service;
 import com.github.pagehelper.PageInfo;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.model.User;
+import com.wbtkj.chat.pojo.vo.user.UserInfo;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 
 public interface UserService {
@@ -50,4 +51,6 @@ public interface UserService {
      * @return
      */
     PageInfo<User> getUsersByPage(Integer page, Integer pageSize, String email);
+
+    UserInfo getUserInfo();
 }

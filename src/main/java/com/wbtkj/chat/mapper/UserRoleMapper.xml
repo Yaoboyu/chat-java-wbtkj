@@ -8,6 +8,7 @@
     <result column="free_Balance" property="freeBalance" jdbcType="INTEGER" />
     <result column="used" property="used" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="top" property="top" jdbcType="BIT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -68,7 +69,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, role_id, free_Balance, used, `status`
+    id, user_id, role_id, free_Balance, used, `status`, `top`
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.UserRoleExample" >
     select
@@ -102,11 +103,11 @@
   </delete>
   <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.UserRole" >
     insert into user_role (id, user_id, role_id, 
-      free_Balance, used, `status`
-      )
+      free_Balance, used, `status`, 
+      `top`)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, 
-      #{freeBalance,jdbcType=INTEGER}, #{used,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}
-      )
+      #{freeBalance,jdbcType=INTEGER}, #{used,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+      #{top,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.UserRole" >
     insert into user_role
@@ -129,6 +130,9 @@
       <if test="status != null" >
         `status`,
       </if>
+      <if test="top != null" >
+        `top`,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -148,6 +152,9 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
+      </if>
+      <if test="top != null" >
+        #{top,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -178,6 +185,9 @@
       <if test="record.status != null" >
         `status` = #{record.status,jdbcType=INTEGER},
       </if>
+      <if test="record.top != null" >
+        `top` = #{record.top,jdbcType=BIT},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -190,7 +200,8 @@
       role_id = #{record.roleId,jdbcType=BIGINT},
       free_Balance = #{record.freeBalance,jdbcType=INTEGER},
       used = #{record.used,jdbcType=INTEGER},
-      `status` = #{record.status,jdbcType=INTEGER}
+      `status` = #{record.status,jdbcType=INTEGER},
+      `top` = #{record.top,jdbcType=BIT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -213,6 +224,9 @@
       <if test="status != null" >
         `status` = #{status,jdbcType=INTEGER},
       </if>
+      <if test="top != null" >
+        `top` = #{top,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -222,7 +236,8 @@
       role_id = #{roleId,jdbcType=BIGINT},
       free_Balance = #{freeBalance,jdbcType=INTEGER},
       used = #{used,jdbcType=INTEGER},
-      `status` = #{status,jdbcType=INTEGER}
+      `status` = #{status,jdbcType=INTEGER},
+      `top` = #{top,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -105,7 +105,8 @@ CREATE TABLE IF NOT EXISTS `user_role` (
     `free_Balance` INT NOT NULL COMMENT '免费额度',
     `used` INT NOT NULL COMMENT '该用户在该角色上使用的点数',
     `status` INT NOT NULL COMMENT '状态。0正常使用，-1软删除',
+    `top` BOOLEAN NOT NULL COMMENT '是否置顶。0不置顶，1置顶',
     PRIMARY KEY (`id`),
-    INDEX `idx_user_id_status`(`user_id`,`status`) USING BTREE,
+    INDEX `idx_user_id_status_top`(`user_id`,`status`,`top`) USING BTREE,
     INDEX `idx_role_id`(`role_id`) USING BTREE
 ) ENGINE=InnoDB;

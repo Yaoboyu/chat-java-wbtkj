@@ -26,7 +26,7 @@ public class UserController {
     SendVerifyCodeService sendVerifyCodeService;
 
     @PutMapping("/pwd")
-    public Result changePwd(@RequestBody ChangePwdVO changePwdVO) throws Exception{
+    public Result changePwd(@RequestBody ChangePwdVO changePwdVO) {
         String codeByEmail = sendVerifyCodeService.getCodeByEmail(ThreadLocalConfig.getUser().getEmail());
         if(codeByEmail == null || StringUtils.isBlank(codeByEmail)) {
             throw new MyServiceException("验证码过期！");
@@ -48,5 +48,10 @@ public class UserController {
     @GetMapping("/recharge/history")
     Result getHistory() {
         return Result.success(cdkeyService.getRechargeRecord());
+    }
+
+    @GetMapping("/info")
+    Result info() {
+        return Result.success(userService.getUserInfo());
     }
 }

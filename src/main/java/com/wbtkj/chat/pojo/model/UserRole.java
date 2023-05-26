@@ -15,6 +15,8 @@ public class UserRole implements Serializable {
 
     private Integer status;
 
+    private Boolean top;
+
     private static final long serialVersionUID = 1L;
 
     public Long getId() {
@@ -65,6 +67,14 @@ public class UserRole implements Serializable {
         this.status = status;
     }
 
+    public Boolean getTop() {
+        return top;
+    }
+
+    public void setTop(Boolean top) {
+        this.top = top;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -77,6 +87,7 @@ public class UserRole implements Serializable {
         sb.append(", freeBalance=").append(freeBalance);
         sb.append(", used=").append(used);
         sb.append(", status=").append(status);
+        sb.append(", top=").append(top);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();

@@ -10,6 +10,7 @@ import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.dto.user.UserStatus;
 import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.model.UserExample;
+import com.wbtkj.chat.pojo.vo.user.UserInfo;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 import com.wbtkj.chat.service.UserService;
 import com.wbtkj.chat.utils.JwtUtils;
@@ -213,6 +214,13 @@ public class UserServiceImpl implements UserService {
         PageInfo<User> pageInfo = new PageInfo<User>(users);
 
         return pageInfo;
+    }
+
+    @Override
+    public UserInfo getUserInfo() {
+        User user = userMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
+        UserInfo userInfo = new UserInfo(user);
+        return userInfo;
     }
 
 }

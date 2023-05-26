@@ -463,6 +463,66 @@ public class UserRoleExample {
             addCriterion("`status` not between", value1, value2, "status");
             return (Criteria) this;
         }
+
+        public Criteria andTopIsNull() {
+            addCriterion("`top` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopIsNotNull() {
+            addCriterion("`top` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopEqualTo(Boolean value) {
+            addCriterion("`top` =", value, "top");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopNotEqualTo(Boolean value) {
+            addCriterion("`top` <>", value, "top");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopGreaterThan(Boolean value) {
+            addCriterion("`top` >", value, "top");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("`top` >=", value, "top");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopLessThan(Boolean value) {
+            addCriterion("`top` <", value, "top");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopLessThanOrEqualTo(Boolean value) {
+            addCriterion("`top` <=", value, "top");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopIn(List<Boolean> values) {
+            addCriterion("`top` in", values, "top");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopNotIn(List<Boolean> values) {
+            addCriterion("`top` not in", values, "top");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopBetween(Boolean value1, Boolean value2) {
+            addCriterion("`top` between", value1, value2, "top");
+            return (Criteria) this;
+        }
+
+        public Criteria andTopNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("`top` not between", value1, value2, "top");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {
