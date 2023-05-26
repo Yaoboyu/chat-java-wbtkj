@@ -44,13 +44,6 @@ public interface RoleService {
     List<RoleHistoryVO> getRoleHistory(long roleId);
 
     /**
-     * 获取一轮对话详情
-     * @param sessionId
-     * @return
-     */
-    List<ChatSession> getSessionById(String sessionId);
-
-    /**
      * 添加一轮新的对话
      * @param userId
      * @param roleId

@@ -1,6 +1,5 @@
 package com.wbtkj.chat.websocket;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.wbtkj.chat.constant.RedisKeyConstant;
 import com.wbtkj.chat.exception.MyServiceException;
@@ -115,6 +114,7 @@ public class ChatHandler extends TextWebSocketHandler {
                 ChatSession newChatSession = roleService.addChatSession(wsChatSession.getUserId(), role.getId());
                 wsChatSession.setChatSessionId(newChatSession.getChatSessionId());
                 wsChatSession.setMessageList(new ArrayList<>());
+                session.sendMessage(new TextMessage("{{chatSessionId}}:" + newChatSession.getChatSessionId()));
 
             } else { // 加载历史对话
                 ChatSession chatSession = roleService.getChatSessionById(wsChatMessage.getChatSessionId());
@@ -127,6 +127,7 @@ public class ChatHandler extends TextWebSocketHandler {
                 ChatSession newChatSession = roleService.addChatSession(wsChatSession.getUserId(), wsChatSession.getRole().getId());
                 wsChatSession.setChatSessionId(newChatSession.getChatSessionId());
                 wsChatSession.setMessageList(new ArrayList<>());
+                session.sendMessage(new TextMessage("{{chatSessionId}}:" + newChatSession.getChatSessionId()));
 
             } else if (!wsChatMessage.getChatSessionId().equals(wsChatSession.getChatSessionId())) { // 加载历史对话
                 roleService.updateChatSession(wsChatSession.getChatSessionId(), wsChatSession.getMessageList());
@@ -135,6 +136,7 @@ public class ChatHandler extends TextWebSocketHandler {
                 wsChatSession.setMessageList(chatSession.getMessages());
             }
         }
+        wsChatSession.getMessageList().add(Message.builder().content(wsChatMessage.getMessage()).role(Message.Role.USER).build());
         redisTemplate.opsForValue().set(key, wsChatSession);
 
         List<Message> messages = new ArrayList<>(wsChatSession.getMessageList());

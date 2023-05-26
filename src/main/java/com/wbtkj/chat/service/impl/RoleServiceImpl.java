@@ -1,6 +1,7 @@
 package com.wbtkj.chat.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.mongodb.client.result.UpdateResult;
 import com.wbtkj.chat.constant.RedisKeyConstant;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.dto.role.WSChatSession;
@@ -9,9 +10,14 @@ import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
 import com.wbtkj.chat.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -54,11 +60,6 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<ChatSession> getSessionById(String sessionId) {
-        return null;
-    }
-
-    @Override
     public ChatSession addChatSession(long userId, long roleId) {
         ChatSession messages = ChatSession.builder()
                 .roleId(roleId).userId(userId).createDate(new Date())
@@ -74,7 +75,14 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public boolean updateChatSession(String chatSessionId, List<Message> messageList) {
-        return false;
+        if (StringUtils.isBlank(chatSessionId) || CollectionUtils.isEmpty(messageList)) {
+            return false;
+        }
+        Query query = new Query(Criteria.where("chatSessionId").is(chatSessionId));
+        Update update = new Update();
+        update.set("messages", messageList);
+        UpdateResult updateResult = mongoTemplate.updateFirst(query, update, ChatSession.class);
+        return updateResult.getModifiedCount() == 1;
     }
 
     @Override
