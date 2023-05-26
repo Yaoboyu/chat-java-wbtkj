@@ -15,8 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class SendVerifyCodeServiceImpl implements SendVerifyCodeService {
-
-
     @Resource
     private RedisTemplate<String, String> redisTemplate;
 

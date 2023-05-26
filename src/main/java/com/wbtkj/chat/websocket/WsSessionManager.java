@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class WsSessionManager {
     // 保存连接 session 的地方
-    private static ConcurrentHashMap<String, WebSocketSession> SESSION_POOL = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, WebSocketSession> SESSION_POOL = new ConcurrentHashMap<>();
     // 在线总数
     private static int onlineCount;
 

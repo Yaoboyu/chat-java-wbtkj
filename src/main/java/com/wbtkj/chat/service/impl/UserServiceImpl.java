@@ -10,7 +10,7 @@ import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.dto.user.UserStatus;
 import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.model.UserExample;
-import com.wbtkj.chat.pojo.vo.user.UserInfo;
+import com.wbtkj.chat.pojo.vo.user.UserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 import com.wbtkj.chat.service.UserService;
 import com.wbtkj.chat.utils.JwtUtils;
@@ -176,7 +176,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean checkToken(String token) throws MyServiceException{
+    public UserLocalDTO checkToken(String token) throws MyServiceException{
         //判断令牌是否存在，如果不存在，返回错误结果（未登录）。
         if(!StringUtils.hasLength(token)){
             log.info("请求头token为空,返回未登录的信息");
@@ -191,12 +191,12 @@ public class UserServiceImpl implements UserService {
             userLocalDTO.setId(user.getId());
             userLocalDTO.setEmail(user.getEmail());
             ThreadLocalConfig.setUser(userLocalDTO);
+            return userLocalDTO;
         } catch (MyServiceException e) {//jwt解析失败
             log.info("解析令牌失败, 返回未登录错误信息");
             throw e;
         }
 
-        return true;
     }
 
     @Override
@@ -217,10 +217,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfo getUserInfo() {
+    public UserInfoVO getUserInfo() {
         User user = userMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
-        UserInfo userInfo = new UserInfo(user);
-        return userInfo;
+        UserInfoVO userInfoVO = new UserInfoVO(user);
+        return userInfoVO;
     }
 
 }

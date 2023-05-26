@@ -445,52 +445,62 @@ public class RoleExample {
             return (Criteria) this;
         }
 
-        public Criteria andModelEqualTo(Integer value) {
+        public Criteria andModelEqualTo(String value) {
             addCriterion("model =", value, "model");
             return (Criteria) this;
         }
 
-        public Criteria andModelNotEqualTo(Integer value) {
+        public Criteria andModelNotEqualTo(String value) {
             addCriterion("model <>", value, "model");
             return (Criteria) this;
         }
 
-        public Criteria andModelGreaterThan(Integer value) {
+        public Criteria andModelGreaterThan(String value) {
             addCriterion("model >", value, "model");
             return (Criteria) this;
         }
 
-        public Criteria andModelGreaterThanOrEqualTo(Integer value) {
+        public Criteria andModelGreaterThanOrEqualTo(String value) {
             addCriterion("model >=", value, "model");
             return (Criteria) this;
         }
 
-        public Criteria andModelLessThan(Integer value) {
+        public Criteria andModelLessThan(String value) {
             addCriterion("model <", value, "model");
             return (Criteria) this;
         }
 
-        public Criteria andModelLessThanOrEqualTo(Integer value) {
+        public Criteria andModelLessThanOrEqualTo(String value) {
             addCriterion("model <=", value, "model");
             return (Criteria) this;
         }
 
-        public Criteria andModelIn(List<Integer> values) {
+        public Criteria andModelLike(String value) {
+            addCriterion("model like", value, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelNotLike(String value) {
+            addCriterion("model not like", value, "model");
+            return (Criteria) this;
+        }
+
+        public Criteria andModelIn(List<String> values) {
             addCriterion("model in", values, "model");
             return (Criteria) this;
         }
 
-        public Criteria andModelNotIn(List<Integer> values) {
+        public Criteria andModelNotIn(List<String> values) {
             addCriterion("model not in", values, "model");
             return (Criteria) this;
         }
 
-        public Criteria andModelBetween(Integer value1, Integer value2) {
+        public Criteria andModelBetween(String value1, String value2) {
             addCriterion("model between", value1, value2, "model");
             return (Criteria) this;
         }
 
-        public Criteria andModelNotBetween(Integer value1, Integer value2) {
+        public Criteria andModelNotBetween(String value1, String value2) {
             addCriterion("model not between", value1, value2, "model");
             return (Criteria) this;
         }

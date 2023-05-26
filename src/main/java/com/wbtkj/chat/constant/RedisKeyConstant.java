@@ -7,6 +7,7 @@ import lombok.Getter;
 public enum RedisKeyConstant {
 
     verify_code("verify_code:", "验证码", 5),
+    ws_chat_session("ws_chat_session:", "websocket chat session", -1),
     ;
 
     private String key;

@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class UserInfo {
+public class UserInfoVO {
     private Long id;
 
     private String email;
@@ -31,7 +31,7 @@ public class UserInfo {
 
     private Date updateTime;
 
-    public UserInfo(User user) {
+    public UserInfoVO(User user) {
         this.id = user.getId();
         this.email = user.getEmail();
         this.status = user.getStatus();

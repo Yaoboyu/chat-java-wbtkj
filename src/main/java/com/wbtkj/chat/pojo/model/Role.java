@@ -14,7 +14,7 @@ public class Role implements Serializable {
 
     private String greeting;
 
-    private Integer model;
+    private String model;
 
     private String system;
 
@@ -88,12 +88,12 @@ public class Role implements Serializable {
         this.greeting = greeting == null ? null : greeting.trim();
     }
 
-    public Integer getModel() {
+    public String getModel() {
         return model;
     }
 
-    public void setModel(Integer model) {
-        this.model = model;
+    public void setModel(String model) {
+        this.model = model == null ? null : model.trim();
     }
 
     public String getSystem() {

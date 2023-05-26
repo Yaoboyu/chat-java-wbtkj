@@ -1,18 +1,21 @@
 package com.wbtkj.chat.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unfbx.chatgpt.entity.chat.ChatCompletionResponse;
+import com.wbtkj.chat.config.StaticContextAccessor;
+import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletionResponse;
+import com.wbtkj.chat.pojo.dto.openai.chat.Message;
+import com.wbtkj.chat.service.RoleService;
+import com.wbtkj.chat.service.impl.RoleServiceImpl;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import javax.websocket.Session;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -26,8 +29,12 @@ public class OpenAIWebSocketEventSourceListener extends EventSourceListener {
 
     private WebSocketSession session;
 
+    private StringBuilder message;
+
+
     public OpenAIWebSocketEventSourceListener(WebSocketSession session) {
         this.session = session;
+        this.message = new StringBuilder();
     }
 
     /**
@@ -48,11 +55,15 @@ public class OpenAIWebSocketEventSourceListener extends EventSourceListener {
         if (data.equals("[DONE]")) {
             log.debug("OpenAI返回数据结束了");
             session.sendMessage(new TextMessage("[DONE]"));
+            RoleService roleService = StaticContextAccessor.getBean(RoleService.class);
+            roleService.addReturnToWSChatSessionMessageList(session.getId(), message.toString());
             return;
         }
         ObjectMapper mapper = new ObjectMapper();
         ChatCompletionResponse completionResponse = mapper.readValue(data, ChatCompletionResponse.class); // 读取Json
-        String delta = mapper.writeValueAsString(completionResponse.getChoices().get(0).getDelta());
+        String delta = completionResponse.getChoices().get(0).getDelta().getContent();
+//        String delta = mapper.writeValueAsString(delta);
+        message.append(delta);
         session.sendMessage(new TextMessage(delta));
     }
 

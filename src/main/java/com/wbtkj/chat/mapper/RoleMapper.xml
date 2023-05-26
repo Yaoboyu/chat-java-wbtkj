@@ -7,7 +7,7 @@
     <result column="avatar" property="avatar" jdbcType="VARCHAR" />
     <result column="nickname" property="nickname" jdbcType="VARCHAR" />
     <result column="greeting" property="greeting" jdbcType="VARCHAR" />
-    <result column="model" property="model" jdbcType="INTEGER" />
+    <result column="model" property="model" jdbcType="VARCHAR" />
     <result column="system" property="system" jdbcType="VARCHAR" />
     <result column="context_n" property="contextN" jdbcType="INTEGER" />
     <result column="max_tokens" property="maxTokens" jdbcType="INTEGER" />
@@ -127,7 +127,7 @@
       hot, create_time, update_time
       )
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{avatar,jdbcType=VARCHAR}, 
-      #{nickname,jdbcType=VARCHAR}, #{greeting,jdbcType=VARCHAR}, #{model,jdbcType=INTEGER}, 
+      #{nickname,jdbcType=VARCHAR}, #{greeting,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, 
       #{system,jdbcType=VARCHAR}, #{contextN,jdbcType=INTEGER}, #{maxTokens,jdbcType=INTEGER}, 
       #{temperature,jdbcType=DOUBLE}, #{topP,jdbcType=DOUBLE}, #{frequencyPenalty,jdbcType=DOUBLE}, 
       #{presencePenalty,jdbcType=DOUBLE}, #{logitBias,jdbcType=VARCHAR}, #{stop,jdbcType=VARCHAR}, 
@@ -219,7 +219,7 @@
         #{greeting,jdbcType=VARCHAR},
       </if>
       <if test="model != null" >
-        #{model,jdbcType=INTEGER},
+        #{model,jdbcType=VARCHAR},
       </if>
       <if test="system != null" >
         #{system,jdbcType=VARCHAR},
@@ -293,7 +293,7 @@
         greeting = #{record.greeting,jdbcType=VARCHAR},
       </if>
       <if test="record.model != null" >
-        model = #{record.model,jdbcType=INTEGER},
+        model = #{record.model,jdbcType=VARCHAR},
       </if>
       <if test="record.system != null" >
         `system` = #{record.system,jdbcType=VARCHAR},
@@ -352,7 +352,7 @@
       avatar = #{record.avatar,jdbcType=VARCHAR},
       nickname = #{record.nickname,jdbcType=VARCHAR},
       greeting = #{record.greeting,jdbcType=VARCHAR},
-      model = #{record.model,jdbcType=INTEGER},
+      model = #{record.model,jdbcType=VARCHAR},
       `system` = #{record.system,jdbcType=VARCHAR},
       context_n = #{record.contextN,jdbcType=INTEGER},
       max_tokens = #{record.maxTokens,jdbcType=INTEGER},
@@ -388,7 +388,7 @@
         greeting = #{greeting,jdbcType=VARCHAR},
       </if>
       <if test="model != null" >
-        model = #{model,jdbcType=INTEGER},
+        model = #{model,jdbcType=VARCHAR},
       </if>
       <if test="system != null" >
         `system` = #{system,jdbcType=VARCHAR},
@@ -444,7 +444,7 @@
       avatar = #{avatar,jdbcType=VARCHAR},
       nickname = #{nickname,jdbcType=VARCHAR},
       greeting = #{greeting,jdbcType=VARCHAR},
-      model = #{model,jdbcType=INTEGER},
+      model = #{model,jdbcType=VARCHAR},
       `system` = #{system,jdbcType=VARCHAR},
       context_n = #{contextN,jdbcType=INTEGER},
       max_tokens = #{maxTokens,jdbcType=INTEGER},

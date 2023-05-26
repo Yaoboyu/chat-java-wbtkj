@@ -1,20 +1,22 @@
 package com.wbtkj.chat.pojo.model;
 
+import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 
-@Document("messages")
+@Document("chat_session")
 @Data
 @Builder
-public class Messages {
+public class ChatSession {
     @Id
-    private String id;
+    private String chatSessionId;
     private Long roleId;
     private Long userId;
     private Date createDate;
-    private String messages;
+    private List<Message> messages;
 }

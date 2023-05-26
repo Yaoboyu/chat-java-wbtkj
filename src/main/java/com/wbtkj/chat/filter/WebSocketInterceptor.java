@@ -34,7 +34,7 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
         log.debug("HandshakeInterceptor beforeHandshake start...");
         if (request instanceof ServletServerHttpRequest) {
             HttpServletRequest req = ((ServletServerHttpRequest) request).getServletRequest();
-            String token = req.getHeader("token");
+            String token = req.getHeader("Authorization");
 
             try {
                 userService.checkToken(token);

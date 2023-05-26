@@ -2,8 +2,9 @@ package com.wbtkj.chat.service;
 
 import com.github.pagehelper.PageInfo;
 import com.wbtkj.chat.exception.MyServiceException;
+import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.User;
-import com.wbtkj.chat.pojo.vo.user.UserInfo;
+import com.wbtkj.chat.pojo.vo.user.UserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 
 public interface UserService {
@@ -41,7 +42,7 @@ public interface UserService {
      * @param token
      * @return
      */
-    boolean checkToken(String token) throws MyServiceException;
+    UserLocalDTO checkToken(String token) throws MyServiceException;
 
     /**
      * 分页并模糊查询email
@@ -52,5 +53,5 @@ public interface UserService {
      */
     PageInfo<User> getUsersByPage(Integer page, Integer pageSize, String email);
 
-    UserInfo getUserInfo();
+    UserInfoVO getUserInfo();
 }
