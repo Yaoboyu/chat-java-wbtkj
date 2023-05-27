@@ -11,8 +11,10 @@ import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.RechargeRecord;
 import com.wbtkj.chat.pojo.model.RechargeRecordExample;
 import com.wbtkj.chat.pojo.model.User;
+import com.wbtkj.chat.pojo.model.UserExample;
 import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.service.CDKEYService;
+import com.wbtkj.chat.service.UserService;
 import com.wbtkj.chat.utils.AesUtil;
 import com.wbtkj.chat.utils.CardGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,8 @@ import java.util.*;
 @Service
 @Slf4j
 public class CDKEYServiceImpl implements CDKEYService {
+    @Resource
+    UserService userService;
     @Resource
     RechargeRecordMapper rechargeRecordMapper;
     @Resource
@@ -71,6 +75,9 @@ public class CDKEYServiceImpl implements CDKEYService {
         if (cdkeyInfo.get("type").equals(RechargeRecordType.BALANCE.getType())) {
             user.setBalance(user.getBalance() + cdkeyInfo.get("value"));
             userMapper.updateByPrimaryKey(user);
+
+            // 返现
+            userService.cashBack(user.getUseInvCode(), rechargeRecord.getValue());
 
         } else if (cdkeyInfo.get("type").equals(RechargeRecordType.VIP.getType())) {
             //TODO：vip

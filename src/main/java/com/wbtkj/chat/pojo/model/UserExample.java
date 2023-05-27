@@ -825,62 +825,52 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andUseInvCodeEqualTo(String value) {
+        public Criteria andUseInvCodeEqualTo(Long value) {
             addCriterion("use_inv_code =", value, "useInvCode");
             return (Criteria) this;
         }
 
-        public Criteria andUseInvCodeNotEqualTo(String value) {
+        public Criteria andUseInvCodeNotEqualTo(Long value) {
             addCriterion("use_inv_code <>", value, "useInvCode");
             return (Criteria) this;
         }
 
-        public Criteria andUseInvCodeGreaterThan(String value) {
+        public Criteria andUseInvCodeGreaterThan(Long value) {
             addCriterion("use_inv_code >", value, "useInvCode");
             return (Criteria) this;
         }
 
-        public Criteria andUseInvCodeGreaterThanOrEqualTo(String value) {
+        public Criteria andUseInvCodeGreaterThanOrEqualTo(Long value) {
             addCriterion("use_inv_code >=", value, "useInvCode");
             return (Criteria) this;
         }
 
-        public Criteria andUseInvCodeLessThan(String value) {
+        public Criteria andUseInvCodeLessThan(Long value) {
             addCriterion("use_inv_code <", value, "useInvCode");
             return (Criteria) this;
         }
 
-        public Criteria andUseInvCodeLessThanOrEqualTo(String value) {
+        public Criteria andUseInvCodeLessThanOrEqualTo(Long value) {
             addCriterion("use_inv_code <=", value, "useInvCode");
             return (Criteria) this;
         }
 
-        public Criteria andUseInvCodeLike(String value) {
-            addCriterion("use_inv_code like", value, "useInvCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseInvCodeNotLike(String value) {
-            addCriterion("use_inv_code not like", value, "useInvCode");
-            return (Criteria) this;
-        }
-
-        public Criteria andUseInvCodeIn(List<String> values) {
+        public Criteria andUseInvCodeIn(List<Long> values) {
             addCriterion("use_inv_code in", values, "useInvCode");
             return (Criteria) this;
         }
 
-        public Criteria andUseInvCodeNotIn(List<String> values) {
+        public Criteria andUseInvCodeNotIn(List<Long> values) {
             addCriterion("use_inv_code not in", values, "useInvCode");
             return (Criteria) this;
         }
 
-        public Criteria andUseInvCodeBetween(String value1, String value2) {
+        public Criteria andUseInvCodeBetween(Long value1, Long value2) {
             addCriterion("use_inv_code between", value1, value2, "useInvCode");
             return (Criteria) this;
         }
 
-        public Criteria andUseInvCodeNotBetween(String value1, String value2) {
+        public Criteria andUseInvCodeNotBetween(Long value1, Long value2) {
             addCriterion("use_inv_code not between", value1, value2, "useInvCode");
             return (Criteria) this;
         }

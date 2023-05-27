@@ -51,7 +51,23 @@ public interface UserService {
      * @param email
      * @return
      */
-    PageInfo<User> getUsersByPage(Integer page, Integer pageSize, String email);
+    PageInfo<User> getUsersByPage(int page, int pageSize, String email);
 
     UserInfoVO getUserInfo();
+
+    /**
+     * 返现
+     * @param userId 增加返现的账户
+     * @param point 返现点数
+     * @return
+     */
+    boolean cashBack(Long userId, int point);
+
+    /**
+     * 扣除用户余额
+     * @param userId
+     * @param point
+     * @return
+     */
+    int deductBalance(long userId, int point);
 }

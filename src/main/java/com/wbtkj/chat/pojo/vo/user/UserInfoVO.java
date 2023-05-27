@@ -25,7 +25,7 @@ public class UserInfoVO {
 
     private String myInvCode;
 
-    private String useInvCode;
+    private Long useInvCode;
 
     private Date createTime;
 

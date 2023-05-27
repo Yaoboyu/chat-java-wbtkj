@@ -26,7 +26,7 @@ public class User implements Serializable {
 
     private String myInvCode;
 
-    private String useInvCode;
+    private Long useInvCode;
 
     private Date createTime;
 
@@ -122,12 +122,12 @@ public class User implements Serializable {
         this.myInvCode = myInvCode == null ? null : myInvCode.trim();
     }
 
-    public String getUseInvCode() {
+    public Long getUseInvCode() {
         return useInvCode;
     }
 
-    public void setUseInvCode(String useInvCode) {
-        this.useInvCode = useInvCode == null ? null : useInvCode.trim();
+    public void setUseInvCode(Long useInvCode) {
+        this.useInvCode = useInvCode;
     }
 
     public Date getCreateTime() {

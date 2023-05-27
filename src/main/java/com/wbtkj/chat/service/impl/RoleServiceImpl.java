@@ -3,9 +3,13 @@ package com.wbtkj.chat.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.mongodb.client.result.UpdateResult;
 import com.wbtkj.chat.constant.RedisKeyConstant;
+import com.wbtkj.chat.exception.MyServiceException;
+import com.wbtkj.chat.mapper.UserRoleMapper;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.dto.role.WSChatSession;
 import com.wbtkj.chat.pojo.model.ChatSession;
+import com.wbtkj.chat.pojo.model.UserRole;
+import com.wbtkj.chat.pojo.model.UserRoleExample;
 import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
 import com.wbtkj.chat.service.RoleService;
@@ -28,6 +32,8 @@ import java.util.List;
 @Service
 @Slf4j
 public class RoleServiceImpl implements RoleService {
+    @Resource
+    UserRoleMapper userRoleMapper;
 
     @Resource
     private MongoTemplate mongoTemplate;
@@ -96,5 +102,19 @@ public class RoleServiceImpl implements RoleService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public int addUserRoleUsed(long roleId, long userId, int point) {
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.createCriteria().andRoleIdEqualTo(roleId).andUserIdEqualTo(userId);
+        List<UserRole> userRoles = userRoleMapper.selectByExample(userRoleExample);
+        if (CollectionUtils.isEmpty(userRoles)) {
+            throw new MyServiceException("未添加该角色");
+        }
+        UserRole userRole = userRoles.get(0);
+        userRole.setUsed(userRole.getUsed() + point);
+        userRoleMapper.updateByPrimaryKey(userRole);
+        return userRole.getUsed();
     }
 }

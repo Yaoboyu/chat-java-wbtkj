@@ -5,7 +5,6 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="user_id" property="userId" jdbcType="BIGINT" />
     <result column="role_id" property="roleId" jdbcType="BIGINT" />
-    <result column="free_Balance" property="freeBalance" jdbcType="INTEGER" />
     <result column="used" property="used" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="top" property="top" jdbcType="BIT" />
@@ -69,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, role_id, free_Balance, used, `status`, `top`
+    id, user_id, role_id, used, `status`, `top`
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.UserRoleExample" >
     select
@@ -103,11 +102,9 @@
   </delete>
   <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.UserRole" >
     insert into user_role (id, user_id, role_id, 
-      free_Balance, used, `status`, 
-      `top`)
+      used, `status`, `top`)
     values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, 
-      #{freeBalance,jdbcType=INTEGER}, #{used,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
-      #{top,jdbcType=BIT})
+      #{used,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{top,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.UserRole" >
     insert into user_role
@@ -120,9 +117,6 @@
       </if>
       <if test="roleId != null" >
         role_id,
-      </if>
-      <if test="freeBalance != null" >
-        free_Balance,
       </if>
       <if test="used != null" >
         used,
@@ -143,9 +137,6 @@
       </if>
       <if test="roleId != null" >
         #{roleId,jdbcType=BIGINT},
-      </if>
-      <if test="freeBalance != null" >
-        #{freeBalance,jdbcType=INTEGER},
       </if>
       <if test="used != null" >
         #{used,jdbcType=INTEGER},
@@ -176,9 +167,6 @@
       <if test="record.roleId != null" >
         role_id = #{record.roleId,jdbcType=BIGINT},
       </if>
-      <if test="record.freeBalance != null" >
-        free_Balance = #{record.freeBalance,jdbcType=INTEGER},
-      </if>
       <if test="record.used != null" >
         used = #{record.used,jdbcType=INTEGER},
       </if>
@@ -198,7 +186,6 @@
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
       role_id = #{record.roleId,jdbcType=BIGINT},
-      free_Balance = #{record.freeBalance,jdbcType=INTEGER},
       used = #{record.used,jdbcType=INTEGER},
       `status` = #{record.status,jdbcType=INTEGER},
       `top` = #{record.top,jdbcType=BIT}
@@ -214,9 +201,6 @@
       </if>
       <if test="roleId != null" >
         role_id = #{roleId,jdbcType=BIGINT},
-      </if>
-      <if test="freeBalance != null" >
-        free_Balance = #{freeBalance,jdbcType=INTEGER},
       </if>
       <if test="used != null" >
         used = #{used,jdbcType=INTEGER},
@@ -234,7 +218,6 @@
     update user_role
     set user_id = #{userId,jdbcType=BIGINT},
       role_id = #{roleId,jdbcType=BIGINT},
-      free_Balance = #{freeBalance,jdbcType=INTEGER},
       used = #{used,jdbcType=INTEGER},
       `status` = #{status,jdbcType=INTEGER},
       `top` = #{top,jdbcType=BIT}

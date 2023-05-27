@@ -6,10 +6,13 @@ import com.github.pagehelper.PageInfo;
 import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.mapper.UserMapper;
 import com.wbtkj.chat.exception.MyServiceException;
+import com.wbtkj.chat.mapper.UserRoleMapper;
+import com.wbtkj.chat.pojo.dto.role.UserRoleStatus;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.dto.user.UserStatus;
 import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.model.UserExample;
+import com.wbtkj.chat.pojo.model.UserRole;
 import com.wbtkj.chat.pojo.vo.user.UserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 import com.wbtkj.chat.service.UserService;
@@ -35,7 +38,8 @@ import org.springframework.util.StringUtils;
 public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
-
+    @Resource
+    private UserRoleMapper userRoleMapper;
 
     @Override
     public String login(String email, String pwd) {
@@ -65,11 +69,15 @@ public class UserServiceImpl implements UserService {
             throw new MyServiceException("密码至少8位！");
         }
 
-        userExample.clear();
-        userExample.createCriteria().andMyInvCodeEqualTo(userRegisterVO.getInvCode());
-
-        if(userMapper.countByExample(userExample) == 0) {
-            throw new MyServiceException("邀请码不存在");
+        Long useInvCode = null;
+        if (userRegisterVO.getInvCode() != null) {
+            userExample.clear();
+            userExample.createCriteria().andMyInvCodeEqualTo(userRegisterVO.getInvCode());
+            List<User> userList = userMapper.selectByExample(userExample);
+            if(CollectionUtils.isEmpty(userList)) {
+                throw new MyServiceException("邀请码错误！");
+            }
+            useInvCode = userList.get(0).getId();
         }
 
         Long time = System.currentTimeMillis();
@@ -84,17 +92,28 @@ public class UserServiceImpl implements UserService {
         newUser.setCash(0.);
         newUser.setRemark("");
         newUser.setMyInvCode("");
-        newUser.setUseInvCode(userRegisterVO.getInvCode());
+        newUser.setUseInvCode(useInvCode);
         newUser.setCreateTime(date);
         newUser.setUpdateTime(date);
 
         userMapper.insert(newUser);
 
         // 设置全局唯一邀请码
+        userExample.clear();
+        userExample.createCriteria().andEmailEqualTo(userRegisterVO.getEmail());
         newUser = userMapper.selectByExample(userExample).get(0);
         newUser.setMyInvCode(RandomUtil.randomStringUpper(3) + newUser.getId() + RandomUtil.randomStringUpper(3));
 
         userMapper.updateByPrimaryKey(newUser);
+
+        // 默认角色
+        UserRole userRole = new UserRole();
+        userRole.setRoleId(1L);
+        userRole.setUserId(newUser.getId());
+        userRole.setUsed(0);
+        userRole.setStatus(UserRoleStatus.ENABLED.getStatus());
+        userRole.setTop(false);
+        userRoleMapper.insert(userRole);
     }
 
     @Override
@@ -146,6 +165,10 @@ public class UserServiceImpl implements UserService {
 
         if(user.getBalance() != null) {
             oldUser.setBalance(user.getBalance());
+        }
+
+        if(user.getCash() != null) {
+            oldUser.setCash(user.getCash());
         }
 
         if(user.getRemark() != null) {
@@ -201,7 +224,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public PageInfo<User> getUsersByPage(Integer page, Integer pageSize, String email) {
+    public PageInfo<User> getUsersByPage(int page, int pageSize, String email) {
         PageHelper.startPage(page, pageSize);
         UserExample userExample = new UserExample();
         if(StringUtils.hasLength(email)) {
@@ -221,6 +244,28 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
         UserInfoVO userInfoVO = new UserInfoVO(user);
         return userInfoVO;
+    }
+
+    @Override
+    public boolean cashBack(Long userId, int point) {
+        if (userId == null) {
+            return false;
+        }
+        User roleOwner = userMapper.selectByPrimaryKey(userId);
+        roleOwner.setCash(roleOwner.getCash() + point * GeneralConstant.POINT_RATE * GeneralConstant.CASH_RATE);
+        userMapper.updateByPrimaryKey(roleOwner);
+        return true;
+    }
+
+    @Override
+    public int deductBalance(long userId, int point) {
+        User user = userMapper.selectByPrimaryKey(userId);
+        if (user.getBalance() - point < 0) {
+            throw new MyServiceException("余额不足");
+        }
+        user.setBalance(user.getBalance() - point);
+        userMapper.updateByPrimaryKey(user);
+        return user.getBalance();
     }
 
 }

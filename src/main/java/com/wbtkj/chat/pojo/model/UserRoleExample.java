@@ -284,66 +284,6 @@ public class UserRoleExample {
             return (Criteria) this;
         }
 
-        public Criteria andFreeBalanceIsNull() {
-            addCriterion("free_Balance is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andFreeBalanceIsNotNull() {
-            addCriterion("free_Balance is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andFreeBalanceEqualTo(Integer value) {
-            addCriterion("free_Balance =", value, "freeBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andFreeBalanceNotEqualTo(Integer value) {
-            addCriterion("free_Balance <>", value, "freeBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andFreeBalanceGreaterThan(Integer value) {
-            addCriterion("free_Balance >", value, "freeBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andFreeBalanceGreaterThanOrEqualTo(Integer value) {
-            addCriterion("free_Balance >=", value, "freeBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andFreeBalanceLessThan(Integer value) {
-            addCriterion("free_Balance <", value, "freeBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andFreeBalanceLessThanOrEqualTo(Integer value) {
-            addCriterion("free_Balance <=", value, "freeBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andFreeBalanceIn(List<Integer> values) {
-            addCriterion("free_Balance in", values, "freeBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andFreeBalanceNotIn(List<Integer> values) {
-            addCriterion("free_Balance not in", values, "freeBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andFreeBalanceBetween(Integer value1, Integer value2) {
-            addCriterion("free_Balance between", value1, value2, "freeBalance");
-            return (Criteria) this;
-        }
-
-        public Criteria andFreeBalanceNotBetween(Integer value1, Integer value2) {
-            addCriterion("free_Balance not between", value1, value2, "freeBalance");
-            return (Criteria) this;
-        }
-
         public Criteria andUsedIsNull() {
             addCriterion("used is null");
             return (Criteria) this;

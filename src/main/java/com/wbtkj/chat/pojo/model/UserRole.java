@@ -9,8 +9,6 @@ public class UserRole implements Serializable {
 
     private Long roleId;
 
-    private Integer freeBalance;
-
     private Integer used;
 
     private Integer status;
@@ -41,14 +39,6 @@ public class UserRole implements Serializable {
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
-    }
-
-    public Integer getFreeBalance() {
-        return freeBalance;
-    }
-
-    public void setFreeBalance(Integer freeBalance) {
-        this.freeBalance = freeBalance;
     }
 
     public Integer getUsed() {
@@ -84,7 +74,6 @@ public class UserRole implements Serializable {
         sb.append(", id=").append(id);
         sb.append(", userId=").append(userId);
         sb.append(", roleId=").append(roleId);
-        sb.append(", freeBalance=").append(freeBalance);
         sb.append(", used=").append(used);
         sb.append(", status=").append(status);
         sb.append(", top=").append(top);

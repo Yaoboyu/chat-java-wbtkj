@@ -73,4 +73,13 @@ public interface RoleService {
      * @return
      */
     boolean addReturnToWSChatSessionMessageList(String wsSessionId, String message);
+
+    /**
+     * 增加UserRole的Used
+     * @param roleId
+     * @param userId
+     * @param point
+     * @return
+     */
+    int addUserRoleUsed(long roleId, long userId, int point);
 }

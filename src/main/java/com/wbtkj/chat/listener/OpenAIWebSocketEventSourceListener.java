@@ -12,6 +12,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -63,6 +64,9 @@ public class OpenAIWebSocketEventSourceListener extends EventSourceListener {
         ChatCompletionResponse completionResponse = mapper.readValue(data, ChatCompletionResponse.class); // 读取Json
         String delta = completionResponse.getChoices().get(0).getDelta().getContent();
 //        String delta = mapper.writeValueAsString(delta);
+        if (StringUtils.isBlank(delta)) {
+            return;
+        }
         message.append(delta);
         session.sendMessage(new TextMessage(delta));
     }
