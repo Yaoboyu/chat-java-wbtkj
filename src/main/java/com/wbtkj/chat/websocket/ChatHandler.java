@@ -5,12 +5,15 @@ import com.wbtkj.chat.constant.RedisKeyConstant;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.listener.OpenAIWebSocketEventSourceListener;
 import com.wbtkj.chat.mapper.RoleMapper;
+import com.wbtkj.chat.mapper.UserMapper;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.dto.role.WSChatSession;
+import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyValue;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.ChatSession;
 import com.wbtkj.chat.pojo.model.Role;
+import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.vo.role.WSChatMessage;
 import com.wbtkj.chat.service.OpenAiStreamService;
 import com.wbtkj.chat.service.RoleService;
@@ -42,6 +45,8 @@ public class ChatHandler extends TextWebSocketHandler {
     private RoleService roleService;
     @Resource
     private RoleMapper roleMapper;
+    @Resource
+    private UserMapper userMapper;
 //    @Resource
 //    private MongoTemplate mongoTemplate;
     @Resource
@@ -99,10 +104,20 @@ public class ChatHandler extends TextWebSocketHandler {
         }
 
         if (wsChatMessage.getRoleId() == null) {
-            throw new MyServiceException("缺少roleid");
+            throw new MyServiceException("缺少roleId");
         }
 
         Role role = roleMapper.selectByPrimaryKey(wsChatMessage.getRoleId());
+
+        // 扣除用户余额
+        User user = userMapper.selectByPrimaryKey(wsChatSession.getUserId());
+        int value = ThirdPartyModelKeyValue.getValue(role.getModel());
+        if (user.getBalance() - value < 0) {
+            throw new MyServiceException("余额不足");
+        }
+        user.setBalance(user.getBalance() - value);
+        session.sendMessage(new TextMessage("{{userBalance}}:" + user.getBalance()));
+        userMapper.updateByPrimaryKey(user);
 
         // 更新wsChatSession
         if (wsChatSession.getRole() == null
@@ -158,6 +173,8 @@ public class ChatHandler extends TextWebSocketHandler {
 
         OpenAIWebSocketEventSourceListener eventSourceListener = new OpenAIWebSocketEventSourceListener(session);
         openAiStreamService.streamChatCompletion(chatCompletion, eventSourceListener);
+
+
     }
 
     /**

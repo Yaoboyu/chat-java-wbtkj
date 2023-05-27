@@ -214,14 +214,6 @@ public class OpenAiStreamServiceImpl implements OpenAiStreamService {
         return subscription.blockingGet();
     }
 
-    /**
-     * 账户调用接口消耗金额信息查询
-     * 最多查询100天
-     *
-     * @param starDate 开始时间
-     * @param endDate  结束时间
-     * @return
-     */
     public BillingUsage billingUsage(@NotNull LocalDate starDate, @NotNull LocalDate endDate) {
         Single<BillingUsage> billingUsage = this.openAiApi.billingUsage(starDate, endDate);
         return billingUsage.blockingGet();

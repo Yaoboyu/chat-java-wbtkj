@@ -174,7 +174,7 @@ public class OpenAiAuthInterceptor implements Interceptor {
                     "[告警] 没有可用的gpt3 key！！",
                     "[告警] 没有可用的gpt3 key！！");
             log.error(CommonError.NO_ACTIVE_API_KEYS.getMsg());
-            throw new MyException();
+            throw new MyException("gpt-3.5-turbo暂不可用");
         }
         return gpt3Key.get(getGpt3KeyIndex());
     }
@@ -185,7 +185,7 @@ public class OpenAiAuthInterceptor implements Interceptor {
                     "[告警] 没有可用的gpt4 key！！",
                     "[告警] 没有可用的gpt4 key！！");
             log.error(CommonError.NO_ACTIVE_API_KEYS.getMsg());
-            throw new MyException();
+            throw new MyException("gpt-4暂不可用");
         }
         return gpt4Key.get(getGpt4KeyIndex());
     }
