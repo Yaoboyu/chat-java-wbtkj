@@ -1,13 +1,16 @@
 package com.wbtkj.chat.controller;
 
+import com.wbtkj.chat.exception.MyException;
 import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.pojo.vo.admin.AdminLoginVO;
 import com.wbtkj.chat.service.*;
+import com.wbtkj.chat.utils.CardGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -45,10 +48,10 @@ public class AdminController {
         return Result.success();
     }
 
-    @PostMapping("/cdkey/{num}/{value}")
-    Result getCDKEYS(@PathVariable int num, @PathVariable int value){
+    @PostMapping("/cdkey/{type}/{num}/{value}")
+    Result getCDKEYS(@PathVariable int type, @PathVariable int num, @PathVariable int value){
         log.info("准备发放{}张卡密,价值{}",num,value);
-        return Result.success(cdkeyService.publish(num, value));
+        return Result.success(cdkeyService.publish(type, num, value));
     }
 
     @GetMapping("/cdkey/info/{cdkey}")

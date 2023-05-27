@@ -12,8 +12,8 @@ import java.util.Map;
 public class JwtUtils {
 
 
-    public static final String SIGN_KEY = "yaoboyu";
-    public static final Long EXPIRE = 43200000L;
+    public static final String SIGN_KEY = "kjdjk4jf892jfj";
+    public static final Long EXPIRE = 5 * 24 * 60 * 60 * 1000L;
 
     /**
      * 生成JWT令牌

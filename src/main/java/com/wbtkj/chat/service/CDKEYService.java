@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CDKEYService {
 
-    List<String> publish(int num, int value);
+    List<String> publish(int type, int num, int value);
 
     long activate(String cdkey);
 

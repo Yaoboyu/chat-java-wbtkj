@@ -2,6 +2,7 @@ package com.wbtkj.chat.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.wbtkj.chat.config.ThreadLocalConfig;
+import com.wbtkj.chat.exception.MyException;
 import com.wbtkj.chat.mapper.RechargeRecordMapper;
 import com.wbtkj.chat.mapper.UserMapper;
 import com.wbtkj.chat.exception.MyServiceException;
@@ -10,8 +11,10 @@ import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.RechargeRecord;
 import com.wbtkj.chat.pojo.model.RechargeRecordExample;
 import com.wbtkj.chat.pojo.model.User;
+import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.service.CDKEYService;
 import com.wbtkj.chat.utils.AesUtil;
+import com.wbtkj.chat.utils.CardGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,30 +31,17 @@ public class CDKEYServiceImpl implements CDKEYService {
     @Resource
     UserMapper userMapper;
 
-
-    private int value(String cdkey) {
-        try {
-            Map<String,String> mp = AesUtil.decode(cdkey);
-            return Integer.parseInt(mp.get("value"));
-        } catch (Exception e) {
-            throw new MyServiceException("卡密错误");
-        }
-    }
-
     @Override
-    public List<String> publish(int num, int value) {
-        List<String> list = new ArrayList<String>();
-        for(Integer i = 0;i < num;i++) {
-            HashMap<String, String> map = new HashMap<>();
-            map.put("value", String.valueOf(value));
-            map.put("num",i.toString());
-            list.add(JSON.toJSONString(map));
+    public List<String> publish(int type, int num, int value) {
+        if (type != RechargeRecordType.BALANCE.getType() && type != RechargeRecordType.VIP.getType()) {
+            throw new MyServiceException("类型错误");
         }
-        List<String> publish = new ArrayList<String>();
-        for(String s : list) {
-            publish.add(AesUtil.code(s));
+        try {
+            List<String> res = CardGenerator.generateCards(type, num, value);
+            return res;
+        } catch (Exception e) {
+            throw new MyException();
         }
-        return publish;
     }
 
     @Override
@@ -62,25 +52,32 @@ public class CDKEYServiceImpl implements CDKEYService {
         List<RechargeRecord> rechargeRecords = rechargeRecordMapper.selectByExample(rechargeRecordExample);
 
         if(!CollectionUtils.isEmpty(rechargeRecords)){
-            throw new MyServiceException("激活失败:该卡密已被激活!");
+            throw new MyServiceException("该卡密已被使用!");
         }
 
         Long userId = ThreadLocalConfig.getUser().getId();
-        int value = value(cdkey);
+        Map<String, Integer> cdkeyInfo = CardGenerator.getInfo(cdkey);
 
         RechargeRecord rechargeRecord = new RechargeRecord();
         rechargeRecord.setUserId(userId);
-        rechargeRecord.setType(RechargeRecordType.BALANCE.getType());
+        rechargeRecord.setType(cdkeyInfo.get("type"));
         rechargeRecord.setCdkey(cdkey);
-        rechargeRecord.setValue(value);
+        rechargeRecord.setValue(cdkeyInfo.get("value"));
         rechargeRecord.setUseTime(new Date());
         rechargeRecordMapper.insert(rechargeRecord);
 
         User user = userMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
-        user.setBalance(user.getBalance() + value);
-        userMapper.updateByPrimaryKey(user);
 
-        return value;
+        if (cdkeyInfo.get("type").equals(RechargeRecordType.BALANCE.getType())) {
+            user.setBalance(user.getBalance() + cdkeyInfo.get("value"));
+            userMapper.updateByPrimaryKey(user);
+
+        } else if (cdkeyInfo.get("type").equals(RechargeRecordType.VIP.getType())) {
+            //TODO：vip
+        }
+
+
+        return cdkeyInfo.get("value");
     }
 
     @Override
@@ -96,7 +93,9 @@ public class CDKEYServiceImpl implements CDKEYService {
             rechargeRecord = cdkeyActivates.get(0);
         } else {
             rechargeRecord = new RechargeRecord();
-            rechargeRecord.setValue(value(cdkey));
+            Map<String, Integer> cdkeyInfo = CardGenerator.getInfo(cdkey);
+            rechargeRecord.setType(cdkeyInfo.get("type"));
+            rechargeRecord.setValue(cdkeyInfo.get("value"));
             rechargeRecord.setCdkey(cdkey);
         }
 
