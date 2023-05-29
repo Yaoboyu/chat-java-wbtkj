@@ -8,4 +8,6 @@ public class GeneralConstant {
     public static final double POINT_RATE = 0.01; // 充值比例
 
     public static final double CASH_RATE = 0.2; // 返现比例
+
+    public static final int USER_NORMAL_MAX_ROLE = 20; // 普通用户最多角色数
 }

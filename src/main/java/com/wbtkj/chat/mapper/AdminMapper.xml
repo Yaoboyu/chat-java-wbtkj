@@ -100,20 +100,15 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.Admin" >
-    insert into admin (id, username, pwd, 
-      salt, create_time, update_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{username,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
-      #{salt,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.Admin" useGeneratedKeys="true" keyProperty="id" >
+    insert into admin (username, pwd, salt, 
+      create_time, update_time)
+    values (#{username,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.Admin" >
+  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.Admin" useGeneratedKeys="true" keyProperty="id" >
     insert into admin
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="username != null" >
         username,
       </if>
@@ -131,9 +126,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="username != null" >
         #{username,jdbcType=VARCHAR},
       </if>
@@ -225,4 +217,18 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.AdminExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from admin
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>

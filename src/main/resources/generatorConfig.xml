@@ -28,6 +28,13 @@
         <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin">
+            <property name="useRowBounds" value="true"/>
+            <property name="rowBoundsWithCount" value="true"/>
+            <property name="offsetAsPageNum" value="true"/>
+            <property name="pageSizeZero" value="false"/>
+            <property name="runtimeDialect" value="mysql"/>
+        </plugin>
 
         <!-- 注释 -->
         <commentGenerator>
@@ -70,23 +77,28 @@
         <!-- 每个数据库中的表都写一个table，用完就注释掉 -->
 <!--        <table tableName="user">-->
 <!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--            <columnOverride column="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
 <!--        </table>-->
 
 <!--        <table tableName="recharge_record">-->
 <!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--        </table>-->
 
 <!--        <table tableName="third_party_model_key">-->
 <!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--        </table>-->
 
 <!--        <table tableName="admin">-->
 <!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--        </table>-->
 
 <!--        <table tableName="role">-->
 <!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--            <columnOverride column="greeting" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
 <!--            <columnOverride column="system" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
 <!--            <columnOverride column="logit_bias" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
@@ -94,6 +106,7 @@
 
 <!--        <table tableName="user_role">-->
 <!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
 <!--        </table>-->
 
 

@@ -18,6 +18,7 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -188,6 +189,15 @@ public class OpenAiAuthInterceptor implements Interceptor {
             throw new MyException("gpt-4暂不可用");
         }
         return gpt4Key.get(getGpt4KeyIndex());
+    }
+
+    public boolean hasKey(String model) {
+        if (model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())) {
+            return !CollectionUtils.isEmpty(gpt3Key);
+        } else if ((model.equals(ChatCompletion.Model.GPT_4.getName()))) {
+            return !CollectionUtils.isEmpty(gpt4Key);
+        }
+        return false;
     }
 
     private synchronized int getGpt3KeyIndex(){

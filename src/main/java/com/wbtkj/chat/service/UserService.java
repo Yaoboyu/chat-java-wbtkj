@@ -7,6 +7,8 @@ import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.vo.user.UserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 
+import java.util.List;
+
 public interface UserService {
     /**
      * 登录验证
@@ -19,16 +21,18 @@ public interface UserService {
     /**
      * 注册
      * @param userRegisterVO
+     * @return
      */
-    void register(UserRegisterVO userRegisterVO);
+    boolean register(UserRegisterVO userRegisterVO);
 
-    void changePwd(String pwd);
+    boolean changePwd(String pwd);
 
     /**
      * 可以修改密码，状态，会员有效期，余额，备注
      * @param user
+     * @return
      */
-    void updateUser(User user);
+    boolean updateUser(User user);
 
     /**
      * 检查用户是否存在，是否已被禁用
@@ -51,7 +55,7 @@ public interface UserService {
      * @param email
      * @return
      */
-    PageInfo<User> getUsersByPage(int page, int pageSize, String email);
+    List<User> getUsersByPage(int page, int pageSize, String email);
 
     UserInfoVO getUserInfo();
 

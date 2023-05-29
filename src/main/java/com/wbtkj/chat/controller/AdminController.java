@@ -36,7 +36,9 @@ public class AdminController {
     }
 
     @GetMapping("/user")
-    Result getUsers(@RequestParam int page, @RequestParam int pageSize, @RequestParam String email){
+    Result getUsers(@RequestParam int page,
+                    @RequestParam int pageSize,
+                    @RequestParam(required = false) String email){
         log.info("模糊分页查询");
         return Result.success(userService.getUsersByPage(page, pageSize, email));
     }

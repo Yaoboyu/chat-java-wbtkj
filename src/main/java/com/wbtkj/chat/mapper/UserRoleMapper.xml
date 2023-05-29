@@ -100,18 +100,15 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.UserRole" >
-    insert into user_role (id, user_id, role_id, 
-      used, `status`, `top`)
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, 
-      #{used,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{top,jdbcType=BIT})
+  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.UserRole" useGeneratedKeys="true" keyProperty="id" >
+    insert into user_role (user_id, role_id, used, 
+      `status`, `top`)
+    values (#{userId,jdbcType=BIGINT}, #{roleId,jdbcType=BIGINT}, #{used,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{top,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.UserRole" >
+  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.UserRole" useGeneratedKeys="true" keyProperty="id" >
     insert into user_role
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="userId != null" >
         user_id,
       </if>
@@ -129,9 +126,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="userId != null" >
         #{userId,jdbcType=BIGINT},
       </if>
@@ -223,4 +217,18 @@
       `top` = #{top,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.UserRoleExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user_role
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>

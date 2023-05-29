@@ -4,6 +4,7 @@ import com.wbtkj.chat.pojo.model.Admin;
 import com.wbtkj.chat.pojo.model.AdminExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 public interface AdminMapper {
     int countByExample(AdminExample example);
@@ -15,6 +16,8 @@ public interface AdminMapper {
     int insert(Admin record);
 
     int insertSelective(Admin record);
+
+    List<Admin> selectByExampleWithRowbounds(AdminExample example, RowBounds rowBounds);
 
     List<Admin> selectByExample(AdminExample example);
 

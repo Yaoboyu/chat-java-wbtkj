@@ -21,7 +21,7 @@ public class UserServiceImplTest {
     public void registerTest(){
         UserRegisterVO userRegisterVO = new UserRegisterVO();
         userRegisterVO.setEmail("12345@qq.com");
-        userRegisterVO.setPwd("123456");
+        userRegisterVO.setPwd("12345678");
         userRegisterVO.setCode("123567");
         userService.register(userRegisterVO);
     }

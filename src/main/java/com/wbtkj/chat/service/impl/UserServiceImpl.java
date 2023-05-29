@@ -1,7 +1,6 @@
 package com.wbtkj.chat.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.mapper.UserMapper;
@@ -19,6 +18,7 @@ import com.wbtkj.chat.service.UserService;
 import com.wbtkj.chat.utils.JwtUtils;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void register(UserRegisterVO userRegisterVO) {
+    public boolean register(UserRegisterVO userRegisterVO) {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andEmailEqualTo(userRegisterVO.getEmail());
 
@@ -80,12 +80,11 @@ public class UserServiceImpl implements UserService {
             useInvCode = userList.get(0).getId();
         }
 
-        Long time = System.currentTimeMillis();
-        Date date = new Date(time);
+        Date date = new Date();
 
         User newUser = new User();
         newUser.setEmail(userRegisterVO.getEmail());
-        newUser.setSalt(String.valueOf((time % 100000)));
+        newUser.setSalt(RandomUtil.randomStringUpper(5));
         newUser.setPwd(MD5Utils.code(userRegisterVO.getPwd() + newUser.getSalt()));
         newUser.setStatus(UserStatus.ENABLED.getStatus());
         newUser.setBalance(GeneralConstant.USER_INIT_BALANCE);
@@ -99,11 +98,7 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(newUser);
 
         // 设置全局唯一邀请码
-        userExample.clear();
-        userExample.createCriteria().andEmailEqualTo(userRegisterVO.getEmail());
-        newUser = userMapper.selectByExample(userExample).get(0);
         newUser.setMyInvCode(RandomUtil.randomStringUpper(3) + newUser.getId() + RandomUtil.randomStringUpper(3));
-
         userMapper.updateByPrimaryKey(newUser);
 
         // 默认角色
@@ -114,10 +109,12 @@ public class UserServiceImpl implements UserService {
         userRole.setStatus(UserRoleStatus.ENABLED.getStatus());
         userRole.setTop(false);
         userRoleMapper.insert(userRole);
+
+        return true;
     }
 
     @Override
-    public void changePwd(String pwd) {
+    public boolean changePwd(String pwd) {
         if(pwd.length() < 8) {
             throw new MyServiceException("密码至少8位！");
         }
@@ -135,11 +132,13 @@ public class UserServiceImpl implements UserService {
         newUser.setUpdateTime(new Date());
 
         userMapper.updateByPrimaryKey(newUser);
+
+        return true;
     }
 
     @Override
     @Transactional
-    public void updateUser(User user) {
+    public boolean updateUser(User user) {
         Long id = user.getId();
         if(id == null) {
             throw new MyServiceException("缺少user id");
@@ -179,6 +178,7 @@ public class UserServiceImpl implements UserService {
 
         userMapper.updateByPrimaryKey(oldUser);
 
+        return true;
     }
 
     @Override
@@ -210,9 +210,7 @@ public class UserServiceImpl implements UserService {
         try {
             Claims claims = JwtUtils.parseJWT(token);
             User user = getCheckedUser((String) claims.get("email"));
-            UserLocalDTO userLocalDTO = new UserLocalDTO();
-            userLocalDTO.setId(user.getId());
-            userLocalDTO.setEmail(user.getEmail());
+            UserLocalDTO userLocalDTO = UserLocalDTO.builder().id(user.getId()).email(user.getEmail()).build();
             ThreadLocalConfig.setUser(userLocalDTO);
             return userLocalDTO;
         } catch (MyServiceException e) {//jwt解析失败
@@ -224,19 +222,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public PageInfo<User> getUsersByPage(int page, int pageSize, String email) {
-        PageHelper.startPage(page, pageSize);
+    public List<User> getUsersByPage(int page, int pageSize, String email) {
+        if (page < 1 || pageSize < 1) {
+            throw new MyServiceException("参数错误");
+        }
+
         UserExample userExample = new UserExample();
         if(StringUtils.hasLength(email)) {
             userExample.createCriteria().andEmailLike("%" + email + "%");
         }
 
-        List<User> users = userMapper.selectByExample(userExample);
+        RowBounds rowBounds = new RowBounds((page-1)*pageSize, pageSize);
+        List<User> users = userMapper.selectByExampleWithRowbounds(userExample, rowBounds);
 
-        //把查询的结果封装到PageInfo类中。
-        PageInfo<User> pageInfo = new PageInfo<User>(users);
-
-        return pageInfo;
+        return users;
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.wbtkj.chat.pojo.model.RechargeRecord;
 import com.wbtkj.chat.pojo.model.RechargeRecordExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 public interface RechargeRecordMapper {
     int countByExample(RechargeRecordExample example);
@@ -15,6 +16,8 @@ public interface RechargeRecordMapper {
     int insert(RechargeRecord record);
 
     int insertSelective(RechargeRecord record);
+
+    List<RechargeRecord> selectByExampleWithRowbounds(RechargeRecordExample example, RowBounds rowBounds);
 
     List<RechargeRecord> selectByExample(RechargeRecordExample example);
 

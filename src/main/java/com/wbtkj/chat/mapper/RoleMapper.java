@@ -4,6 +4,7 @@ import com.wbtkj.chat.pojo.model.Role;
 import com.wbtkj.chat.pojo.model.RoleExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 public interface RoleMapper {
     int countByExample(RoleExample example);
@@ -15,6 +16,8 @@ public interface RoleMapper {
     int insert(Role record);
 
     int insertSelective(Role record);
+
+    List<Role> selectByExampleWithRowbounds(RoleExample example, RowBounds rowBounds);
 
     List<Role> selectByExample(RoleExample example);
 

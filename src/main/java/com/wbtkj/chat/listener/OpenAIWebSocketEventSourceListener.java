@@ -43,7 +43,7 @@ public class OpenAIWebSocketEventSourceListener extends EventSourceListener {
      */
     @Override
     public void onOpen(EventSource eventSource, Response response) {
-        log.info("OpenAI建立sse连接...");
+
     }
 
     /**
@@ -52,9 +52,7 @@ public class OpenAIWebSocketEventSourceListener extends EventSourceListener {
     @SneakyThrows
     @Override
     public void onEvent(EventSource eventSource, String id, String type, String data) {
-        log.info("OpenAI返回数据：{}", data);
         if (data.equals("[DONE]")) {
-            log.debug("OpenAI返回数据结束了");
             session.sendMessage(new TextMessage("[DONE]"));
             RoleService roleService = StaticContextAccessor.getBean(RoleService.class);
             roleService.addReturnToWSChatSessionMessageList(session.getId(), message.toString());
@@ -63,7 +61,6 @@ public class OpenAIWebSocketEventSourceListener extends EventSourceListener {
         ObjectMapper mapper = new ObjectMapper();
         ChatCompletionResponse completionResponse = mapper.readValue(data, ChatCompletionResponse.class); // 读取Json
         String delta = completionResponse.getChoices().get(0).getDelta().getContent();
-//        String delta = mapper.writeValueAsString(delta);
         if (StringUtils.isBlank(delta)) {
             return;
         }
@@ -74,7 +71,6 @@ public class OpenAIWebSocketEventSourceListener extends EventSourceListener {
 
     @Override
     public void onClosed(EventSource eventSource) {
-        log.info("OpenAI关闭sse连接...");
     }
 
 

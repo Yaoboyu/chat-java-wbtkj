@@ -100,20 +100,15 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.RechargeRecord" >
-    insert into recharge_record (id, user_id, `type`, 
-      cdkey, `value`, use_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, 
-      #{cdkey,jdbcType=VARCHAR}, #{value,jdbcType=INTEGER}, #{useTime,jdbcType=TIMESTAMP}
-      )
+  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.RechargeRecord" useGeneratedKeys="true" keyProperty="id" >
+    insert into recharge_record (user_id, `type`, cdkey, 
+      `value`, use_time)
+    values (#{userId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{cdkey,jdbcType=VARCHAR}, 
+      #{value,jdbcType=INTEGER}, #{useTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.RechargeRecord" >
+  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.RechargeRecord" useGeneratedKeys="true" keyProperty="id" >
     insert into recharge_record
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="userId != null" >
         user_id,
       </if>
@@ -131,9 +126,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="userId != null" >
         #{userId,jdbcType=BIGINT},
       </if>
@@ -225,4 +217,18 @@
       use_time = #{useTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.RechargeRecordExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from recharge_record
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>

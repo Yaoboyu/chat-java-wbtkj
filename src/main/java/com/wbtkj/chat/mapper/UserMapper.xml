@@ -109,24 +109,21 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.User" >
-    insert into user (id, email, pwd, 
-      salt, `status`, vip_start_time, 
-      vip_end_time, balance, cash, 
-      remark, my_inv_code, use_inv_code, 
-      create_time, update_time)
-    values (#{id,jdbcType=BIGINT}, #{email,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
-      #{salt,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{vipStartTime,jdbcType=TIMESTAMP}, 
-      #{vipEndTime,jdbcType=TIMESTAMP}, #{balance,jdbcType=INTEGER}, #{cash,jdbcType=DOUBLE}, 
-      #{remark,jdbcType=VARCHAR}, #{myInvCode,jdbcType=VARCHAR}, #{useInvCode,jdbcType=BIGINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.User" useGeneratedKeys="true" keyProperty="id" >
+    insert into user (email, pwd, salt, 
+      `status`, vip_start_time, vip_end_time, 
+      balance, cash, remark, 
+      my_inv_code, use_inv_code, create_time, 
+      update_time)
+    values (#{email,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{vipStartTime,jdbcType=TIMESTAMP}, #{vipEndTime,jdbcType=TIMESTAMP}, 
+      #{balance,jdbcType=INTEGER}, #{cash,jdbcType=DOUBLE}, #{remark,jdbcType=VARCHAR}, 
+      #{myInvCode,jdbcType=VARCHAR}, #{useInvCode,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.User" >
+  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.User" useGeneratedKeys="true" keyProperty="id" >
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="email != null" >
         email,
       </if>
@@ -168,9 +165,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="email != null" >
         #{email,jdbcType=VARCHAR},
       </if>
@@ -350,4 +344,18 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.UserExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from user
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>

@@ -1,8 +1,8 @@
 package com.wbtkj.chat.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.model.ChatSession;
+import com.wbtkj.chat.pojo.vo.role.RoleBriefVO;
 import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
 
@@ -11,19 +11,30 @@ import java.util.List;
 public interface RoleService {
     /**
      * 获取用户所属角色
+     * 如果角色属于用户，则返回所有字段，如果不属于，则返回应用市场查询出来的字段
      * @return
      */
-    List<JSONObject> getRole();
+    List<Object> getRole();
 
     /**
-     *
+     * 获取上架角色
+     * @return
+     * @param page
+     * @param pageSize
+     * @param type
+     * @param name
+     */
+    List<RoleBriefVO> getShopRole(Integer page, Integer pageSize, Integer type, String name);
+
+    /**
+     * 添加角色
      * @param roleInfo
      * @return
      */
     boolean addRole(RoleInfoVO roleInfo);
 
     /**
-     *
+     * 修改角色
      * @param roleInfo
      * @return
      */
@@ -32,9 +43,17 @@ public interface RoleService {
     /**
      * 在应用市场通过id添加role
      * @param roleId
+     * @param isNew
      * @return
      */
-    boolean addRoleById(long roleId);
+    boolean addRoleById(long roleId, boolean isNew);
+
+    /**
+     * 删除role，只删除UserRole表
+     * @param roleId
+     * @return
+     */
+    boolean deleteRole(long roleId);
 
     /**
      * 获取role的对话历史
@@ -82,4 +101,6 @@ public interface RoleService {
      * @return
      */
     int addUserRoleUsed(long roleId, long userId, int point);
+
+    boolean checkUserRole(long roleId, long userId);
 }

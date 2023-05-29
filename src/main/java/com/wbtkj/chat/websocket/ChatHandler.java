@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.wbtkj.chat.constant.GeneralConstant;
 import com.wbtkj.chat.constant.RedisKeyConstant;
 import com.wbtkj.chat.exception.MyServiceException;
+import com.wbtkj.chat.filter.OpenAiAuthInterceptor;
 import com.wbtkj.chat.listener.OpenAIWebSocketEventSourceListener;
 import com.wbtkj.chat.mapper.RoleMapper;
 import com.wbtkj.chat.mapper.UserMapper;
@@ -16,6 +17,7 @@ import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.ChatSession;
 import com.wbtkj.chat.pojo.model.Role;
 import com.wbtkj.chat.pojo.model.User;
+import com.wbtkj.chat.pojo.model.UserRole;
 import com.wbtkj.chat.pojo.vo.role.WSChatMessage;
 import com.wbtkj.chat.service.OpenAiStreamService;
 import com.wbtkj.chat.service.RoleService;
@@ -53,6 +55,8 @@ public class ChatHandler extends TextWebSocketHandler {
     private UserMapper userMapper;
     @Resource
     private UserRoleMapper userRoleMapper;
+    @Resource
+    private OpenAiAuthInterceptor openAiAuthInterceptor;
 //    @Resource
 //    private MongoTemplate mongoTemplate;
     @Resource
@@ -101,6 +105,7 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     @Transactional
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        // TODO 修改hot
         // 取wsChatSession
         String key = RedisKeyConstant.ws_chat_session.getKey() + session.getId();
         WSChatSession wsChatSession = (WSChatSession) redisTemplate.opsForValue().get(key);
@@ -116,7 +121,17 @@ public class ChatHandler extends TextWebSocketHandler {
             return;
         }
 
+        if (!roleService.checkUserRole(wsChatMessage.getRoleId(), wsChatSession.getUserId())) {
+            session.sendMessage(new TextMessage("{{wbtkj_error}}:" + "未拥有该角色"));
+            return;
+        }
+
         Role role = roleMapper.selectByPrimaryKey(wsChatMessage.getRoleId());
+
+        if (!openAiAuthInterceptor.hasKey(role.getModel())) {
+            session.sendMessage(new TextMessage("{{wbtkj_error}}:" + role.getModel() + "暂不可用"));
+            return;
+        }
 
         // 扣除用户余额
         int point = ThirdPartyModelKeyValue.getValue(role.getModel());
@@ -143,6 +158,7 @@ public class ChatHandler extends TextWebSocketHandler {
                 session.sendMessage(new TextMessage("{{wbtkj_chatSessionId}}:" + newChatSession.getChatSessionId()));
 
             } else { // 加载历史对话
+                // TODO 鉴权
                 ChatSession chatSession = roleService.getChatSessionById(wsChatMessage.getChatSessionId());
                 if (chatSession == null) {
                     session.sendMessage(new TextMessage("{{wbtkj_error}}:" + "chatSessionId错误"));

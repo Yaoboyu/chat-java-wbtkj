@@ -4,6 +4,7 @@ import com.wbtkj.chat.pojo.model.ThirdPartyModelKey;
 import com.wbtkj.chat.pojo.model.ThirdPartyModelKeyExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
 
 public interface ThirdPartyModelKeyMapper {
     int countByExample(ThirdPartyModelKeyExample example);
@@ -15,6 +16,8 @@ public interface ThirdPartyModelKeyMapper {
     int insert(ThirdPartyModelKey record);
 
     int insertSelective(ThirdPartyModelKey record);
+
+    List<ThirdPartyModelKey> selectByExampleWithRowbounds(ThirdPartyModelKeyExample example, RowBounds rowBounds);
 
     List<ThirdPartyModelKey> selectByExample(ThirdPartyModelKeyExample example);
 

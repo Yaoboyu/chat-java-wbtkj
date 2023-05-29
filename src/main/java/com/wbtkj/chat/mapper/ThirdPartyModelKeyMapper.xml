@@ -100,20 +100,15 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKey" >
-    insert into third_party_model_key (id, `key`, model, 
-      `status`, create_time, update_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{key,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKey" useGeneratedKeys="true" keyProperty="id" >
+    insert into third_party_model_key (`key`, model, `status`, 
+      create_time, update_time)
+    values (#{key,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKey" >
+  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKey" useGeneratedKeys="true" keyProperty="id" >
     insert into third_party_model_key
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
       <if test="key != null" >
         `key`,
       </if>
@@ -131,9 +126,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=BIGINT},
-      </if>
       <if test="key != null" >
         #{key,jdbcType=VARCHAR},
       </if>
@@ -225,4 +217,18 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.ThirdPartyModelKeyExample" id="selectByExampleWithRowbounds" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from third_party_model_key
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>
