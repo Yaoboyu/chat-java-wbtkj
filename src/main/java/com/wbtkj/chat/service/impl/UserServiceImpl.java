@@ -1,7 +1,6 @@
 package com.wbtkj.chat.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
-import com.github.pagehelper.PageInfo;
 import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.mapper.UserMapper;
 import com.wbtkj.chat.exception.MyServiceException;
@@ -203,7 +202,7 @@ public class UserServiceImpl implements UserService {
         //判断令牌是否存在，如果不存在，返回错误结果（未登录）。
         if(!StringUtils.hasLength(token)){
             log.info("请求头token为空,返回未登录的信息");
-            throw new MyServiceException("未登录");
+            throw new MyServiceException("token过期");
         }
 
         //解析token，如果解析失败，返回错误结果（未登录）。
@@ -213,9 +212,9 @@ public class UserServiceImpl implements UserService {
             UserLocalDTO userLocalDTO = UserLocalDTO.builder().id(user.getId()).email(user.getEmail()).build();
             ThreadLocalConfig.setUser(userLocalDTO);
             return userLocalDTO;
-        } catch (MyServiceException e) {//jwt解析失败
+        } catch (Exception e) {//jwt解析失败
             log.info("解析令牌失败, 返回未登录错误信息");
-            throw e;
+            throw new MyServiceException("token过期");
         }
 
     }

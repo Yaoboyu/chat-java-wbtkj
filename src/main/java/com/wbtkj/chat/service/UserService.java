@@ -1,6 +1,5 @@
 package com.wbtkj.chat.service;
 
-import com.github.pagehelper.PageInfo;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.User;

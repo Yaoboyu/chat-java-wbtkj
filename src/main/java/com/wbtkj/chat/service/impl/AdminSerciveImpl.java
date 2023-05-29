@@ -1,6 +1,5 @@
 package com.wbtkj.chat.service.impl;
 
-import com.github.pagehelper.PageHelper;
 import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.mapper.AdminMapper;
@@ -63,7 +62,7 @@ public class AdminSerciveImpl implements AdminService {
         //判断令牌是否存在，如果不存在，返回错误结果（未登录）。
         if(!StringUtils.hasLength(token)){
             log.info("请求头token为空,返回未登录的信息");
-            throw new MyServiceException("未登录");
+            throw new MyServiceException("token过期");
         }
 
         //解析token，如果解析失败，返回错误结果（未登录）。
@@ -74,9 +73,9 @@ public class AdminSerciveImpl implements AdminService {
             adminLocalDTO.setId(admin.getId());
             adminLocalDTO.setUsername(admin.getUsername());
             ThreadLocalConfig.setAdmin(adminLocalDTO);
-        } catch (MyServiceException e) {//jwt解析失败
+        } catch (Exception e) {//jwt解析失败
             log.info("解析令牌失败, 返回未登录错误信息");
-            throw e;
+            throw new MyServiceException("token过期");
         }
 
         return true;
