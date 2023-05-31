@@ -51,9 +51,8 @@ CREATE TABLE `third_party_model_key` (
 ) ENGINE=InnoDB;
 
 LOCK TABLES `third_party_model_key` WRITE;
-INSERT INTO `third_party_model_key` VALUES (1,'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','gpt-3.5-turbo','0','2023-04-06 09:54:02','2023-04-06 09:54:02');
-INSERT INTO `third_party_model_key` VALUES (2,'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','gpt-3.5-turbo','0','2023-04-06 09:54:02','2023-04-06 09:54:02');
-INSERT INTO `third_party_model_key` VALUES (3,'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','gpt-4','0','2023-04-06 09:54:02','2023-04-06 09:54:02');
+INSERT INTO `third_party_model_key` VALUES (null,'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','gpt-3.5-turbo','0','2023-04-06 09:54:02','2023-04-06 09:54:02');
+INSERT INTO `third_party_model_key` VALUES (null,'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','gpt-3.5-turbo','0','2023-04-06 09:54:02','2023-04-06 09:54:02');
 UNLOCK TABLES;
 
 drop table if exists admin;

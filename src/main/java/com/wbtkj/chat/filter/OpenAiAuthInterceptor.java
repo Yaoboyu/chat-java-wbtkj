@@ -169,22 +169,22 @@ public class OpenAiAuthInterceptor implements Interceptor {
      *
      * @return key
      */
-    private String getGpt3Key() {
-        if (CollectionUtil.isEmpty(gpt3Key)) {
+    public String getGpt3Key() {
+        if (gpt3Key.size() < 2) {
             MailUtils.SendMail("773508803@qq.com",
-                    "[告警] 没有可用的gpt3 key！！",
-                    "[告警] 没有可用的gpt3 key！！");
+                    "chat-java-wbtkj",
+                    "[告警] gpt3 key 只剩" + gpt3Key.size() + "个");
             log.error(CommonError.NO_ACTIVE_API_KEYS.getMsg());
             throw new MyException("gpt-3.5-turbo暂不可用");
         }
         return gpt3Key.get(getGpt3KeyIndex());
     }
 
-    private String getGpt4Key() {
-        if (CollectionUtil.isEmpty(gpt4Key)) {
+    public String getGpt4Key() {
+        if (gpt4Key.size() < 2) {
             MailUtils.SendMail("773508803@qq.com",
-                    "[告警] 没有可用的gpt4 key！！",
-                    "[告警] 没有可用的gpt4 key！！");
+                    "chat-java-wbtkj",
+                    "[告警] gpt4 key 只剩" + gpt4Key.size() + "个");
             log.error(CommonError.NO_ACTIVE_API_KEYS.getMsg());
             throw new MyException("gpt-4暂不可用");
         }

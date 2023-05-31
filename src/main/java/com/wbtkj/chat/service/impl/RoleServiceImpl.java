@@ -144,7 +144,10 @@ public class RoleServiceImpl implements RoleService {
                 newRole.setNickname(oldRole.getNickname());
             }
             RoleExample roleExample = new RoleExample();
-            roleExample.createCriteria().andIsMarketEqualTo(true).andNicknameEqualTo(newRole.getNickname());
+            roleExample.createCriteria()
+                    .andIsMarketEqualTo(true)
+                    .andNicknameEqualTo(newRole.getNickname())
+                    .andIdNotEqualTo(newRole.getId());
             if (roleMapper.countByExample(roleExample) > 0) {
                 throw new MyServiceException("已存在同名角色，请修改角色昵称或选择不上架市场");
             }

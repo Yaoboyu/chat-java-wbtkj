@@ -72,7 +72,7 @@ public class ChatHandler extends TextWebSocketHandler {
     @Transactional
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         try {
-            String token = session.getHandshakeHeaders().get("authorization").get(0);
+            String token = session.getHandshakeHeaders().get("sec-websocket-protocol").get(0);
             UserLocalDTO userLocalDTO = userService.checkToken(token);
             WSChatSession wsChatSession = WSChatSession.builder()
                     .userId(userLocalDTO.getId())
@@ -84,7 +84,6 @@ public class ChatHandler extends TextWebSocketHandler {
             redisTemplate.opsForValue().set(key, wsChatSession);
 
             WsSessionManager.add(session.getId(), session);
-            WsSessionManager.addOnlineCount();
         } catch (MyServiceException e) {
             session.close();
             throw e;
@@ -222,12 +221,12 @@ public class ChatHandler extends TextWebSocketHandler {
         // 用户退出，移除缓存
         WsSessionManager.remove(session.getId());
 
-
         String key = RedisKeyConstant.ws_chat_session.getKey() + session.getId();
         WSChatSession wsChatSession = (WSChatSession) redisTemplate.opsForValue().getAndDelete(key);
-        roleService.updateChatSession(wsChatSession.getChatSessionId(), wsChatSession.getMessageList());
+        if (wsChatSession != null) {
+            roleService.updateChatSession(wsChatSession.getChatSessionId(), wsChatSession.getMessageList());
+        }
 
-        WsSessionManager.subOnlineCount();
     }
 
 

@@ -2,9 +2,11 @@ package com.wbtkj.chat.config;
 
 import com.wbtkj.chat.websocket.ChatHandler;
 import com.wbtkj.chat.filter.WebSocketInterceptor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.socket.config.annotation.*;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 
 import javax.annotation.Resource;
 
@@ -28,7 +30,12 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
                 .addHandler(chatHandler, "/chat")
-//                .addInterceptors(webSocketInterceptor)
+                .addInterceptors(webSocketInterceptor)
                 .setAllowedOrigins("*");
     }
+
+//    @Bean
+//    public ServerEndpointExporter serverEndpointExporter() {
+//        return new ServerEndpointExporter();
+//    }
 }

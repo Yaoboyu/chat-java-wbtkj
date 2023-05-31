@@ -11,7 +11,7 @@ public class WsSessionManager {
     // 保存连接 session 的地方
     private static final ConcurrentHashMap<String, WebSocketSession> SESSION_POOL = new ConcurrentHashMap<>();
     // 在线总数
-    private static int onlineCount;
+//    private static int onlineCount;
 
 
     /**
@@ -70,20 +70,20 @@ public class WsSessionManager {
      * @return
      */
     public static synchronized int getOnlineCount() {
-        return onlineCount;
+        return SESSION_POOL.size();
     }
 
-    /**
-     * 当前连接数加一
-     */
-    public static synchronized void addOnlineCount() {
-        onlineCount++;
-    }
-
-    /**
-     * 当前连接数减一
-     */
-    public static synchronized void subOnlineCount() {
-        onlineCount--;
-    }
+//    /**
+//     * 当前连接数加一
+//     */
+//    public static synchronized void addOnlineCount() {
+//        onlineCount++;
+//    }
+//
+//    /**
+//     * 当前连接数减一
+//     */
+//    public static synchronized void subOnlineCount() {
+//        onlineCount--;
+//    }
 }
