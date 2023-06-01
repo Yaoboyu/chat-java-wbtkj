@@ -55,20 +55,13 @@
     </appender>
 
     <!-- project default level -->
-    <logger name="net.sh.rgface.serive" level="ERROR" />
-    <logger name="com.wm.springbootjpa01" level="INFO"/>
+    <logger name="net.sh.rgface.serive" level="${LOG_LEVEL}" />
+    <logger name="com.wm.springbootjpa01" level="${LOG_LEVEL}"/>
     <logger name="org.apache.ibatis" level="${LOG_LEVEL}"/>
-    <logger name="org.mybatis.spring" level="${LOG_LEVEL}" additivity="false"/>
     <logger name="org.springframework" level="${LOG_LEVEL}"/>
-    <logger name="org.mybatis.spring.SqlSessionTemplate" level="OFF"/>
-    <logger name="com.zaxxer.hikari.HikariDataSource" level="INFO"/>
-    <logger name="org.apache.ibatis.session.defaults.DefaultSqlSession" level="INFO"/>
-    <logger name="org.springframework.transaction" level="INFO"/>
-    <logger name="org.mybatis.spring.transaction.SpringManagedTransaction" level="INFO"/>
-    <logger name="org.springframework.transaction.support.TransactionSynchronizationManager" level="INFO"/>
-    <logger name="java.sql.Connection" level="${LOG_LEVEL}" additivity="false"/>
-    <logger name="java.sql.Statement" level="${LOG_LEVEL}" additivity="false"/>
-    <logger name="java.sql.PreparedStatement" level="${LOG_LEVEL}" additivity="false"/>
+    <logger name="java.sql.Connection" level="${LOG_LEVEL}"/>
+    <logger name="java.sql.Statement" level="${LOG_LEVEL}"/>
+    <logger name="java.sql.PreparedStatement" level="${LOG_LEVEL}"/>
 
     <!--设置为OFF,即屏蔽; 留下sqltiming作为INFO级别输出-->
     <logger name="jdbc.connection" level="OFF"/>

@@ -182,9 +182,9 @@ public class OpenAiAuthInterceptor implements Interceptor {
 
     public String getGpt4Key() {
         if (gpt4Key.size() < 2) {
-            MailUtils.SendMail("773508803@qq.com",
-                    "chat-java-wbtkj",
-                    "[告警] gpt4 key 只剩" + gpt4Key.size() + "个");
+//            MailUtils.SendMail("773508803@qq.com",
+//                    "chat-java-wbtkj",
+//                    "[告警] gpt4 key 只剩" + gpt4Key.size() + "个");
             log.error(CommonError.NO_ACTIVE_API_KEYS.getMsg());
             throw new MyException("gpt-4暂不可用");
         }
