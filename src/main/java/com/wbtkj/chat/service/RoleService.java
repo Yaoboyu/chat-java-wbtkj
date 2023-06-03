@@ -2,6 +2,7 @@ package com.wbtkj.chat.service;
 
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.model.ChatSession;
+import com.wbtkj.chat.pojo.model.Role;
 import com.wbtkj.chat.pojo.vo.role.RoleBriefVO;
 import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
@@ -103,4 +104,7 @@ public interface RoleService {
     int addUserRoleUsed(long roleId, long userId, int point);
 
     boolean checkUserRole(long roleId, long userId);
+
+    Role getRole(long roleId);
+    void setRole(Role role);
 }

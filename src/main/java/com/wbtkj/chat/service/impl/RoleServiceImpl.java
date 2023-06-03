@@ -29,10 +29,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -293,5 +295,21 @@ public class RoleServiceImpl implements RoleService {
         List<UserRole> userRoles = userRoleMapper.selectByExample(userRoleExample);
 
         return !CollectionUtils.isEmpty(userRoles);
+    }
+
+    @Override
+    public Role getRole(long roleId) {
+        Role role = (Role) redisTemplate.opsForValue().get("Role:" + roleId);
+        if(role == null){
+            role = roleMapper.selectByPrimaryKey(roleId);
+            setRole(role);
+        }
+        return role;
+    }
+    public void setRole(Role role){
+        if (role == null) {
+            return;
+        }
+        redisTemplate.opsForValue().set("Role:" + role.getId(), role,70, TimeUnit.MINUTES);
     }
 }
