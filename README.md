@@ -2,6 +2,11 @@
 
 # 部署
 
+MongoDB
+```shell script
+sudo sysctl -w net.ipv4.tcp_keepalive_time=120
+```
+
 PostgreSQL
 ```shell script
 git clone --branch v0.4.0 https://github.com/pgvector/pgvector.git
