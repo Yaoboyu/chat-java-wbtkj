@@ -29,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,18 +51,21 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public List<Object> getRole() {
+    public List<Object> getUserRole() {
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andUserIdEqualTo(ThreadLocalConfig.getUser().getId())
                 .andStatusEqualTo(UserRoleStatus.ENABLED.getStatus());
         userRoleExample.setOrderByClause("top desc");
 
         List<UserRole> userRoles = userRoleMapper.selectByExample(userRoleExample);
+        // 用户拥有的角色ids
         List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
 
-        RoleExample roleExample = new RoleExample();
-        roleExample.createCriteria().andIdIn(roleIds);
-        List<Role> roles = roleMapper.selectByExample(roleExample);
+        List<Role> roles = new ArrayList<>();
+        for (Long roleId : roleIds) {
+            roles.add(getRole(roleId));
+        }
+
         Map<Long, Role> roleMap = roles.stream().collect(Collectors.toMap(Role::getId, role -> role));
 
         List<Object> res = new ArrayList<>();
@@ -156,6 +158,9 @@ public class RoleServiceImpl implements RoleService {
         }
 
         roleMapper.updateByPrimaryKeySelective(newRole);
+
+        newRole = roleMapper.selectByPrimaryKey(newRole.getId());
+        setRole(newRole);
         return true;
     }
 
@@ -238,10 +243,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public ChatSession getChatSessionById(String chatSessionId) {
+    public ChatSession getChatSessionById(String chatSessionId, long userId) {
         ChatSession res = mongoTemplate.findById(chatSessionId, ChatSession.class);
-        if (res == null) {
-            throw new MyServiceException("会话不存在");
+        if (res != null && !res.getUserId().equals(userId)) {
+            return null;
+//            throw new MyServiceException("会话不存在");
         }
         return res;
     }
@@ -299,17 +305,24 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getRole(long roleId) {
-        Role role = (Role) redisTemplate.opsForValue().get("Role:" + roleId);
-        if(role == null){
-            role = roleMapper.selectByPrimaryKey(roleId);
-            setRole(role);
+        try {
+            Role role = (Role) redisTemplate.opsForValue().get("Role:" + roleId);
+            if(role == null){
+                role = roleMapper.selectByPrimaryKey(roleId);
+                setRole(role);
+            }
+            return role;
+        } catch (Exception e) {
+            return null;
         }
-        return role;
     }
+
+    @Override
     public void setRole(Role role){
         if (role == null) {
             return;
         }
-        redisTemplate.opsForValue().set("Role:" + role.getId(), role,70, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(RedisKeyConstant.role.getKey() + role.getId(), role,
+                RedisKeyConstant.role.getExp(), TimeUnit.MINUTES);
     }
 }

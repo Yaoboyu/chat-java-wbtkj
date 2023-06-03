@@ -13,7 +13,7 @@ import java.util.List;
 public class WSChatSession implements Serializable {
     private Long userId;
     private String email;
-    private Role role;
+    private Long roleId;
     private String chatSessionId;
     private List<Message> messageList;
 }

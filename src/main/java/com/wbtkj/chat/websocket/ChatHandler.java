@@ -3,9 +3,11 @@ package com.wbtkj.chat.websocket;
 import cn.hutool.json.JSONUtil;
 import com.wbtkj.chat.constant.RedisKeyConstant;
 import com.wbtkj.chat.exception.MyServiceException;
+import com.wbtkj.chat.filter.OpenAiAuthInterceptor;
 import com.wbtkj.chat.listener.OpenAIWebSocketEventSourceListener;
 import com.wbtkj.chat.mapper.RoleMapper;
 import com.wbtkj.chat.mapper.UserMapper;
+import com.wbtkj.chat.mapper.UserRoleMapper;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.dto.role.WSChatSession;
@@ -13,7 +15,6 @@ import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyValue;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.ChatSession;
 import com.wbtkj.chat.pojo.model.Role;
-import com.wbtkj.chat.pojo.model.User;
 import com.wbtkj.chat.pojo.vo.role.WSChatMessage;
 import com.wbtkj.chat.service.OpenAiStreamService;
 import com.wbtkj.chat.service.RoleService;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -29,14 +31,16 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 @Component
 @Slf4j
 public class ChatHandler extends TextWebSocketHandler {
+
+
     @Resource
     private OpenAiStreamService openAiStreamService;
     @Resource
@@ -47,7 +51,11 @@ public class ChatHandler extends TextWebSocketHandler {
     private RoleMapper roleMapper;
     @Resource
     private UserMapper userMapper;
-//    @Resource
+    @Resource
+    private UserRoleMapper userRoleMapper;
+    @Resource
+    private OpenAiAuthInterceptor openAiAuthInterceptor;
+    //    @Resource
 //    private MongoTemplate mongoTemplate;
     @Resource
     RedisTemplate<Object, Object> redisTemplate;
@@ -59,6 +67,7 @@ public class ChatHandler extends TextWebSocketHandler {
      * @throws Exception
      */
     @Override
+    @Transactional
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         try {
             String token = session.getHandshakeHeaders().get("sec-websocket-protocol").get(0);
@@ -66,11 +75,11 @@ public class ChatHandler extends TextWebSocketHandler {
             WSChatSession wsChatSession = WSChatSession.builder()
                     .userId(userLocalDTO.getId())
                     .email(userLocalDTO.getEmail())
-                    .role(null)
+                    .roleId(null)
                     .chatSessionId(null)
                     .messageList(null).build();
             String key = RedisKeyConstant.ws_chat_session.getKey() + session.getId();
-            redisTemplate.opsForValue().set(key, wsChatSession);
+            redisTemplate.opsForValue().set(key, wsChatSession, 30, TimeUnit.MINUTES);
 
             WsSessionManager.add(session.getId(), session);
         } catch (MyServiceException e) {
@@ -91,11 +100,17 @@ public class ChatHandler extends TextWebSocketHandler {
      * @throws Exception
      */
     @Override
+    @Transactional
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         // 取wsChatSession
         String key = RedisKeyConstant.ws_chat_session.getKey() + session.getId();
         WSChatSession wsChatSession = (WSChatSession) redisTemplate.opsForValue().get(key);
-        log.info("[连接:{}] 收到消息:{}", wsChatSession.getUserId(), message.getPayload());
+        if (wsChatSession == null) {
+            session.sendMessage(new TextMessage("{{wbtkj_error}}:" + "会话过期，请刷新网页"));
+            session.close();
+            return;
+        }
+        log.info("[链接:{}, 用户:{}] 收到消息:{}", session.getId(), wsChatSession.getUserId(), message.getPayload());
         WSChatMessage wsChatMessage = JSONUtil.toBean(message.getPayload(), WSChatMessage.class);
 
         if (StringUtils.isBlank(wsChatMessage.getMessage())) {
@@ -103,57 +118,85 @@ public class ChatHandler extends TextWebSocketHandler {
         }
 
         if (wsChatMessage.getRoleId() == null) {
-            throw new MyServiceException("缺少roleId");
+            session.sendMessage(new TextMessage("{{wbtkj_error}}:" + "缺少roleId"));
+            return;
         }
 
-        Role role = roleMapper.selectByPrimaryKey(wsChatMessage.getRoleId());
+        Role role = roleService.getRole(wsChatMessage.getRoleId());
+        if (role == null) {
+            session.sendMessage(new TextMessage("{{wbtkj_error}}:" + "角色不存在"));
+            return;
+        }
+
+        if (!roleService.checkUserRole(wsChatMessage.getRoleId(), wsChatSession.getUserId())) {
+            session.sendMessage(new TextMessage("{{wbtkj_error}}:" + "未拥有该角色"));
+            return;
+        }
+
+        if (!openAiAuthInterceptor.hasKey(role.getModel())) {
+            session.sendMessage(new TextMessage("{{wbtkj_error}}:" + role.getModel() + "暂不可用"));
+            return;
+        }
 
         // 扣除用户余额
-        User user = userMapper.selectByPrimaryKey(wsChatSession.getUserId());
-        int value = ThirdPartyModelKeyValue.getValue(role.getModel());
-        if (user.getBalance() - value < 0) {
-            throw new MyServiceException("余额不足");
+        int point = ThirdPartyModelKeyValue.getValue(role.getModel());
+        int newBalance = userService.deductBalance(wsChatSession.getUserId(), point);
+        session.sendMessage(new TextMessage("{{wbtkj_newBalance}}:" + newBalance));
+        // 返现
+        if (role.getUserId() != 0 && !role.getUserId().equals(wsChatSession.getUserId())) { //不是官方角色并且不是角色主人
+            userService.cashBack(role.getUserId(), point);
         }
-        user.setBalance(user.getBalance() - value);
-        session.sendMessage(new TextMessage("{{userBalance}}:" + user.getBalance()));
-        userMapper.updateByPrimaryKey(user);
+        // 增加UserRoleUsed
+        roleService.addUserRoleUsed(role.getId(), wsChatSession.getUserId(), point);
+        // 增加角色热度
+        role.setHot(role.getHot() + 1);
+        roleService.setRole(role);
 
         // 更新wsChatSession
-        if (wsChatSession.getRole() == null
-                || !wsChatSession.getRole().getId().equals(wsChatMessage.getRoleId())) { // 新角色
+        if (wsChatSession.getRoleId() == null
+                || !wsChatSession.getRoleId().equals(wsChatMessage.getRoleId())) { // 新角色
             roleService.updateChatSession(wsChatSession.getChatSessionId(), wsChatSession.getMessageList());
 
-            wsChatSession.setRole(role);
+            wsChatSession.setRoleId(role.getId());
             if (wsChatMessage.getChatSessionId() == null) { // 新对话
                 ChatSession newChatSession = roleService.addChatSession(wsChatSession.getUserId(), role.getId());
                 wsChatSession.setChatSessionId(newChatSession.getChatSessionId());
                 wsChatSession.setMessageList(new ArrayList<>());
-                session.sendMessage(new TextMessage("{{chatSessionId}}:" + newChatSession.getChatSessionId()));
+                session.sendMessage(new TextMessage("{{wbtkj_chatSessionId}}:" + newChatSession.getChatSessionId()));
 
             } else { // 加载历史对话
-                ChatSession chatSession = roleService.getChatSessionById(wsChatMessage.getChatSessionId());
+                ChatSession chatSession = roleService.getChatSessionById(wsChatMessage.getChatSessionId(), wsChatSession.getUserId());
+                if (chatSession == null) {
+                    session.sendMessage(new TextMessage("{{wbtkj_error}}:" + "chatSessionId错误或不属于该用户"));
+                    return;
+                }
                 wsChatSession.setChatSessionId(wsChatMessage.getChatSessionId());
                 wsChatSession.setMessageList(chatSession.getMessages());
             }
-        } else {
+        } else { // 老角色
             if (wsChatMessage.getChatSessionId() == null) { // 新对话
                 roleService.updateChatSession(wsChatSession.getChatSessionId(), wsChatSession.getMessageList());
-                ChatSession newChatSession = roleService.addChatSession(wsChatSession.getUserId(), wsChatSession.getRole().getId());
+                ChatSession newChatSession = roleService.addChatSession(wsChatSession.getUserId(), wsChatSession.getRoleId());
                 wsChatSession.setChatSessionId(newChatSession.getChatSessionId());
                 wsChatSession.setMessageList(new ArrayList<>());
-                session.sendMessage(new TextMessage("{{chatSessionId}}:" + newChatSession.getChatSessionId()));
+                session.sendMessage(new TextMessage("{{wbtkj_chatSessionId}}:" + newChatSession.getChatSessionId()));
 
             } else if (!wsChatMessage.getChatSessionId().equals(wsChatSession.getChatSessionId())) { // 加载历史对话
                 roleService.updateChatSession(wsChatSession.getChatSessionId(), wsChatSession.getMessageList());
-                ChatSession chatSession = roleService.getChatSessionById(wsChatMessage.getChatSessionId());
+                ChatSession chatSession = roleService.getChatSessionById(wsChatMessage.getChatSessionId(), wsChatSession.getUserId());
+                if (chatSession == null) {
+                    session.sendMessage(new TextMessage("{{wbtkj_error}}:" + "chatSessionId错误或不属于该用户"));
+                    return;
+                }
                 wsChatSession.setChatSessionId(wsChatMessage.getChatSessionId());
                 wsChatSession.setMessageList(chatSession.getMessages());
             }
         }
+        List<Message> messages = new ArrayList<>(wsChatSession.getMessageList());
+
         wsChatSession.getMessageList().add(Message.builder().content(wsChatMessage.getMessage()).role(Message.Role.USER).build());
         redisTemplate.opsForValue().set(key, wsChatSession);
 
-        List<Message> messages = new ArrayList<>(wsChatSession.getMessageList());
         messages = messages.subList(Math.max(0, messages.size() - role.getContextN()*2), messages.size());
         messages.add(0, Message.builder().content(role.getSystem()).role(Message.Role.SYSTEM).build());
         messages.add(Message.builder().content(wsChatMessage.getMessage()).role(Message.Role.USER).build());
@@ -184,12 +227,15 @@ public class ChatHandler extends TextWebSocketHandler {
      * @throws Exception
      */
     @Override
+    @Transactional
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         // 用户退出，移除缓存
         WsSessionManager.remove(session.getId());
 
+
         String key = RedisKeyConstant.ws_chat_session.getKey() + session.getId();
         WSChatSession wsChatSession = (WSChatSession) redisTemplate.opsForValue().getAndDelete(key);
+        roleService.updateChatSession(wsChatSession.getChatSessionId(), wsChatSession.getMessageList());
         if (wsChatSession != null) {
             roleService.updateChatSession(wsChatSession.getChatSessionId(), wsChatSession.getMessageList());
         }

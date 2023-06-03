@@ -15,7 +15,7 @@ public interface RoleService {
      * 如果角色属于用户，则返回所有字段，如果不属于，则返回应用市场查询出来的字段
      * @return
      */
-    List<Object> getRole();
+    List<Object> getUserRole();
 
     /**
      * 获取上架角色
@@ -44,7 +44,7 @@ public interface RoleService {
     /**
      * 在应用市场通过id添加role
      * @param roleId
-     * @param isNew
+     * @param isNew 是否是addRole函数调用此函数
      * @return
      */
     boolean addRoleById(long roleId, boolean isNew);
@@ -74,9 +74,10 @@ public interface RoleService {
     /**
      * 通过chatSessionId获取ChatSession
      * @param chatSessionId
+     * @param userId
      * @return
      */
-    ChatSession getChatSessionById(String chatSessionId);
+    ChatSession getChatSessionById(String chatSessionId, long userId);
 
     /**
      * 更新对话
@@ -103,8 +104,24 @@ public interface RoleService {
      */
     int addUserRoleUsed(long roleId, long userId, int point);
 
+    /**
+     * 检查UserRole表是否存在roleId和userId对
+     * @param roleId
+     * @param userId
+     * @return
+     */
     boolean checkUserRole(long roleId, long userId);
 
+    /**
+     * 从redis里拿，如果没有从数据库拿
+     * @param roleId
+     * @return
+     */
     Role getRole(long roleId);
+
+    /**
+     * 根据roleId刷新redis中的role
+     * @param role
+     */
     void setRole(Role role);
 }

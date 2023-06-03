@@ -17,3 +17,9 @@ make install # may need sudo
 sudo -u postgres psql
 ALTER USER postgres WITH PASSWORD 'wbtkjjktbw';
 ```
+
+
+# 优化
+## 后端
+1. UserRole表放入缓存
+2. 刷热度用消息队列

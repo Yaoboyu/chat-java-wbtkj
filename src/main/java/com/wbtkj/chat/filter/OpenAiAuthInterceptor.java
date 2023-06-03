@@ -144,6 +144,7 @@ public class OpenAiAuthInterceptor implements Interceptor {
             throw new MyException();
         }
 
+        log.info("model:{}, key:{}, depth:{} ==== 内存中gpt3:{},gpt4:{}", model, key, depth, gpt3Key.size(), gpt4Key.size());
         return response;
     }
 

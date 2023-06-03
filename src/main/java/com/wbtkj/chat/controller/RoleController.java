@@ -1,5 +1,6 @@
 package com.wbtkj.chat.controller;
 
+import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
 import com.wbtkj.chat.service.RoleService;
@@ -19,7 +20,7 @@ public class RoleController {
 
     @GetMapping("")
     Result info() {
-        return Result.success(roleService.getRole());
+        return Result.success(roleService.getUserRole());
     }
 
     @GetMapping("/history/{roleId}")
@@ -29,7 +30,7 @@ public class RoleController {
 
     @GetMapping("/session/{chatSessionId}")
     Result roleSession(@PathVariable String chatSessionId) {
-        return Result.success(roleService.getChatSessionById(chatSessionId));
+        return Result.success(roleService.getChatSessionById(chatSessionId, ThreadLocalConfig.getUser().getId()));
     }
 
     @PostMapping("")
