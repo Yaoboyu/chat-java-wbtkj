@@ -1,4 +1,4 @@
-package com.wbtkj.chat.service;
+package com.wbtkj.chat.api;
 
 import com.wbtkj.chat.pojo.dto.openai.billing.BillingUsage;
 import com.wbtkj.chat.pojo.dto.openai.billing.CreditGrantsResponse;
@@ -42,7 +42,7 @@ import java.util.Map;
  * @author https:www.unfbx.com
  * 2023-02-15
  */
-public interface OpenAiApi {
+public interface OpenAIAPI {
 
     /**
      * 模型列表

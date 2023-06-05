@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.ContentType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.knuddels.jtokkit.api.EncodingType;
+import com.wbtkj.chat.api.OpenAIAPI;
 import com.wbtkj.chat.config.StaticContextAccessor;
 import com.wbtkj.chat.exception.MyException;
 import com.wbtkj.chat.exception.MyServiceException;
@@ -13,9 +15,12 @@ import com.wbtkj.chat.pojo.dto.openai.billing.Subscription;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.dto.openai.completions.Completion;
-import com.wbtkj.chat.service.OpenAiApi;
-import com.wbtkj.chat.service.OpenAiStreamService;
+import com.wbtkj.chat.pojo.dto.openai.embeddings.Embedding;
+import com.wbtkj.chat.pojo.dto.openai.embeddings.EmbeddingResponse;
+import com.wbtkj.chat.pojo.dto.openai.embeddings.TextAndEmbedding;
+import com.wbtkj.chat.service.OpenAIService;
 import com.wbtkj.chat.service.ThirdPartyModelKeyService;
+import com.wbtkj.chat.utils.TikTokensUtil;
 import io.reactivex.Single;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +29,7 @@ import okhttp3.sse.EventSource;
 import okhttp3.sse.EventSourceListener;
 import okhttp3.sse.EventSources;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -32,6 +37,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -45,18 +51,17 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Slf4j
+@Getter
 @Service
-public class OpenAiStreamServiceImpl implements OpenAiStreamService {
+public class OpenAIServiceImpl implements OpenAIService {
 
-//    @Value("${chatgpt.apiHost}")
     private String apiHost;
     /**
      * 自定义的okHttpClient
      */
     private OkHttpClient okHttpClient;
 
-    @Getter
-    private OpenAiApi openAiApi;
+    private OpenAIAPI openAIAPI;
 
     /**
      * 自定义鉴权处理拦截器
@@ -70,11 +75,12 @@ public class OpenAiStreamServiceImpl implements OpenAiStreamService {
     /**
      * 构造实例对象
      */
-    public OpenAiStreamServiceImpl() {
-        openAiAuthInterceptor = StaticContextAccessor.getBean(OpenAiAuthInterceptor.class);
-        apiHost = StaticContextAccessor.getBean(Environment.class).getProperty("chatgpt.apiHost");
+    public OpenAIServiceImpl(@Value("${chatgpt.apiHost}") String apiHost) {
+        this.openAiAuthInterceptor = StaticContextAccessor.getBean(OpenAiAuthInterceptor.class);
 
-        okHttpClient = new OkHttpClient
+        this.apiHost = apiHost;
+
+        this.okHttpClient = new OkHttpClient
                 .Builder()
                 .addInterceptor(openAiAuthInterceptor)
                 .connectTimeout(10, TimeUnit.SECONDS)
@@ -83,12 +89,12 @@ public class OpenAiStreamServiceImpl implements OpenAiStreamService {
                 .build();
 
 
-        openAiApi = new Retrofit.Builder()
+        this.openAIAPI = new Retrofit.Builder()
                 .baseUrl(apiHost)
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
-                .build().create(OpenAiApi.class);
+                .build().create(OpenAIAPI.class);
     }
 
 
@@ -165,55 +171,62 @@ public class OpenAiStreamServiceImpl implements OpenAiStreamService {
         this.streamChatCompletion(chatCompletion, eventSourceListener);
     }
 
-//    /**
-//     * ## 官方已经禁止使用此api
-//     * OpenAi账户余额查询
-//     *
-//     * @return 余额信息
-//     */
-//    @SneakyThrows
-//    @Deprecated
-//    public CreditGrantsResponse creditGrants() {
-//        Request request = new Request.Builder()
-//                .url(this.apiHost + "dashboard/billing/credit_grants")
-//                .get()
-//                .build();
-//        Response response = this.okHttpClient.newCall(request).execute();
-//        ResponseBody body = response.body();
-//        String bodyStr = body.string();
-////        log.info("调用查询余额请求返回值：{}", bodyStr);
-//        if (!response.isSuccessful()) {
-//            if (response.code() == CommonError.OPENAI_AUTHENTICATION_ERROR.getCode()
-//                    || response.code() == CommonError.OPENAI_LIMIT_ERROR.getCode()
-//                    || response.code() == CommonError.OPENAI_SERVER_ERROR.getCode()) {
-//                OpenAiResponse openAiResponse = JSONUtil.toBean(bodyStr, OpenAiResponse.class);
-//                log.error(openAiResponse.getError().getMessage());
-//                throw new BaseException(openAiResponse.getError().getMessage());
-//            }
-//            String errorMsg = bodyStr;
-//            log.error("询余额请求异常：{}", errorMsg);
-//            OpenAiResponse openAiResponse = JSONUtil.toBean(errorMsg, OpenAiResponse.class);
-//            if (Objects.nonNull(openAiResponse.getError())) {
-//                log.error(openAiResponse.getError().getMessage());
-//                throw new BaseException(openAiResponse.getError().getMessage());
-//            }
-//            throw new BaseException(CommonError.RETRY_ERROR);
-//        }
-//        ObjectMapper mapper = new ObjectMapper();
-//        // 读取Json 返回值
-//        CreditGrantsResponse completionResponse = mapper.readValue(bodyStr, CreditGrantsResponse.class);
-//        return completionResponse;
-//    }
-
-
     public Subscription subscription() {
-        Single<Subscription> subscription = this.openAiApi.subscription();
+        Single<Subscription> subscription = this.openAIAPI.subscription();
         return subscription.blockingGet();
     }
 
     public BillingUsage billingUsage(@NotNull LocalDate starDate, @NotNull LocalDate endDate) {
-        Single<BillingUsage> billingUsage = this.openAiApi.billingUsage(starDate, endDate);
+        Single<BillingUsage> billingUsage = this.openAIAPI.billingUsage(starDate, endDate);
         return billingUsage.blockingGet();
     }
 
+    public EmbeddingResponse embeddings(String input) {
+        List<String> inputs = new ArrayList<>(1);
+        inputs.add(input);
+        Embedding embedding = Embedding.builder().input(inputs).build();
+        return this.embeddings(embedding);
+    }
+
+    public List<TextAndEmbedding> embeddings(List<String> input) {
+        List<TextAndEmbedding> result = new ArrayList<>();
+        int queryLen = 0;
+        int startIndex = 0;
+        int tokens = 0;
+
+        for (int index = 0; index < input.size(); index++) {
+            queryLen += TikTokensUtil.tokens(EncodingType.CL100K_BASE, input.get(index));
+            if (queryLen > 8192 - 1024) {
+                Embedding embedding = Embedding.builder().input(input.subList(startIndex, index + 1)).build();
+                EmbeddingResponse embeddingResponse = this.embeddings(embedding);
+                for (int i = startIndex; i < index + 1; i++) {
+                    result.add(TextAndEmbedding.builder()
+                            .text(input.get(i))
+                            .embedding(embeddingResponse.getData().get(i-startIndex).getEmbedding())
+                            .build());
+                }
+                queryLen = 0;
+                startIndex = index + 1;
+                tokens += embeddingResponse.getUsage().getTotalTokens();
+            }
+        }
+        if (queryLen > 0) {
+            Embedding embedding = Embedding.builder().input(input.subList(startIndex, input.size())).build();
+            EmbeddingResponse embeddingResponse = this.embeddings(embedding);
+            for (int i = startIndex; i < input.size(); i++) {
+                result.add(TextAndEmbedding.builder()
+                        .text(input.get(i))
+                        .embedding(embeddingResponse.getData().get(i-startIndex).getEmbedding())
+                        .build());
+            }
+            tokens += embeddingResponse.getUsage().getTotalTokens();
+        }
+
+        return result;
+    }
+
+    public EmbeddingResponse embeddings(Embedding embedding) {
+        Single<EmbeddingResponse> embeddings = this.openAIAPI.embeddings(embedding);
+        return embeddings.blockingGet();
+    }
 }

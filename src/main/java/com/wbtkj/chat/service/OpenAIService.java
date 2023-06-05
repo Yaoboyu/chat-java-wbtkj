@@ -5,13 +5,16 @@ import com.wbtkj.chat.pojo.dto.openai.billing.Subscription;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.dto.openai.completions.Completion;
+import com.wbtkj.chat.pojo.dto.openai.embeddings.Embedding;
+import com.wbtkj.chat.pojo.dto.openai.embeddings.EmbeddingResponse;
+import com.wbtkj.chat.pojo.dto.openai.embeddings.TextAndEmbedding;
 import okhttp3.sse.EventSourceListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface OpenAiStreamService {
+public interface OpenAIService {
 
     /**
      * 问答接口 stream 形式
@@ -61,4 +64,28 @@ public interface OpenAiStreamService {
      * @return
      */
     public BillingUsage billingUsage(@NotNull LocalDate starDate, @NotNull LocalDate endDate);
+
+    /**
+     * 向量计算：单文本
+     *
+     * @param input
+     * @return EmbeddingResponse
+     */
+    EmbeddingResponse embeddings(String input);
+
+    /**
+     * 向量计算：集合文本
+     *
+     * @param input 文本集合
+     * @return EmbeddingResponse
+     */
+    List<TextAndEmbedding> embeddings(List<String> input);
+
+    /**
+     * 文本转换向量
+     *
+     * @param embedding 入参
+     * @return EmbeddingResponse
+     */
+    EmbeddingResponse embeddings(Embedding embedding);
 }

@@ -16,7 +16,7 @@ import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.ChatSession;
 import com.wbtkj.chat.pojo.model.Role;
 import com.wbtkj.chat.pojo.vo.role.WSChatMessage;
-import com.wbtkj.chat.service.OpenAiStreamService;
+import com.wbtkj.chat.service.OpenAIService;
 import com.wbtkj.chat.service.RoleService;
 import com.wbtkj.chat.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public class ChatHandler extends TextWebSocketHandler {
 
 
     @Resource
-    private OpenAiStreamService openAiStreamService;
+    private OpenAIService openAIService;
     @Resource
     private UserService userService;
     @Resource
@@ -214,7 +214,7 @@ public class ChatHandler extends TextWebSocketHandler {
                 .build();
 
         OpenAIWebSocketEventSourceListener eventSourceListener = new OpenAIWebSocketEventSourceListener(session);
-        openAiStreamService.streamChatCompletion(chatCompletion, eventSourceListener);
+        openAIService.streamChatCompletion(chatCompletion, eventSourceListener);
 
 
     }

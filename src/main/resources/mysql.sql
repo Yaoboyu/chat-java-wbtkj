@@ -115,3 +115,17 @@ CREATE TABLE IF NOT EXISTS `user_role` (
     INDEX `idx_user_id_status_top`(`user_id`,`status`,`top`) USING BTREE,
     INDEX `idx_role_id_user_id`(`role_id`,`user_id`) USING BTREE
 ) ENGINE=InnoDB;
+
+
+drop table if exists user_file;
+CREATE TABLE IF NOT EXISTS `user_file` (
+   `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '自增主键',
+   `user_id` BIGINT NOT NULL COMMENT '用户id',
+   `role_id` BIGINT NOT NULL COMMENT '角色id',
+   `used` INT NOT NULL COMMENT '该用户在该角色上使用的点数',
+   `status` INT NOT NULL COMMENT '状态。0正常使用，-1软删除',
+   `top` BOOLEAN NOT NULL COMMENT '是否置顶。0不置顶，1置顶',
+   PRIMARY KEY (`id`),
+   INDEX `idx_user_id_status_top`(`user_id`,`status`,`top`) USING BTREE,
+   INDEX `idx_role_id_user_id`(`role_id`,`user_id`) USING BTREE
+) ENGINE=InnoDB;

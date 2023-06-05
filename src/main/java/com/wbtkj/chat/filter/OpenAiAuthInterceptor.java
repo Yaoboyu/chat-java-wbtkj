@@ -1,6 +1,5 @@
 package com.wbtkj.chat.filter;
 
-
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
@@ -19,13 +18,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
-
 
 @Slf4j
 @Component
@@ -39,6 +38,8 @@ public class OpenAiAuthInterceptor implements Interceptor {
     private int gpt3KeyIndex;
     private int gpt4KeyIndex;
 
+    private ThirdPartyModelKeyService thirdPartyModelKeyService;
+
     /**
      * 账号被封了
      */
@@ -47,12 +48,7 @@ public class OpenAiAuthInterceptor implements Interceptor {
      * key不正确
      */
     private static final String INVALID_API_KEY = "invalid_api_key";
-    /**
-     *
-     */
-//    private static final String EXCEEDED_QUOTA = "quota";
 
-    private ThirdPartyModelKeyService thirdPartyModelKeyService;
 
 
     public OpenAiAuthInterceptor() {
@@ -102,6 +98,9 @@ public class OpenAiAuthInterceptor implements Interceptor {
         // 获取key
         Request original = chain.request();
         String model = original.header("model");
+        if (!StringUtils.hasLength(model)) {
+            model = ChatCompletion.Model.GPT_3_5_TURBO.getName();
+        }
         String key = null;
         if(model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())) {
             key = getGpt3Key();

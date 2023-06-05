@@ -14,6 +14,9 @@ spring:
     password: wbtkjjktbw
   application:
     name: chat-java-wbtkj
+  servlet:
+    multipart:
+      max-file-size: 10MB
 
 mybatis:
   configuration:
@@ -33,6 +36,9 @@ server:
 
 chatgpt:
   apiHost: https://openai.wbtkj.top/
+
+chat-py-wbtkj:
+  apiHost: http://localhost:10318/
 
 log:
   path: D:/ProgramData/Springbootlog
