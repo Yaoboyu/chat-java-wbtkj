@@ -3,7 +3,7 @@ package com.wbtkj.chat.service.impl;
 import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.mapper.AdminMapper;
-import com.wbtkj.chat.mapper.UserMapper;
+import com.wbtkj.chat.mapper.UserInfoMapper;
 import com.wbtkj.chat.pojo.dto.admin.AdminLocalDTO;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.*;
@@ -25,7 +25,7 @@ import java.util.*;
 @Slf4j
 public class AdminSerciveImpl implements AdminService {
     @Resource
-    UserMapper userMapper;
+    UserInfoMapper userInfoMapper;
     @Resource
     AdminMapper adminMapper;
 

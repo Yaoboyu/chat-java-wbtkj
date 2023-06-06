@@ -2,9 +2,6 @@ package com.wbtkj.chat.service;
 
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.model.Admin;
-import com.wbtkj.chat.pojo.model.User;
-
-import java.util.List;
 
 public interface AdminService {
 

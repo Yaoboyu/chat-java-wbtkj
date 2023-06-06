@@ -1,9 +1,13 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://42.192.145.155:3306/wbtkj_chat?serverTimezone=UTC
-    username: root
-    password: R/oot123
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://42.192.145.155:5432/wbtkj_chat
+    username: postgres
+    password: wbtkjjktbw
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://42.192.145.155:3306/wbtkj_chat?serverTimezone=UTC
+#    username: root
+#    password: R/oot123
   data:
     mongodb:
       uri: mongodb://wbtkj:wbtkjjktbw@42.192.145.155:27017/chat-wbtkj

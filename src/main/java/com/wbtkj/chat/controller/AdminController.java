@@ -1,16 +1,13 @@
 package com.wbtkj.chat.controller;
 
-import com.wbtkj.chat.exception.MyException;
-import com.wbtkj.chat.pojo.model.User;
+import com.wbtkj.chat.pojo.model.UserInfo;
 import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.pojo.vo.admin.AdminLoginVO;
 import com.wbtkj.chat.service.*;
-import com.wbtkj.chat.utils.CardGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -44,9 +41,9 @@ public class AdminController {
     }
 
     @PutMapping("/user")
-    Result updateStatus(@RequestBody User user){
+    Result updateStatus(@RequestBody UserInfo userInfo){
         log.info("修改用户信息");
-        userService.updateUser(user);
+        userService.updateUser(userInfo);
         return Result.success();
     }
 

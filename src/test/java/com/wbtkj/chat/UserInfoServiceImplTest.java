@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 @SpringBootTest
 @EnableConfigurationProperties
 @ActiveProfiles("dev")
-public class UserServiceImplTest {
+public class UserInfoServiceImplTest {
 
     @Resource
     private UserService userService;

@@ -1,21 +1,17 @@
 package com.wbtkj.chat.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.exception.MyException;
 import com.wbtkj.chat.mapper.RechargeRecordMapper;
-import com.wbtkj.chat.mapper.UserMapper;
+import com.wbtkj.chat.mapper.UserInfoMapper;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.dto.rechargeRecord.RechargeRecordType;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.RechargeRecord;
 import com.wbtkj.chat.pojo.model.RechargeRecordExample;
-import com.wbtkj.chat.pojo.model.User;
-import com.wbtkj.chat.pojo.model.UserExample;
-import com.wbtkj.chat.pojo.vo.Result;
+import com.wbtkj.chat.pojo.model.UserInfo;
 import com.wbtkj.chat.service.CDKEYService;
 import com.wbtkj.chat.service.UserService;
-import com.wbtkj.chat.utils.AesUtil;
 import com.wbtkj.chat.utils.CardGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +29,7 @@ public class CDKEYServiceImpl implements CDKEYService {
     @Resource
     RechargeRecordMapper rechargeRecordMapper;
     @Resource
-    UserMapper userMapper;
+    UserInfoMapper userInfoMapper;
 
     @Override
     public List<String> publish(int type, int num, int value) {
@@ -70,14 +66,14 @@ public class CDKEYServiceImpl implements CDKEYService {
         rechargeRecord.setUseTime(new Date());
         rechargeRecordMapper.insert(rechargeRecord);
 
-        User user = userMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
 
         if (cdkeyInfo.get("type").equals(RechargeRecordType.BALANCE.getType())) {
-            user.setBalance(user.getBalance() + cdkeyInfo.get("value"));
-            userMapper.updateByPrimaryKey(user);
+            userInfo.setBalance(userInfo.getBalance() + cdkeyInfo.get("value"));
+            userInfoMapper.updateByPrimaryKey(userInfo);
 
             // 返现
-            userService.cashBack(user.getUseInvCode(), rechargeRecord.getValue());
+            userService.cashBack(userInfo.getUseInvCode(), rechargeRecord.getValue());
 
         } else if (cdkeyInfo.get("type").equals(RechargeRecordType.VIP.getType())) {
             //TODO：vip

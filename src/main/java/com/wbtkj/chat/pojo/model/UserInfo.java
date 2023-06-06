@@ -3,7 +3,7 @@ package com.wbtkj.chat.pojo.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class User implements Serializable {
+public class UserInfo implements Serializable {
     private Long id;
 
     private String email;

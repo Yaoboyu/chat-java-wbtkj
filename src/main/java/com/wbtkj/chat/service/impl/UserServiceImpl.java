@@ -2,14 +2,14 @@ package com.wbtkj.chat.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import com.wbtkj.chat.config.ThreadLocalConfig;
-import com.wbtkj.chat.mapper.UserMapper;
+import com.wbtkj.chat.mapper.UserInfoMapper;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.mapper.UserRoleMapper;
 import com.wbtkj.chat.pojo.dto.role.UserRoleStatus;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.dto.user.UserStatus;
-import com.wbtkj.chat.pojo.model.User;
-import com.wbtkj.chat.pojo.model.UserExample;
+import com.wbtkj.chat.pojo.model.UserInfo;
+import com.wbtkj.chat.pojo.model.UserInfoExample;
 import com.wbtkj.chat.pojo.model.UserRole;
 import com.wbtkj.chat.pojo.vo.user.UserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
@@ -36,19 +36,19 @@ import org.springframework.util.StringUtils;
 @Slf4j
 public class UserServiceImpl implements UserService {
     @Resource
-    private UserMapper userMapper;
+    private UserInfoMapper userInfoMapper;
     @Resource
     private UserRoleMapper userRoleMapper;
 
     @Override
     public String login(String email, String pwd) {
-        User user = getCheckedUser(email);
-        if(!user.getPwd().equals(MD5Utils.code(pwd + user.getSalt()))) {
+        UserInfo userInfo = getCheckedUser(email);
+        if(!userInfo.getPwd().equals(MD5Utils.code(pwd + userInfo.getSalt()))) {
             throw new MyServiceException("密码错误！");
         }
 
         Map<String,Object> claims = new HashMap<>();
-        claims.put("id", user.getId());
+        claims.put("id", userInfo.getId());
         claims.put("email", email);
 
         return JwtUtils.generateJwt(claims);
@@ -57,10 +57,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public boolean register(UserRegisterVO userRegisterVO) {
-        UserExample userExample = new UserExample();
-        userExample.createCriteria().andEmailEqualTo(userRegisterVO.getEmail());
+        UserInfoExample userInfoExample = new UserInfoExample();
+        userInfoExample.createCriteria().andEmailEqualTo(userRegisterVO.getEmail());
 
-        if(userMapper.countByExample(userExample) > 0) {
+        if(userInfoMapper.countByExample(userInfoExample) > 0) {
             throw new MyServiceException("账号已被注册!");
         }
 
@@ -70,40 +70,40 @@ public class UserServiceImpl implements UserService {
 
         Long useInvCode = null;
         if (userRegisterVO.getInvCode() != null) {
-            userExample.clear();
-            userExample.createCriteria().andMyInvCodeEqualTo(userRegisterVO.getInvCode());
-            List<User> userList = userMapper.selectByExample(userExample);
-            if(CollectionUtils.isEmpty(userList)) {
+            userInfoExample.clear();
+            userInfoExample.createCriteria().andMyInvCodeEqualTo(userRegisterVO.getInvCode());
+            List<UserInfo> userInfoList = userInfoMapper.selectByExample(userInfoExample);
+            if(CollectionUtils.isEmpty(userInfoList)) {
                 throw new MyServiceException("邀请码错误！");
             }
-            useInvCode = userList.get(0).getId();
+            useInvCode = userInfoList.get(0).getId();
         }
 
         Date date = new Date();
 
-        User newUser = new User();
-        newUser.setEmail(userRegisterVO.getEmail());
-        newUser.setSalt(RandomUtil.randomStringUpper(5));
-        newUser.setPwd(MD5Utils.code(userRegisterVO.getPwd() + newUser.getSalt()));
-        newUser.setStatus(UserStatus.ENABLED.getStatus());
-        newUser.setBalance(GeneralConstant.USER_INIT_BALANCE);
-        newUser.setCash(0.);
-        newUser.setRemark("");
-        newUser.setMyInvCode("");
-        newUser.setUseInvCode(useInvCode);
-        newUser.setCreateTime(date);
-        newUser.setUpdateTime(date);
+        UserInfo newUserInfo = new UserInfo();
+        newUserInfo.setEmail(userRegisterVO.getEmail());
+        newUserInfo.setSalt(RandomUtil.randomStringUpper(5));
+        newUserInfo.setPwd(MD5Utils.code(userRegisterVO.getPwd() + newUserInfo.getSalt()));
+        newUserInfo.setStatus(UserStatus.ENABLED.getStatus());
+        newUserInfo.setBalance(GeneralConstant.USER_INIT_BALANCE);
+        newUserInfo.setCash(0.);
+        newUserInfo.setRemark("");
+        newUserInfo.setMyInvCode("");
+        newUserInfo.setUseInvCode(useInvCode);
+        newUserInfo.setCreateTime(date);
+        newUserInfo.setUpdateTime(date);
 
-        userMapper.insert(newUser);
+        userInfoMapper.insert(newUserInfo);
 
         // 设置全局唯一邀请码
-        newUser.setMyInvCode(RandomUtil.randomStringUpper(3) + newUser.getId() + RandomUtil.randomStringUpper(3));
-        userMapper.updateByPrimaryKey(newUser);
+        newUserInfo.setMyInvCode(RandomUtil.randomStringUpper(3) + newUserInfo.getId() + RandomUtil.randomStringUpper(3));
+        userInfoMapper.updateByPrimaryKey(newUserInfo);
 
         // 默认角色
         UserRole userRole = new UserRole();
         userRole.setRoleId(1L);
-        userRole.setUserId(newUser.getId());
+        userRole.setUserId(newUserInfo.getId());
         userRole.setUsed(0);
         userRole.setStatus(UserRoleStatus.ENABLED.getStatus());
         userRole.setTop(false);
@@ -118,83 +118,83 @@ public class UserServiceImpl implements UserService {
             throw new MyServiceException("密码至少8位！");
         }
 
-        UserExample userExample = new UserExample();
-        userExample.createCriteria().andIdEqualTo(ThreadLocalConfig.getUser().getId());
+        UserInfoExample userInfoExample = new UserInfoExample();
+        userInfoExample.createCriteria().andIdEqualTo(ThreadLocalConfig.getUser().getId());
 
-        User newUser = userMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
+        UserInfo newUserInfo = userInfoMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
 
-        if(newUser.getPwd().equals(MD5Utils.code(pwd + newUser.getSalt()))) {
+        if(newUserInfo.getPwd().equals(MD5Utils.code(pwd + newUserInfo.getSalt()))) {
             throw new MyServiceException("新密码与原密码不能相同！");
         }
 
-        newUser.setPwd(MD5Utils.code(pwd + newUser.getSalt()));
-        newUser.setUpdateTime(new Date());
+        newUserInfo.setPwd(MD5Utils.code(pwd + newUserInfo.getSalt()));
+        newUserInfo.setUpdateTime(new Date());
 
-        userMapper.updateByPrimaryKey(newUser);
+        userInfoMapper.updateByPrimaryKey(newUserInfo);
 
         return true;
     }
 
     @Override
     @Transactional
-    public boolean updateUser(User user) {
-        Long id = user.getId();
+    public boolean updateUser(UserInfo userInfo) {
+        Long id = userInfo.getId();
         if(id == null) {
             throw new MyServiceException("缺少user id");
         }
 
-        User oldUser = userMapper.selectByPrimaryKey(id);
+        UserInfo oldUserInfo = userInfoMapper.selectByPrimaryKey(id);
 
-        if(user.getPwd() != null) {
-            oldUser.setPwd(MD5Utils.code(user.getPwd() + oldUser.getSalt()));
+        if(userInfo.getPwd() != null) {
+            oldUserInfo.setPwd(MD5Utils.code(userInfo.getPwd() + oldUserInfo.getSalt()));
         }
 
-        if(user.getStatus() != null) {
-            oldUser.setStatus(user.getStatus());
+        if(userInfo.getStatus() != null) {
+            oldUserInfo.setStatus(userInfo.getStatus());
         }
 
-        if(user.getVipStartTime() != null) {
-            oldUser.setVipStartTime(user.getVipStartTime());
+        if(userInfo.getVipStartTime() != null) {
+            oldUserInfo.setVipStartTime(userInfo.getVipStartTime());
         }
 
-        if(user.getVipEndTime() != null) {
-            oldUser.setVipEndTime(user.getVipEndTime());
+        if(userInfo.getVipEndTime() != null) {
+            oldUserInfo.setVipEndTime(userInfo.getVipEndTime());
         }
 
-        if(user.getBalance() != null) {
-            oldUser.setBalance(user.getBalance());
+        if(userInfo.getBalance() != null) {
+            oldUserInfo.setBalance(userInfo.getBalance());
         }
 
-        if(user.getCash() != null) {
-            oldUser.setCash(user.getCash());
+        if(userInfo.getCash() != null) {
+            oldUserInfo.setCash(userInfo.getCash());
         }
 
-        if(user.getRemark() != null) {
-            oldUser.setRemark(user.getRemark());
+        if(userInfo.getRemark() != null) {
+            oldUserInfo.setRemark(userInfo.getRemark());
         }
 
-        oldUser.setUpdateTime(new Date());
+        oldUserInfo.setUpdateTime(new Date());
 
-        userMapper.updateByPrimaryKey(oldUser);
+        userInfoMapper.updateByPrimaryKey(oldUserInfo);
 
         return true;
     }
 
     @Override
     @Transactional
-    public User getCheckedUser(String email) throws MyServiceException {
-        UserExample userExample = new UserExample();
-        userExample.createCriteria().andEmailEqualTo(email);
-        List<User> users = userMapper.selectByExample(userExample);
-        if(CollectionUtils.isEmpty(users)) {
+    public UserInfo getCheckedUser(String email) throws MyServiceException {
+        UserInfoExample userInfoExample = new UserInfoExample();
+        userInfoExample.createCriteria().andEmailEqualTo(email);
+        List<UserInfo> userInfos = userInfoMapper.selectByExample(userInfoExample);
+        if(CollectionUtils.isEmpty(userInfos)) {
             throw new MyServiceException("用户邮箱不存在");
         }
-        User user = users.get(0);
-        if(user.getStatus() == UserStatus.DISABLED.getStatus()) {
+        UserInfo userInfo = userInfos.get(0);
+        if(userInfo.getStatus() == UserStatus.DISABLED.getStatus()) {
             throw new MyServiceException("用户已禁用！请联系管理员");
         }
 
-        return user;
+        return userInfo;
     }
 
     @Override
@@ -208,8 +208,8 @@ public class UserServiceImpl implements UserService {
         //解析token，如果解析失败，返回错误结果（未登录）。
         try {
             Claims claims = JwtUtils.parseJWT(token);
-            User user = getCheckedUser((String) claims.get("email"));
-            UserLocalDTO userLocalDTO = UserLocalDTO.builder().id(user.getId()).email(user.getEmail()).build();
+            UserInfo userInfo = getCheckedUser((String) claims.get("email"));
+            UserLocalDTO userLocalDTO = UserLocalDTO.builder().id(userInfo.getId()).email(userInfo.getEmail()).build();
             ThreadLocalConfig.setUser(userLocalDTO);
             return userLocalDTO;
         } catch (Exception e) {//jwt解析失败
@@ -221,26 +221,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public List<User> getUsersByPage(int page, int pageSize, String email) {
+    public List<UserInfo> getUsersByPage(int page, int pageSize, String email) {
         if (page < 1 || pageSize < 1) {
             throw new MyServiceException("参数错误");
         }
 
-        UserExample userExample = new UserExample();
+        UserInfoExample userInfoExample = new UserInfoExample();
         if(StringUtils.hasLength(email)) {
-            userExample.createCriteria().andEmailLike("%" + email + "%");
+            userInfoExample.createCriteria().andEmailLike("%" + email + "%");
         }
 
         RowBounds rowBounds = new RowBounds((page-1)*pageSize, pageSize);
-        List<User> users = userMapper.selectByExampleWithRowbounds(userExample, rowBounds);
+        List<UserInfo> userInfos = userInfoMapper.selectByExampleWithRowbounds(userInfoExample, rowBounds);
 
-        return users;
+        return userInfos;
     }
 
     @Override
     public UserInfoVO getUserInfo() {
-        User user = userMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
-        UserInfoVO userInfoVO = new UserInfoVO(user);
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
+        UserInfoVO userInfoVO = new UserInfoVO(userInfo);
         return userInfoVO;
     }
 
@@ -249,21 +249,21 @@ public class UserServiceImpl implements UserService {
         if (userId == null) {
             return false;
         }
-        User roleOwner = userMapper.selectByPrimaryKey(userId);
+        UserInfo roleOwner = userInfoMapper.selectByPrimaryKey(userId);
         roleOwner.setCash(roleOwner.getCash() + point * GeneralConstant.POINT_RATE * GeneralConstant.CASH_RATE);
-        userMapper.updateByPrimaryKey(roleOwner);
+        userInfoMapper.updateByPrimaryKey(roleOwner);
         return true;
     }
 
     @Override
     public int deductBalance(long userId, int point) {
-        User user = userMapper.selectByPrimaryKey(userId);
-        if (user.getBalance() - point < 0) {
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
+        if (userInfo.getBalance() - point < 0) {
             throw new MyServiceException("余额不足");
         }
-        user.setBalance(user.getBalance() - point);
-        userMapper.updateByPrimaryKey(user);
-        return user.getBalance();
+        userInfo.setBalance(userInfo.getBalance() - point);
+        userInfoMapper.updateByPrimaryKey(userInfo);
+        return userInfo.getBalance();
     }
 
 }

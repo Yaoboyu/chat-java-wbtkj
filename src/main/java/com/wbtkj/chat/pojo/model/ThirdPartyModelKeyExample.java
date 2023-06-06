@@ -166,72 +166,72 @@ public class ThirdPartyModelKeyExample {
         }
 
         public Criteria andKeyIsNull() {
-            addCriterion("`key` is null");
+            addCriterion("\"key\" is null");
             return (Criteria) this;
         }
 
         public Criteria andKeyIsNotNull() {
-            addCriterion("`key` is not null");
+            addCriterion("\"key\" is not null");
             return (Criteria) this;
         }
 
         public Criteria andKeyEqualTo(String value) {
-            addCriterion("`key` =", value, "key");
+            addCriterion("\"key\" =", value, "key");
             return (Criteria) this;
         }
 
         public Criteria andKeyNotEqualTo(String value) {
-            addCriterion("`key` <>", value, "key");
+            addCriterion("\"key\" <>", value, "key");
             return (Criteria) this;
         }
 
         public Criteria andKeyGreaterThan(String value) {
-            addCriterion("`key` >", value, "key");
+            addCriterion("\"key\" >", value, "key");
             return (Criteria) this;
         }
 
         public Criteria andKeyGreaterThanOrEqualTo(String value) {
-            addCriterion("`key` >=", value, "key");
+            addCriterion("\"key\" >=", value, "key");
             return (Criteria) this;
         }
 
         public Criteria andKeyLessThan(String value) {
-            addCriterion("`key` <", value, "key");
+            addCriterion("\"key\" <", value, "key");
             return (Criteria) this;
         }
 
         public Criteria andKeyLessThanOrEqualTo(String value) {
-            addCriterion("`key` <=", value, "key");
+            addCriterion("\"key\" <=", value, "key");
             return (Criteria) this;
         }
 
         public Criteria andKeyLike(String value) {
-            addCriterion("`key` like", value, "key");
+            addCriterion("\"key\" like", value, "key");
             return (Criteria) this;
         }
 
         public Criteria andKeyNotLike(String value) {
-            addCriterion("`key` not like", value, "key");
+            addCriterion("\"key\" not like", value, "key");
             return (Criteria) this;
         }
 
         public Criteria andKeyIn(List<String> values) {
-            addCriterion("`key` in", values, "key");
+            addCriterion("\"key\" in", values, "key");
             return (Criteria) this;
         }
 
         public Criteria andKeyNotIn(List<String> values) {
-            addCriterion("`key` not in", values, "key");
+            addCriterion("\"key\" not in", values, "key");
             return (Criteria) this;
         }
 
         public Criteria andKeyBetween(String value1, String value2) {
-            addCriterion("`key` between", value1, value2, "key");
+            addCriterion("\"key\" between", value1, value2, "key");
             return (Criteria) this;
         }
 
         public Criteria andKeyNotBetween(String value1, String value2) {
-            addCriterion("`key` not between", value1, value2, "key");
+            addCriterion("\"key\" not between", value1, value2, "key");
             return (Criteria) this;
         }
 
@@ -306,62 +306,62 @@ public class ThirdPartyModelKeyExample {
         }
 
         public Criteria andStatusIsNull() {
-            addCriterion("`status` is null");
+            addCriterion("\"status\" is null");
             return (Criteria) this;
         }
 
         public Criteria andStatusIsNotNull() {
-            addCriterion("`status` is not null");
+            addCriterion("\"status\" is not null");
             return (Criteria) this;
         }
 
         public Criteria andStatusEqualTo(Integer value) {
-            addCriterion("`status` =", value, "status");
+            addCriterion("\"status\" =", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusNotEqualTo(Integer value) {
-            addCriterion("`status` <>", value, "status");
+            addCriterion("\"status\" <>", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusGreaterThan(Integer value) {
-            addCriterion("`status` >", value, "status");
+            addCriterion("\"status\" >", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`status` >=", value, "status");
+            addCriterion("\"status\" >=", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusLessThan(Integer value) {
-            addCriterion("`status` <", value, "status");
+            addCriterion("\"status\" <", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusLessThanOrEqualTo(Integer value) {
-            addCriterion("`status` <=", value, "status");
+            addCriterion("\"status\" <=", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusIn(List<Integer> values) {
-            addCriterion("`status` in", values, "status");
+            addCriterion("\"status\" in", values, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusNotIn(List<Integer> values) {
-            addCriterion("`status` not in", values, "status");
+            addCriterion("\"status\" not in", values, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusBetween(Integer value1, Integer value2) {
-            addCriterion("`status` between", value1, value2, "status");
+            addCriterion("\"status\" between", value1, value2, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusNotBetween(Integer value1, Integer value2) {
-            addCriterion("`status` not between", value1, value2, "status");
+            addCriterion("\"status\" not between", value1, value2, "status");
             return (Criteria) this;
         }
 

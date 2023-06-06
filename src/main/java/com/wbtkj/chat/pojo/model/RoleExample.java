@@ -506,72 +506,72 @@ public class RoleExample {
         }
 
         public Criteria andSystemIsNull() {
-            addCriterion("`system` is null");
+            addCriterion("\"system\" is null");
             return (Criteria) this;
         }
 
         public Criteria andSystemIsNotNull() {
-            addCriterion("`system` is not null");
+            addCriterion("\"system\" is not null");
             return (Criteria) this;
         }
 
         public Criteria andSystemEqualTo(String value) {
-            addCriterion("`system` =", value, "system");
+            addCriterion("\"system\" =", value, "system");
             return (Criteria) this;
         }
 
         public Criteria andSystemNotEqualTo(String value) {
-            addCriterion("`system` <>", value, "system");
+            addCriterion("\"system\" <>", value, "system");
             return (Criteria) this;
         }
 
         public Criteria andSystemGreaterThan(String value) {
-            addCriterion("`system` >", value, "system");
+            addCriterion("\"system\" >", value, "system");
             return (Criteria) this;
         }
 
         public Criteria andSystemGreaterThanOrEqualTo(String value) {
-            addCriterion("`system` >=", value, "system");
+            addCriterion("\"system\" >=", value, "system");
             return (Criteria) this;
         }
 
         public Criteria andSystemLessThan(String value) {
-            addCriterion("`system` <", value, "system");
+            addCriterion("\"system\" <", value, "system");
             return (Criteria) this;
         }
 
         public Criteria andSystemLessThanOrEqualTo(String value) {
-            addCriterion("`system` <=", value, "system");
+            addCriterion("\"system\" <=", value, "system");
             return (Criteria) this;
         }
 
         public Criteria andSystemLike(String value) {
-            addCriterion("`system` like", value, "system");
+            addCriterion("\"system\" like", value, "system");
             return (Criteria) this;
         }
 
         public Criteria andSystemNotLike(String value) {
-            addCriterion("`system` not like", value, "system");
+            addCriterion("\"system\" not like", value, "system");
             return (Criteria) this;
         }
 
         public Criteria andSystemIn(List<String> values) {
-            addCriterion("`system` in", values, "system");
+            addCriterion("\"system\" in", values, "system");
             return (Criteria) this;
         }
 
         public Criteria andSystemNotIn(List<String> values) {
-            addCriterion("`system` not in", values, "system");
+            addCriterion("\"system\" not in", values, "system");
             return (Criteria) this;
         }
 
         public Criteria andSystemBetween(String value1, String value2) {
-            addCriterion("`system` between", value1, value2, "system");
+            addCriterion("\"system\" between", value1, value2, "system");
             return (Criteria) this;
         }
 
         public Criteria andSystemNotBetween(String value1, String value2) {
-            addCriterion("`system` not between", value1, value2, "system");
+            addCriterion("\"system\" not between", value1, value2, "system");
             return (Criteria) this;
         }
 

@@ -83,7 +83,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, avatar, nickname, greeting, model, `system`, context_n, max_tokens, 
+    id, user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, 
     temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, 
     market_type, likes, hot, create_time, update_time
   </sql>
@@ -119,7 +119,7 @@
   </delete>
   <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.Role" useGeneratedKeys="true" keyProperty="id" >
     insert into role (user_id, avatar, nickname, 
-      greeting, model, `system`, 
+      greeting, model, "system", 
       context_n, max_tokens, temperature, 
       top_p, frequency_penalty, presence_penalty, 
       logit_bias, stop, is_market, 
@@ -152,7 +152,7 @@
         model,
       </if>
       <if test="system != null" >
-        `system`,
+        "system",
       </if>
       <if test="contextN != null" >
         context_n,
@@ -288,7 +288,7 @@
         model = #{record.model,jdbcType=VARCHAR},
       </if>
       <if test="record.system != null" >
-        `system` = #{record.system,jdbcType=VARCHAR},
+        "system" = #{record.system,jdbcType=VARCHAR},
       </if>
       <if test="record.contextN != null" >
         context_n = #{record.contextN,jdbcType=INTEGER},
@@ -345,7 +345,7 @@
       nickname = #{record.nickname,jdbcType=VARCHAR},
       greeting = #{record.greeting,jdbcType=VARCHAR},
       model = #{record.model,jdbcType=VARCHAR},
-      `system` = #{record.system,jdbcType=VARCHAR},
+      "system" = #{record.system,jdbcType=VARCHAR},
       context_n = #{record.contextN,jdbcType=INTEGER},
       max_tokens = #{record.maxTokens,jdbcType=INTEGER},
       temperature = #{record.temperature,jdbcType=DOUBLE},
@@ -383,7 +383,7 @@
         model = #{model,jdbcType=VARCHAR},
       </if>
       <if test="system != null" >
-        `system` = #{system,jdbcType=VARCHAR},
+        "system" = #{system,jdbcType=VARCHAR},
       </if>
       <if test="contextN != null" >
         context_n = #{contextN,jdbcType=INTEGER},
@@ -437,7 +437,7 @@
       nickname = #{nickname,jdbcType=VARCHAR},
       greeting = #{greeting,jdbcType=VARCHAR},
       model = #{model,jdbcType=VARCHAR},
-      `system` = #{system,jdbcType=VARCHAR},
+      "system" = #{system,jdbcType=VARCHAR},
       context_n = #{contextN,jdbcType=INTEGER},
       max_tokens = #{maxTokens,jdbcType=INTEGER},
       temperature = #{temperature,jdbcType=DOUBLE},

@@ -68,7 +68,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, `type`, cdkey, `value`, use_time
+    id, user_id, "type", cdkey, "value", use_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.RechargeRecordExample" >
     select
@@ -101,8 +101,8 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.RechargeRecord" useGeneratedKeys="true" keyProperty="id" >
-    insert into recharge_record (user_id, `type`, cdkey, 
-      `value`, use_time)
+    insert into recharge_record (user_id, "type", cdkey, 
+      "value", use_time)
     values (#{userId,jdbcType=BIGINT}, #{type,jdbcType=INTEGER}, #{cdkey,jdbcType=VARCHAR}, 
       #{value,jdbcType=INTEGER}, #{useTime,jdbcType=TIMESTAMP})
   </insert>
@@ -113,13 +113,13 @@
         user_id,
       </if>
       <if test="type != null" >
-        `type`,
+        "type",
       </if>
       <if test="cdkey != null" >
         cdkey,
       </if>
       <if test="value != null" >
-        `value`,
+        "value",
       </if>
       <if test="useTime != null" >
         use_time,
@@ -159,13 +159,13 @@
         user_id = #{record.userId,jdbcType=BIGINT},
       </if>
       <if test="record.type != null" >
-        `type` = #{record.type,jdbcType=INTEGER},
+        "type" = #{record.type,jdbcType=INTEGER},
       </if>
       <if test="record.cdkey != null" >
         cdkey = #{record.cdkey,jdbcType=VARCHAR},
       </if>
       <if test="record.value != null" >
-        `value` = #{record.value,jdbcType=INTEGER},
+        "value" = #{record.value,jdbcType=INTEGER},
       </if>
       <if test="record.useTime != null" >
         use_time = #{record.useTime,jdbcType=TIMESTAMP},
@@ -179,9 +179,9 @@
     update recharge_record
     set id = #{record.id,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=BIGINT},
-      `type` = #{record.type,jdbcType=INTEGER},
+      "type" = #{record.type,jdbcType=INTEGER},
       cdkey = #{record.cdkey,jdbcType=VARCHAR},
-      `value` = #{record.value,jdbcType=INTEGER},
+      "value" = #{record.value,jdbcType=INTEGER},
       use_time = #{record.useTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -194,13 +194,13 @@
         user_id = #{userId,jdbcType=BIGINT},
       </if>
       <if test="type != null" >
-        `type` = #{type,jdbcType=INTEGER},
+        "type" = #{type,jdbcType=INTEGER},
       </if>
       <if test="cdkey != null" >
         cdkey = #{cdkey,jdbcType=VARCHAR},
       </if>
       <if test="value != null" >
-        `value` = #{value,jdbcType=INTEGER},
+        "value" = #{value,jdbcType=INTEGER},
       </if>
       <if test="useTime != null" >
         use_time = #{useTime,jdbcType=TIMESTAMP},
@@ -211,9 +211,9 @@
   <update id="updateByPrimaryKey" parameterType="com.wbtkj.chat.pojo.model.RechargeRecord" >
     update recharge_record
     set user_id = #{userId,jdbcType=BIGINT},
-      `type` = #{type,jdbcType=INTEGER},
+      "type" = #{type,jdbcType=INTEGER},
       cdkey = #{cdkey,jdbcType=VARCHAR},
-      `value` = #{value,jdbcType=INTEGER},
+      "value" = #{value,jdbcType=INTEGER},
       use_time = #{useTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>

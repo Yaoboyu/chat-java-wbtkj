@@ -226,62 +226,62 @@ public class RechargeRecordExample {
         }
 
         public Criteria andTypeIsNull() {
-            addCriterion("`type` is null");
+            addCriterion("\"type\" is null");
             return (Criteria) this;
         }
 
         public Criteria andTypeIsNotNull() {
-            addCriterion("`type` is not null");
+            addCriterion("\"type\" is not null");
             return (Criteria) this;
         }
 
         public Criteria andTypeEqualTo(Integer value) {
-            addCriterion("`type` =", value, "type");
+            addCriterion("\"type\" =", value, "type");
             return (Criteria) this;
         }
 
         public Criteria andTypeNotEqualTo(Integer value) {
-            addCriterion("`type` <>", value, "type");
+            addCriterion("\"type\" <>", value, "type");
             return (Criteria) this;
         }
 
         public Criteria andTypeGreaterThan(Integer value) {
-            addCriterion("`type` >", value, "type");
+            addCriterion("\"type\" >", value, "type");
             return (Criteria) this;
         }
 
         public Criteria andTypeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`type` >=", value, "type");
+            addCriterion("\"type\" >=", value, "type");
             return (Criteria) this;
         }
 
         public Criteria andTypeLessThan(Integer value) {
-            addCriterion("`type` <", value, "type");
+            addCriterion("\"type\" <", value, "type");
             return (Criteria) this;
         }
 
         public Criteria andTypeLessThanOrEqualTo(Integer value) {
-            addCriterion("`type` <=", value, "type");
+            addCriterion("\"type\" <=", value, "type");
             return (Criteria) this;
         }
 
         public Criteria andTypeIn(List<Integer> values) {
-            addCriterion("`type` in", values, "type");
+            addCriterion("\"type\" in", values, "type");
             return (Criteria) this;
         }
 
         public Criteria andTypeNotIn(List<Integer> values) {
-            addCriterion("`type` not in", values, "type");
+            addCriterion("\"type\" not in", values, "type");
             return (Criteria) this;
         }
 
         public Criteria andTypeBetween(Integer value1, Integer value2) {
-            addCriterion("`type` between", value1, value2, "type");
+            addCriterion("\"type\" between", value1, value2, "type");
             return (Criteria) this;
         }
 
         public Criteria andTypeNotBetween(Integer value1, Integer value2) {
-            addCriterion("`type` not between", value1, value2, "type");
+            addCriterion("\"type\" not between", value1, value2, "type");
             return (Criteria) this;
         }
 
@@ -356,62 +356,62 @@ public class RechargeRecordExample {
         }
 
         public Criteria andValueIsNull() {
-            addCriterion("`value` is null");
+            addCriterion("\"value\" is null");
             return (Criteria) this;
         }
 
         public Criteria andValueIsNotNull() {
-            addCriterion("`value` is not null");
+            addCriterion("\"value\" is not null");
             return (Criteria) this;
         }
 
         public Criteria andValueEqualTo(Integer value) {
-            addCriterion("`value` =", value, "value");
+            addCriterion("\"value\" =", value, "value");
             return (Criteria) this;
         }
 
         public Criteria andValueNotEqualTo(Integer value) {
-            addCriterion("`value` <>", value, "value");
+            addCriterion("\"value\" <>", value, "value");
             return (Criteria) this;
         }
 
         public Criteria andValueGreaterThan(Integer value) {
-            addCriterion("`value` >", value, "value");
+            addCriterion("\"value\" >", value, "value");
             return (Criteria) this;
         }
 
         public Criteria andValueGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`value` >=", value, "value");
+            addCriterion("\"value\" >=", value, "value");
             return (Criteria) this;
         }
 
         public Criteria andValueLessThan(Integer value) {
-            addCriterion("`value` <", value, "value");
+            addCriterion("\"value\" <", value, "value");
             return (Criteria) this;
         }
 
         public Criteria andValueLessThanOrEqualTo(Integer value) {
-            addCriterion("`value` <=", value, "value");
+            addCriterion("\"value\" <=", value, "value");
             return (Criteria) this;
         }
 
         public Criteria andValueIn(List<Integer> values) {
-            addCriterion("`value` in", values, "value");
+            addCriterion("\"value\" in", values, "value");
             return (Criteria) this;
         }
 
         public Criteria andValueNotIn(List<Integer> values) {
-            addCriterion("`value` not in", values, "value");
+            addCriterion("\"value\" not in", values, "value");
             return (Criteria) this;
         }
 
         public Criteria andValueBetween(Integer value1, Integer value2) {
-            addCriterion("`value` between", value1, value2, "value");
+            addCriterion("\"value\" between", value1, value2, "value");
             return (Criteria) this;
         }
 
         public Criteria andValueNotBetween(Integer value1, Integer value2) {
-            addCriterion("`value` not between", value1, value2, "value");
+            addCriterion("\"value\" not between", value1, value2, "value");
             return (Criteria) this;
         }
 

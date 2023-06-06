@@ -2,7 +2,7 @@ package com.wbtkj.chat.service;
 
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
-import com.wbtkj.chat.pojo.model.User;
+import com.wbtkj.chat.pojo.model.UserInfo;
 import com.wbtkj.chat.pojo.vo.user.UserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 
@@ -28,17 +28,17 @@ public interface UserService {
 
     /**
      * 可以修改密码，状态，会员有效期，余额，备注
-     * @param user
+     * @param userInfo
      * @return
      */
-    boolean updateUser(User user);
+    boolean updateUser(UserInfo userInfo);
 
     /**
      * 检查用户是否存在，是否已被禁用
      * @param email
      * @return
      */
-    User getCheckedUser(String email) throws MyServiceException;
+    UserInfo getCheckedUser(String email) throws MyServiceException;
 
     /**
      * 解析token并将用户信息存入ThreadLocal
@@ -54,7 +54,7 @@ public interface UserService {
      * @param email
      * @return
      */
-    List<User> getUsersByPage(int page, int pageSize, String email);
+    List<UserInfo> getUsersByPage(int page, int pageSize, String email);
 
     UserInfoVO getUserInfo();
 

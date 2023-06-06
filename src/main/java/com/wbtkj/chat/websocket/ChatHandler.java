@@ -6,7 +6,7 @@ import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.filter.OpenAiAuthInterceptor;
 import com.wbtkj.chat.listener.OpenAIWebSocketEventSourceListener;
 import com.wbtkj.chat.mapper.RoleMapper;
-import com.wbtkj.chat.mapper.UserMapper;
+import com.wbtkj.chat.mapper.UserInfoMapper;
 import com.wbtkj.chat.mapper.UserRoleMapper;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
@@ -50,7 +50,7 @@ public class ChatHandler extends TextWebSocketHandler {
     @Resource
     private RoleMapper roleMapper;
     @Resource
-    private UserMapper userMapper;
+    private UserInfoMapper userInfoMapper;
     @Resource
     private UserRoleMapper userRoleMapper;
     @Resource

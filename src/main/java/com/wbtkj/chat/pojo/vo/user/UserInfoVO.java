@@ -1,6 +1,6 @@
 package com.wbtkj.chat.pojo.vo.user;
 
-import com.wbtkj.chat.pojo.model.User;
+import com.wbtkj.chat.pojo.model.UserInfo;
 import lombok.Data;
 
 import java.util.Date;
@@ -31,18 +31,18 @@ public class UserInfoVO {
 
     private Date updateTime;
 
-    public UserInfoVO(User user) {
-        this.id = user.getId();
-        this.email = user.getEmail();
-        this.status = user.getStatus();
-        this.vipStartTime = user.getVipStartTime();
-        this.vipEndTime = user.getVipEndTime();
-        this.balance = user.getBalance();
-        this.cash = user.getCash();
-        this.remark = user.getRemark();
-        this.myInvCode = user.getMyInvCode();
-        this.useInvCode = user.getUseInvCode();
-        this.createTime = user.getCreateTime();
-        this.updateTime = user.getUpdateTime();
+    public UserInfoVO(UserInfo userInfo) {
+        this.id = userInfo.getId();
+        this.email = userInfo.getEmail();
+        this.status = userInfo.getStatus();
+        this.vipStartTime = userInfo.getVipStartTime();
+        this.vipEndTime = userInfo.getVipEndTime();
+        this.balance = userInfo.getBalance();
+        this.cash = userInfo.getCash();
+        this.remark = userInfo.getRemark();
+        this.myInvCode = userInfo.getMyInvCode();
+        this.useInvCode = userInfo.getUseInvCode();
+        this.createTime = userInfo.getCreateTime();
+        this.updateTime = userInfo.getUpdateTime();
     }
 }

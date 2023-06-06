@@ -179,11 +179,13 @@
             <version>0.1.6</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
+            <version>42.6.0</version>
         </dependency>
+
 
 
     </dependencies>

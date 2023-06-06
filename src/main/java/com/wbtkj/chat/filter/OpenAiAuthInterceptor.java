@@ -3,6 +3,7 @@ package com.wbtkj.chat.filter;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
+import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.wbtkj.chat.config.StaticContextAccessor;
 import com.wbtkj.chat.exception.MyException;
@@ -110,6 +111,7 @@ public class OpenAiAuthInterceptor implements Interceptor {
         Request request = this.auth(key, original);
         // 请求
         Response response = chain.proceed(request);
+
         if (!response.isSuccessful()) {
             String errorMsg = response.body().string();
             OpenAiResponse openAiResponse = JSONUtil.toBean(errorMsg, OpenAiResponse.class);
@@ -143,7 +145,7 @@ public class OpenAiAuthInterceptor implements Interceptor {
             throw new MyException();
         }
 
-        log.info("model:{}, key:{}, depth:{} ==== 内存中gpt3:{},gpt4:{}", model, key, depth, gpt3Key.size(), gpt4Key.size());
+        log.info("model:{}, key:{}, 递归次数:{} ==== 内存中gpt3 key个数:{}, gpt4 key个数:{}", model, key, depth, gpt3Key.size(), gpt4Key.size());
         return response;
     }
 

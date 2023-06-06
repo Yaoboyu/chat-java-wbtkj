@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.wbtkj.chat.mapper.UserMapper" >
-  <resultMap id="BaseResultMap" type="com.wbtkj.chat.pojo.model.User" >
+<mapper namespace="com.wbtkj.chat.mapper.UserInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.wbtkj.chat.pojo.model.UserInfo" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="pwd" property="pwd" jdbcType="VARCHAR" />
@@ -76,16 +76,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, email, pwd, salt, `status`, vip_start_time, vip_end_time, balance, cash, remark, 
+    id, email, pwd, salt, "status", vip_start_time, vip_end_time, balance, cash, remark, 
     my_inv_code, use_inv_code, create_time, update_time
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.UserExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.UserInfoExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from user
+    from user_info
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -96,22 +96,22 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from user
+    from user_info
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from user
+    delete from user_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <delete id="deleteByExample" parameterType="com.wbtkj.chat.pojo.model.UserExample" >
-    delete from user
+  <delete id="deleteByExample" parameterType="com.wbtkj.chat.pojo.model.UserInfoExample" >
+    delete from user_info
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.User" useGeneratedKeys="true" keyProperty="id" >
-    insert into user (email, pwd, salt, 
-      `status`, vip_start_time, vip_end_time, 
+  <insert id="insert" parameterType="com.wbtkj.chat.pojo.model.UserInfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into user_info (email, pwd, salt, 
+      "status", vip_start_time, vip_end_time, 
       balance, cash, remark, 
       my_inv_code, use_inv_code, create_time, 
       update_time)
@@ -121,8 +121,8 @@
       #{myInvCode,jdbcType=VARCHAR}, #{useInvCode,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.User" useGeneratedKeys="true" keyProperty="id" >
-    insert into user
+  <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.UserInfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into user_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="email != null" >
         email,
@@ -134,7 +134,7 @@
         salt,
       </if>
       <if test="status != null" >
-        `status`,
+        "status",
       </if>
       <if test="vipStartTime != null" >
         vip_start_time,
@@ -206,14 +206,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.wbtkj.chat.pojo.model.UserExample" resultType="java.lang.Integer" >
-    select count(*) from user
+  <select id="countByExample" parameterType="com.wbtkj.chat.pojo.model.UserInfoExample" resultType="java.lang.Integer" >
+    select count(*) from user_info
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update user
+    update user_info
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=BIGINT},
@@ -228,7 +228,7 @@
         salt = #{record.salt,jdbcType=VARCHAR},
       </if>
       <if test="record.status != null" >
-        `status` = #{record.status,jdbcType=INTEGER},
+        "status" = #{record.status,jdbcType=INTEGER},
       </if>
       <if test="record.vipStartTime != null" >
         vip_start_time = #{record.vipStartTime,jdbcType=TIMESTAMP},
@@ -263,12 +263,12 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update user
+    update user_info
     set id = #{record.id,jdbcType=BIGINT},
       email = #{record.email,jdbcType=VARCHAR},
       pwd = #{record.pwd,jdbcType=VARCHAR},
       salt = #{record.salt,jdbcType=VARCHAR},
-      `status` = #{record.status,jdbcType=INTEGER},
+      "status" = #{record.status,jdbcType=INTEGER},
       vip_start_time = #{record.vipStartTime,jdbcType=TIMESTAMP},
       vip_end_time = #{record.vipEndTime,jdbcType=TIMESTAMP},
       balance = #{record.balance,jdbcType=INTEGER},
@@ -282,8 +282,8 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.wbtkj.chat.pojo.model.User" >
-    update user
+  <update id="updateByPrimaryKeySelective" parameterType="com.wbtkj.chat.pojo.model.UserInfo" >
+    update user_info
     <set >
       <if test="email != null" >
         email = #{email,jdbcType=VARCHAR},
@@ -295,7 +295,7 @@
         salt = #{salt,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
-        `status` = #{status,jdbcType=INTEGER},
+        "status" = #{status,jdbcType=INTEGER},
       </if>
       <if test="vipStartTime != null" >
         vip_start_time = #{vipStartTime,jdbcType=TIMESTAMP},
@@ -327,12 +327,12 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.wbtkj.chat.pojo.model.User" >
-    update user
+  <update id="updateByPrimaryKey" parameterType="com.wbtkj.chat.pojo.model.UserInfo" >
+    update user_info
     set email = #{email,jdbcType=VARCHAR},
       pwd = #{pwd,jdbcType=VARCHAR},
       salt = #{salt,jdbcType=VARCHAR},
-      `status` = #{status,jdbcType=INTEGER},
+      "status" = #{status,jdbcType=INTEGER},
       vip_start_time = #{vipStartTime,jdbcType=TIMESTAMP},
       vip_end_time = #{vipEndTime,jdbcType=TIMESTAMP},
       balance = #{balance,jdbcType=INTEGER},
@@ -344,13 +344,13 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <select resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.UserExample" id="selectByExampleWithRowbounds" >
+  <select resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.UserInfoExample" id="selectByExampleWithRowbounds" >
     select
     <if test="distinct" >
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from user
+    from user_info
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>

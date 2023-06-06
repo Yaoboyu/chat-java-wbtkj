@@ -2,8 +2,8 @@ drop database if exists wbtkj_chat;
 CREATE DATABASE `wbtkj_chat` CHARACTER SET 'utf8mb4';
 use wbtkj_chat;
 
-drop table if exists user;
-CREATE TABLE `user` (
+drop table if exists userInfo;
+CREATE TABLE `userInfo` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '自增主键',
     `email` VARCHAR(255) NOT NULL COMMENT '邮箱',
     `pwd` VARCHAR(255) NOT NULL COMMENT '加盐后并md5加密后的密码',

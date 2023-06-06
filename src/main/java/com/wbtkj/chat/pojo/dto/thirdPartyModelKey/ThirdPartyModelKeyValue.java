@@ -9,7 +9,7 @@ public class ThirdPartyModelKeyValue {
     static {
         map = new HashMap<>();
         map.put("gpt-3.5-turbo", 1);
-        map.put("gpt-4", 10);
+        map.put("gpt-4", 20);
     }
 
     public static int getValue(String model) {

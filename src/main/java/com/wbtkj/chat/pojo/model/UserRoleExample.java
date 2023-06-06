@@ -345,122 +345,122 @@ public class UserRoleExample {
         }
 
         public Criteria andStatusIsNull() {
-            addCriterion("`status` is null");
+            addCriterion("\"status\" is null");
             return (Criteria) this;
         }
 
         public Criteria andStatusIsNotNull() {
-            addCriterion("`status` is not null");
+            addCriterion("\"status\" is not null");
             return (Criteria) this;
         }
 
         public Criteria andStatusEqualTo(Integer value) {
-            addCriterion("`status` =", value, "status");
+            addCriterion("\"status\" =", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusNotEqualTo(Integer value) {
-            addCriterion("`status` <>", value, "status");
+            addCriterion("\"status\" <>", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusGreaterThan(Integer value) {
-            addCriterion("`status` >", value, "status");
+            addCriterion("\"status\" >", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
-            addCriterion("`status` >=", value, "status");
+            addCriterion("\"status\" >=", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusLessThan(Integer value) {
-            addCriterion("`status` <", value, "status");
+            addCriterion("\"status\" <", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusLessThanOrEqualTo(Integer value) {
-            addCriterion("`status` <=", value, "status");
+            addCriterion("\"status\" <=", value, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusIn(List<Integer> values) {
-            addCriterion("`status` in", values, "status");
+            addCriterion("\"status\" in", values, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusNotIn(List<Integer> values) {
-            addCriterion("`status` not in", values, "status");
+            addCriterion("\"status\" not in", values, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusBetween(Integer value1, Integer value2) {
-            addCriterion("`status` between", value1, value2, "status");
+            addCriterion("\"status\" between", value1, value2, "status");
             return (Criteria) this;
         }
 
         public Criteria andStatusNotBetween(Integer value1, Integer value2) {
-            addCriterion("`status` not between", value1, value2, "status");
+            addCriterion("\"status\" not between", value1, value2, "status");
             return (Criteria) this;
         }
 
         public Criteria andTopIsNull() {
-            addCriterion("`top` is null");
+            addCriterion("\"top\" is null");
             return (Criteria) this;
         }
 
         public Criteria andTopIsNotNull() {
-            addCriterion("`top` is not null");
+            addCriterion("\"top\" is not null");
             return (Criteria) this;
         }
 
         public Criteria andTopEqualTo(Boolean value) {
-            addCriterion("`top` =", value, "top");
+            addCriterion("\"top\" =", value, "top");
             return (Criteria) this;
         }
 
         public Criteria andTopNotEqualTo(Boolean value) {
-            addCriterion("`top` <>", value, "top");
+            addCriterion("\"top\" <>", value, "top");
             return (Criteria) this;
         }
 
         public Criteria andTopGreaterThan(Boolean value) {
-            addCriterion("`top` >", value, "top");
+            addCriterion("\"top\" >", value, "top");
             return (Criteria) this;
         }
 
         public Criteria andTopGreaterThanOrEqualTo(Boolean value) {
-            addCriterion("`top` >=", value, "top");
+            addCriterion("\"top\" >=", value, "top");
             return (Criteria) this;
         }
 
         public Criteria andTopLessThan(Boolean value) {
-            addCriterion("`top` <", value, "top");
+            addCriterion("\"top\" <", value, "top");
             return (Criteria) this;
         }
 
         public Criteria andTopLessThanOrEqualTo(Boolean value) {
-            addCriterion("`top` <=", value, "top");
+            addCriterion("\"top\" <=", value, "top");
             return (Criteria) this;
         }
 
         public Criteria andTopIn(List<Boolean> values) {
-            addCriterion("`top` in", values, "top");
+            addCriterion("\"top\" in", values, "top");
             return (Criteria) this;
         }
 
         public Criteria andTopNotIn(List<Boolean> values) {
-            addCriterion("`top` not in", values, "top");
+            addCriterion("\"top\" not in", values, "top");
             return (Criteria) this;
         }
 
         public Criteria andTopBetween(Boolean value1, Boolean value2) {
-            addCriterion("`top` between", value1, value2, "top");
+            addCriterion("\"top\" between", value1, value2, "top");
             return (Criteria) this;
         }
 
         public Criteria andTopNotBetween(Boolean value1, Boolean value2) {
-            addCriterion("`top` not between", value1, value2, "top");
+            addCriterion("\"top\" not between", value1, value2, "top");
             return (Criteria) this;
         }
     }
