@@ -7,24 +7,11 @@ CREATE DATABASE wbtkj_chat
 
 CREATE EXTENSION vector;
 
-drop SEQUENCE if exists admin_id_seq CASCADE;
-drop SEQUENCE if exists recharge_record_id_seq CASCADE;
-drop SEQUENCE if exists role_id_seq CASCADE;
-drop SEQUENCE if exists third_party_model_key_id_seq CASCADE;
-drop SEQUENCE if exists user_info_id_seq CASCADE;
-drop SEQUENCE if exists user_role_id_seq CASCADE;
-
 -- 执行以下代码
 -- --------------------------------------
-CREATE SEQUENCE admin_id_seq
-    START 1
-    INCREMENT 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
 drop table if exists "admin";
 CREATE TABLE "admin" (
-     "id" BIGINT PRIMARY KEY DEFAULT nextval('admin_id_seq'),
+     "id" bigserial PRIMARY KEY
      "username" varchar(255) NOT NULL,
      "pwd" varchar(255) NOT NULL,
      "salt" varchar(5) NOT NULL,
@@ -41,15 +28,9 @@ COMMENT ON COLUMN "admin"."update_time" IS '修改时间';
 INSERT INTO "admin" (username, pwd, salt, create_time, update_time) VALUES ('admin','45be07bc1f199c69','68723','2019-09-03 13:31:20','2023-04-06 09:54:02');
 
 -- --------------------------------------
-CREATE SEQUENCE recharge_record_id_seq
-    START 1
-    INCREMENT 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
 drop table if exists "recharge_record";
 CREATE TABLE "recharge_record" (
-   "id" BIGINT PRIMARY KEY DEFAULT nextval('recharge_record_id_seq'),
+   "id" bigserial PRIMARY KEY,
    "user_id" int8 NOT NULL,
    "type" int4 NOT NULL,
    "cdkey" varchar(255),
@@ -71,15 +52,9 @@ COMMENT ON COLUMN "recharge_record"."use_time" IS '使用日期';
 
 
 -- --------------------------------------
-CREATE SEQUENCE role_id_seq
-    START 1
-    INCREMENT 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
 drop table if exists "role";
 CREATE TABLE "role" (
-    "id" BIGINT PRIMARY KEY DEFAULT nextval('role_id_seq'),
+    "id" bigserial PRIMARY KEY,
     "user_id" int8 NOT NULL,
     "avatar" varchar(255) NOT NULL,
     "nickname" varchar(255) NOT NULL,
@@ -127,15 +102,9 @@ INSERT INTO "role" (user_id, avatar, nickname, greeting, model, system, context_
 VALUES (0, 'https://ui-avatars.com/api/?background=70a99b&color=fff&name=GPT', '默认GPT3.5角色', '有什么需要帮助的？', 'gpt-3.5-turbo', '', 10, 1000, 1, 1, 0, 0, null, null, true, 0, 0, 0, CURRENT_DATE, CURRENT_DATE);
 
 -- --------------------------------------
-CREATE SEQUENCE third_party_model_key_id_seq
-    START 1
-    INCREMENT 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
 drop table if exists "third_party_model_key";
 CREATE TABLE "third_party_model_key" (
-     "id" BIGINT PRIMARY KEY DEFAULT nextval('third_party_model_key_id_seq'),
+     "id" bigserial PRIMARY KEY,
      "key" varchar(255) NOT NULL,
      "model" varchar(255) NOT NULL,
      "status" int4 NOT NULL,
@@ -163,15 +132,9 @@ INSERT INTO "third_party_model_key" (key, model, status, create_time, update_tim
 INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'gpt-3.5-turbo', 0, '2023-05-31 20:28:00', '2023-05-31 20:28:02');
 
 -- --------------------------------------
-CREATE SEQUENCE user_info_id_seq
-    START 1
-    INCREMENT 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
 drop table if exists "user_info";
 CREATE TABLE "user_info" (
-    "id" BIGINT PRIMARY KEY DEFAULT nextval('user_info_id_seq'),
+    "id" bigserial PRIMARY KEY,
     "email" varchar(255) NOT NULL,
     "pwd" varchar(255) NOT NULL,
     "salt" varchar(5) NOT NULL,
@@ -211,15 +174,9 @@ COMMENT ON COLUMN "user_info"."create_time" IS '创建时间';
 COMMENT ON COLUMN "user_info"."update_time" IS '修改时间';
 
 -- --------------------------------------
-CREATE SEQUENCE user_role_id_seq
-    START 1
-    INCREMENT 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
 drop table if exists "user_role";
 CREATE TABLE "user_role" (
-     "id" BIGINT PRIMARY KEY DEFAULT nextval('user_role_id_seq'),
+     "id" bigserial PRIMARY KEY,
      "user_id" int8 NOT NULL,
      "role_id" int8 NOT NULL,
      "used" int4 NOT NULL,
