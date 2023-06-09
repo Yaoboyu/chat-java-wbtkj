@@ -65,19 +65,50 @@ public class RoleExample {
     }
 
     protected abstract static class GeneratedCriteria {
+        protected List<Criterion> fileNamesCriteria;
+
+        protected List<Criterion> allCriteria;
+
         protected List<Criterion> criteria;
 
         protected GeneratedCriteria() {
             super();
             criteria = new ArrayList<Criterion>();
+            fileNamesCriteria = new ArrayList<Criterion>();
+        }
+
+        public List<Criterion> getFileNamesCriteria() {
+            return fileNamesCriteria;
+        }
+
+        protected void addFileNamesCriterion(String condition, Object value, String property) {
+            if (value == null) {
+                throw new RuntimeException("Value for " + property + " cannot be null");
+            }
+            fileNamesCriteria.add(new Criterion(condition, value, "com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler"));
+            allCriteria = null;
+        }
+
+        protected void addFileNamesCriterion(String condition, List<String> value1, List<String> value2, String property) {
+            if (value1 == null || value2 == null) {
+                throw new RuntimeException("Between values for " + property + " cannot be null");
+            }
+            fileNamesCriteria.add(new Criterion(condition, value1, value2, "com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler"));
+            allCriteria = null;
         }
 
         public boolean isValid() {
-            return criteria.size() > 0;
+            return criteria.size() > 0
+                || fileNamesCriteria.size() > 0;
         }
 
         public List<Criterion> getAllCriteria() {
-            return criteria;
+            if (allCriteria == null) {
+                allCriteria = new ArrayList<Criterion>();
+                allCriteria.addAll(criteria);
+                allCriteria.addAll(fileNamesCriteria);
+            }
+            return allCriteria;
         }
 
         public List<Criterion> getCriteria() {
@@ -89,6 +120,7 @@ public class RoleExample {
                 throw new RuntimeException("Value for condition cannot be null");
             }
             criteria.add(new Criterion(condition));
+            allCriteria = null;
         }
 
         protected void addCriterion(String condition, Object value, String property) {
@@ -96,6 +128,7 @@ public class RoleExample {
                 throw new RuntimeException("Value for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value));
+            allCriteria = null;
         }
 
         protected void addCriterion(String condition, Object value1, Object value2, String property) {
@@ -103,6 +136,7 @@ public class RoleExample {
                 throw new RuntimeException("Between values for " + property + " cannot be null");
             }
             criteria.add(new Criterion(condition, value1, value2));
+            allCriteria = null;
         }
 
         public Criteria andIdIsNull() {
@@ -1192,6 +1226,66 @@ public class RoleExample {
 
         public Criteria andMarketTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("market_type not between", value1, value2, "marketType");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesIsNull() {
+            addCriterion("file_names is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesIsNotNull() {
+            addCriterion("file_names is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesEqualTo(List<String> value) {
+            addFileNamesCriterion("file_names =", value, "fileNames");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesNotEqualTo(List<String> value) {
+            addFileNamesCriterion("file_names <>", value, "fileNames");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesGreaterThan(List<String> value) {
+            addFileNamesCriterion("file_names >", value, "fileNames");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesGreaterThanOrEqualTo(List<String> value) {
+            addFileNamesCriterion("file_names >=", value, "fileNames");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesLessThan(List<String> value) {
+            addFileNamesCriterion("file_names <", value, "fileNames");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesLessThanOrEqualTo(List<String> value) {
+            addFileNamesCriterion("file_names <=", value, "fileNames");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesIn(List<List<String>> values) {
+            addFileNamesCriterion("file_names in", values, "fileNames");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesNotIn(List<List<String>> values) {
+            addFileNamesCriterion("file_names not in", values, "fileNames");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesBetween(List<String> value1, List<String> value2) {
+            addFileNamesCriterion("file_names between", value1, value2, "fileNames");
+            return (Criteria) this;
+        }
+
+        public Criteria andFileNamesNotBetween(List<String> value1, List<String> value2) {
+            addFileNamesCriterion("file_names not between", value1, value2, "fileNames");
             return (Criteria) this;
         }
 

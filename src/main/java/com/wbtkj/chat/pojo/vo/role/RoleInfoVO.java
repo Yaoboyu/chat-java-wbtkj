@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -44,6 +46,8 @@ public class RoleInfoVO {
 
     private Integer marketType;
 
+    private List<String> fileNames;
+
     /**
      * 新增
      * @param userId
@@ -53,7 +57,7 @@ public class RoleInfoVO {
         if (avatar == null || nickname == null || greeting == null
                 || model == null || system == null || contextN == null || maxTokens == null
                 || temperature == null || topP == null || frequencyPenalty == null
-                || presencePenalty == null || isMarket == null || marketType == null) {
+                || presencePenalty == null || isMarket == null || ( isMarket != null && marketType == null)) {
             throw new MyServiceException("缺少参数");
         }
 
@@ -88,6 +92,7 @@ public class RoleInfoVO {
         role.setPresencePenalty(this.presencePenalty);
         role.setLogitBias(this.logitBias);
         role.setIsMarket(this.isMarket);
+        role.setFileNames(this.fileNames);
         role.setMarketType(this.marketType);
         role.setUpdateTime(new Date());
         return role;

@@ -4,6 +4,7 @@ import com.wbtkj.chat.filter.AdminLoginInterceptor;
 import com.wbtkj.chat.filter.UserLoginInterceptor;
 import com.wbtkj.chat.filter.WebSocketInterceptor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

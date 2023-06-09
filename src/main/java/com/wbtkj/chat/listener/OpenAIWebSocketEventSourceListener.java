@@ -6,6 +6,7 @@ import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletionResponse;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.service.RoleService;
 import com.wbtkj.chat.service.impl.RoleServiceImpl;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
@@ -26,6 +27,7 @@ import java.util.Objects;
  * @date 2023-03-23
  */
 @Slf4j
+@NoArgsConstructor
 public class OpenAIWebSocketEventSourceListener extends EventSourceListener {
 
     private WebSocketSession session;

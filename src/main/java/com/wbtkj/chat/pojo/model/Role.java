@@ -2,6 +2,7 @@ package com.wbtkj.chat.pojo.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class Role implements Serializable {
     private Long id;
@@ -37,6 +38,8 @@ public class Role implements Serializable {
     private Boolean isMarket;
 
     private Integer marketType;
+
+    private List<String> fileNames;
 
     private Integer likes;
 
@@ -184,6 +187,14 @@ public class Role implements Serializable {
         this.marketType = marketType;
     }
 
+    public List<String> getFileNames() {
+        return fileNames;
+    }
+
+    public void setFileNames(List<String> fileNames) {
+        this.fileNames = fileNames;
+    }
+
     public Integer getLikes() {
         return likes;
     }
@@ -239,6 +250,7 @@ public class Role implements Serializable {
         sb.append(", stop=").append(stop);
         sb.append(", isMarket=").append(isMarket);
         sb.append(", marketType=").append(marketType);
+        sb.append(", fileNames=").append(fileNames);
         sb.append(", likes=").append(likes);
         sb.append(", hot=").append(hot);
         sb.append(", createTime=").append(createTime);

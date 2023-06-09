@@ -29,6 +29,7 @@
 
         <!-- 格式化XML代码 -->
         <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+
         <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin">
@@ -84,40 +85,53 @@
         </javaClientGenerator>
 
         <!-- 每个数据库中的表都写一个table，用完就注释掉 -->
-        <table tableName="user_info">
-            <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-            <columnOverride column="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
-        </table>
+<!--        <table tableName="user_info">-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--            <columnOverride column="remark" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
+<!--        </table>-->
 
-        <table tableName="recharge_record">
-            <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
+<!--        <table tableName="recharge_record">-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--        </table>-->
 
-        <table tableName="third_party_model_key">
-            <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
+<!--        <table tableName="third_party_model_key">-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--        </table>-->
 
-        <table tableName="admin">
-            <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
+<!--        <table tableName="admin">-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--        </table>-->
 
-        <table tableName="role">
-            <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-            <columnOverride column="greeting" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <columnOverride column="system" javaType="java.lang.String" jdbcType="VARCHAR"/>
-            <columnOverride column="logit_bias" javaType="java.lang.String" jdbcType="VARCHAR"/>
-        </table>
+<!--        <table tableName="role">-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--            <columnOverride column="greeting" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
+<!--            <columnOverride column="system" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
+<!--            <columnOverride column="logit_bias" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
+<!--            <columnOverride column="file_names" javaType="java.util.List&lt;java.lang.String&gt;" typeHandler="com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler"/>-->
+<!--        </table>-->
 
-        <table tableName="user_role">
-            <property name="useActualColumnNames" value="false"/>
-            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>
-        </table>
+<!--        <table tableName="user_role">-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--        </table>-->
 
+<!--        <table tableName="user_file">-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--            <columnOverride column="original_name" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
+<!--        </table>-->
+
+<!--        <table tableName="file_embedding">-->
+<!--            <property name="useActualColumnNames" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="JDBC" identity="true"/>-->
+<!--            <columnOverride column="text" javaType="java.lang.String" jdbcType="VARCHAR"/>-->
+<!--            <columnOverride column="embedding" javaType="java.util.List&lt;java.math.BigDecimal&gt;" typeHandler="com.wbtkj.chat.mapper.typeHandler.PGVectorTypeHandler"/>-->
+<!--        </table>-->
 
 
     </context>

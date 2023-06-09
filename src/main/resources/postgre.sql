@@ -11,7 +11,7 @@ CREATE EXTENSION vector;
 -- --------------------------------------
 drop table if exists "admin";
 CREATE TABLE "admin" (
-     "id" bigserial PRIMARY KEY
+     "id" bigserial PRIMARY KEY,
      "username" varchar(255) NOT NULL,
      "pwd" varchar(255) NOT NULL,
      "salt" varchar(5) NOT NULL,
@@ -37,10 +37,10 @@ CREATE TABLE "recharge_record" (
    "value" int4 NOT NULL,
    "use_time" timestamp NOT NULL
 );
-CREATE INDEX "idx_user_id" ON "recharge_record" USING btree (
+CREATE INDEX "recharge_record_idx_user_id" ON "recharge_record" USING btree (
     "user_id"
     );
-CREATE INDEX "idx_cdkey" ON "recharge_record" USING btree (
+CREATE INDEX "recharge_record_idx_cdkey" ON "recharge_record" USING btree (
     "cdkey"
     );
 COMMENT ON COLUMN "recharge_record"."id" IS '自增主键';
@@ -71,11 +71,15 @@ CREATE TABLE "role" (
     "stop" varchar(5),
     "is_market" bool NOT NULL,
     "market_type" int4 NOT NULL,
+    "file_names" text[],
     "likes" int4 NOT NULL,
     "hot" int4 NOT NULL,
     "create_time" timestamp NOT NULL,
     "update_time" timestamp NOT NULL
 );
+CREATE INDEX "role_idx_is_market" ON "role" USING btree (
+    "is_market"
+    );
 COMMENT ON COLUMN "role"."id" IS '自增主键';
 COMMENT ON COLUMN "role"."user_id" IS '所属用户id';
 COMMENT ON COLUMN "role"."avatar" IS '头像';
@@ -93,13 +97,14 @@ COMMENT ON COLUMN "role"."logit_bias" IS '词汇权重。给词汇添加-100到1
 COMMENT ON COLUMN "role"."stop" IS '停止符';
 COMMENT ON COLUMN "role"."is_market" IS '是否上架应用市场';
 COMMENT ON COLUMN "role"."market_type" IS '应用市场上的分类';
+COMMENT ON COLUMN "role"."file_names" IS '使用的数据集';
 COMMENT ON COLUMN "role"."likes" IS '点赞数';
 COMMENT ON COLUMN "role"."hot" IS '热度（有人对话一次热度就加1）';
 COMMENT ON COLUMN "role"."create_time" IS '创建时间';
 COMMENT ON COLUMN "role"."update_time" IS '修改时间';
 
-INSERT INTO "role" (user_id, avatar, nickname, greeting, model, system, context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, likes, hot, create_time, update_time)
-VALUES (0, 'https://ui-avatars.com/api/?background=70a99b&color=fff&name=GPT', '默认GPT3.5角色', '有什么需要帮助的？', 'gpt-3.5-turbo', '', 10, 1000, 1, 1, 0, 0, null, null, true, 0, 0, 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=GPT&background=70a99b', '默认GPT3.5角色', '有什么需要帮助的？', 'gpt-3.5-turbo', '', 10, 1000, 1, 1, 0, 0, null, null, true, 0, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
 
 -- --------------------------------------
 drop table if exists "third_party_model_key";
@@ -111,10 +116,10 @@ CREATE TABLE "third_party_model_key" (
      "create_time" timestamp NOT NULL,
      "update_time" timestamp NOT NULL
 );
-CREATE UNIQUE INDEX "idx_key" ON "third_party_model_key" USING btree (
+CREATE UNIQUE INDEX "third_party_model_key_idx_key" ON "third_party_model_key" USING btree (
     "key"
     );
-CREATE INDEX "idx_status_key" ON "third_party_model_key" USING btree (
+CREATE INDEX "third_party_model_key_idx_status_key" ON "third_party_model_key" USING btree (
     "status"
     );
 COMMENT ON COLUMN "third_party_model_key"."id" IS '自增主键';
@@ -149,13 +154,13 @@ CREATE TABLE "user_info" (
     "create_time" timestamp NOT NULL,
     "update_time" timestamp NOT NULL
 );
-CREATE UNIQUE INDEX "idx_email" ON "user_info" USING btree (
+CREATE UNIQUE INDEX "user_info_idx_email" ON "user_info" USING btree (
     "email"
     );
-CREATE UNIQUE INDEX "idx_my_inv_code" ON "user_info" USING btree (
+CREATE UNIQUE INDEX "user_info_idx_my_inv_code" ON "user_info" USING btree (
     "my_inv_code"
     );
-CREATE INDEX "idx_use_inv_code" ON "user_info" USING btree (
+CREATE INDEX "user_info_idx_use_inv_code" ON "user_info" USING btree (
     "use_inv_code"
     );
 COMMENT ON COLUMN "user_info"."id" IS '自增主键';
@@ -173,6 +178,9 @@ COMMENT ON COLUMN "user_info"."use_inv_code" IS '使用的邀请码';
 COMMENT ON COLUMN "user_info"."create_time" IS '创建时间';
 COMMENT ON COLUMN "user_info"."update_time" IS '修改时间';
 
+INSERT INTO "user_info" (email, pwd, salt, status, vip_start_time, vip_end_time, balance, cash, remark, my_inv_code, use_inv_code, create_time, update_time)
+VALUES ('soficesi@163.com', '255db5f2d7246cba', '8F4FI', 0, null, null, 1000, 0, '', '40D1FB7', null, CURRENT_DATE, CURRENT_DATE);
+
 -- --------------------------------------
 drop table if exists "user_role";
 CREATE TABLE "user_role" (
@@ -183,12 +191,12 @@ CREATE TABLE "user_role" (
      "status" int4 NOT NULL,
      "top" bool NOT NULL
 );
-CREATE INDEX "idx_user_id_status_top" ON "user_role" USING btree (
+CREATE INDEX "user_role_idx_user_id_status_top" ON "user_role" USING btree (
     "user_id",
     "status",
     "top"
     );
-CREATE INDEX "idx_role_id_user_id" ON "user_role" USING btree (
+CREATE INDEX "user_role_idx_role_id_user_id" ON "user_role" USING btree (
     "role_id",
     "user_id"
     );
@@ -197,7 +205,41 @@ COMMENT ON COLUMN "user_role"."user_id" IS '用户id';
 COMMENT ON COLUMN "user_role"."role_id" IS '角色id';
 COMMENT ON COLUMN "user_role"."used" IS '该用户在该角色上使用的点数';
 COMMENT ON COLUMN "user_role"."status" IS '状态。0正常使用，-1软删除';
-COMMENT ON COLUMN "user_role"."top" IS '是否置顶。0不置顶，1置顶';
+COMMENT ON COLUMN "user_role"."top" IS '是否置顶。false不置顶，true置顶';
 
+INSERT INTO "user_role" (user_id, role_id, used, status, top) VALUES (1,1,0,0,false);
 
+-- --------------------------------------
+drop table if exists "user_file";
+CREATE TABLE "user_file" (
+     "id" bigserial PRIMARY KEY,
+     "user_id" int8 NOT NULL,
+     "type" int4 NOT NULL,
+     "original_name" text NOT NULL,
+     "name" varchar(255)
+);
+CREATE INDEX "user_file_idx_user_id" ON "user_file" USING btree (
+    "user_id"
+    );
+COMMENT ON COLUMN "user_file"."id" IS '自增主键';
+COMMENT ON COLUMN "user_file"."user_id" IS '用户id';
+COMMENT ON COLUMN "user_file"."type" IS '类型，0文件，1url';
+COMMENT ON COLUMN "user_file"."original_name" IS '原始文件名或url';
+COMMENT ON COLUMN "user_file"."name" IS 'uuid文件名或uuid url';
+
+-- --------------------------------------
+drop table if exists "file_embedding";
+CREATE TABLE "file_embedding" (
+     "id" bigserial PRIMARY KEY,
+     "name" varchar(255) NOT NULL,
+     "text" text NOT NULL,
+     "embedding" vector(1536) NOT NULL
+);
+CREATE INDEX "file_embedding_idx_name" ON "file_embedding" USING btree (
+    "name"
+    );
+COMMENT ON COLUMN "file_embedding"."id" IS '自增主键';
+COMMENT ON COLUMN "file_embedding"."name" IS '文件名';
+COMMENT ON COLUMN "file_embedding"."text" IS '分段文本';
+COMMENT ON COLUMN "file_embedding"."embedding" IS '文本对应的嵌入向量';
 

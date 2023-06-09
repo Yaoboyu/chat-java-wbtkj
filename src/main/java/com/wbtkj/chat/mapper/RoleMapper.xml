@@ -19,6 +19,7 @@
     <result column="stop" property="stop" jdbcType="VARCHAR" />
     <result column="is_market" property="isMarket" jdbcType="BIT" />
     <result column="market_type" property="marketType" jdbcType="INTEGER" />
+    <result column="file_names" property="fileNames" jdbcType="ARRAY" typeHandler="com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler" />
     <result column="likes" property="likes" jdbcType="INTEGER" />
     <result column="hot" property="hot" jdbcType="INTEGER" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
@@ -44,6 +45,25 @@
                   and ${criterion.condition}
                   <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+            <foreach collection="criteria.fileNamesCriteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler} and #{criterion.secondValue,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler}
                   </foreach>
                 </when>
               </choose>
@@ -77,6 +97,25 @@
                 </when>
               </choose>
             </foreach>
+            <foreach collection="criteria.fileNamesCriteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler} and #{criterion.secondValue,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
           </trim>
         </if>
       </foreach>
@@ -85,7 +124,7 @@
   <sql id="Base_Column_List" >
     id, user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, 
     temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, 
-    market_type, likes, hot, create_time, update_time
+    market_type, file_names, likes, hot, create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.RoleExample" >
     select
@@ -123,15 +162,17 @@
       context_n, max_tokens, temperature, 
       top_p, frequency_penalty, presence_penalty, 
       logit_bias, stop, is_market, 
-      market_type, likes, hot, 
-      create_time, update_time)
+      market_type, file_names, 
+      likes, hot, create_time, 
+      update_time)
     values (#{userId,jdbcType=BIGINT}, #{avatar,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
       #{greeting,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, #{system,jdbcType=VARCHAR}, 
       #{contextN,jdbcType=INTEGER}, #{maxTokens,jdbcType=INTEGER}, #{temperature,jdbcType=DOUBLE}, 
       #{topP,jdbcType=DOUBLE}, #{frequencyPenalty,jdbcType=DOUBLE}, #{presencePenalty,jdbcType=DOUBLE}, 
       #{logitBias,jdbcType=VARCHAR}, #{stop,jdbcType=VARCHAR}, #{isMarket,jdbcType=BIT}, 
-      #{marketType,jdbcType=INTEGER}, #{likes,jdbcType=INTEGER}, #{hot,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      #{marketType,jdbcType=INTEGER}, #{fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler}, 
+      #{likes,jdbcType=INTEGER}, #{hot,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.wbtkj.chat.pojo.model.Role" useGeneratedKeys="true" keyProperty="id" >
     insert into role
@@ -183,6 +224,9 @@
       </if>
       <if test="marketType != null" >
         market_type,
+      </if>
+      <if test="fileNames != null" >
+        file_names,
       </if>
       <if test="likes != null" >
         likes,
@@ -245,6 +289,9 @@
       </if>
       <if test="marketType != null" >
         #{marketType,jdbcType=INTEGER},
+      </if>
+      <if test="fileNames != null" >
+        #{fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler},
       </if>
       <if test="likes != null" >
         #{likes,jdbcType=INTEGER},
@@ -320,6 +367,9 @@
       <if test="record.marketType != null" >
         market_type = #{record.marketType,jdbcType=INTEGER},
       </if>
+      <if test="record.fileNames != null" >
+        file_names = #{record.fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler},
+      </if>
       <if test="record.likes != null" >
         likes = #{record.likes,jdbcType=INTEGER},
       </if>
@@ -356,6 +406,7 @@
       stop = #{record.stop,jdbcType=VARCHAR},
       is_market = #{record.isMarket,jdbcType=BIT},
       market_type = #{record.marketType,jdbcType=INTEGER},
+      file_names = #{record.fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler},
       likes = #{record.likes,jdbcType=INTEGER},
       hot = #{record.hot,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -415,6 +466,9 @@
       <if test="marketType != null" >
         market_type = #{marketType,jdbcType=INTEGER},
       </if>
+      <if test="fileNames != null" >
+        file_names = #{fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler},
+      </if>
       <if test="likes != null" >
         likes = #{likes,jdbcType=INTEGER},
       </if>
@@ -448,6 +502,7 @@
       stop = #{stop,jdbcType=VARCHAR},
       is_market = #{isMarket,jdbcType=BIT},
       market_type = #{marketType,jdbcType=INTEGER},
+      file_names = #{fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler},
       likes = #{likes,jdbcType=INTEGER},
       hot = #{hot,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},

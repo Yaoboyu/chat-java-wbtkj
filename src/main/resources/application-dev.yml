@@ -20,17 +20,18 @@ spring:
     name: chat-java-wbtkj
   servlet:
     multipart:
-      max-file-size: 10MB
+      max-file-size: 20MB
 
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
   mapper-locations: classpath:com/wbtkj/chat/mapper/*.xml
+  type-handlers-package: com.wbtkj.chat.mapper.typeHandler
 
 email:
-  hostname: smtp.qq.com
-  email-from: 1712683212@qq.com
-  au: ezjcvxhvxxvmfajg
+  hostname: smtp.163.com
+  email-from: wbtkj0317@163.com
+  au: VOTLHEUAQTTDAXDZ
 
 server:
   servlet:

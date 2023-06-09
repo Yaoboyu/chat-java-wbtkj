@@ -1,6 +1,7 @@
 package com.wbtkj.chat;
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.ReUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -11,7 +12,6 @@ import java.util.UUID;
 public class UtilTests {
     @Test
     public void randomTest() throws UnknownHostException {
-        InetAddress localHost = InetAddress.getLocalHost();
-        System.out.println(UUID.randomUUID().toString().replace("-", ""));
+        System.out.println(ReUtil.isMatch("(https?://)?([^/]+)(/.*)?", "htt://www.com"));
     }
 }

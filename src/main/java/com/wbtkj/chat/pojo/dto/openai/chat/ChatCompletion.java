@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.unfbx.chatgpt.utils.TikTokensUtil;
+import com.wbtkj.chat.utils.TikTokensUtil;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -66,7 +66,7 @@ public class ChatCompletion implements Serializable {
      * @see com.unfbx.chatgpt.OpenAiStreamClient
      */
     @Builder.Default
-    private boolean stream = true;
+    private boolean stream = false;
     /**
      * 停止输出标识
      */
@@ -97,16 +97,16 @@ public class ChatCompletion implements Serializable {
      */
     private String user;
 
-//    /**
-//     * 获取当前参数的tokens数
-//     */
-//    public long tokens() {
-//        if (CollectionUtil.isEmpty(this.messages) || StrUtil.isBlank(this.model)) {
-//            log.warn("参数异常model：{}，prompt：{}", this.model, this.messages);
-//            return 0;
-//        }
-//        return TikTokensUtil.tokens(this.model, this.messages);
-//    }
+    /**
+     * 获取当前参数的tokens数
+     */
+    public long tokens() {
+        if (CollectionUtil.isEmpty(this.messages) || StrUtil.isBlank(this.model)) {
+            log.warn("参数异常model：{}，prompt：{}", this.model, this.messages);
+            return 0;
+        }
+        return TikTokensUtil.tokens(this.model, this.messages);
+    }
 
 
     @Getter

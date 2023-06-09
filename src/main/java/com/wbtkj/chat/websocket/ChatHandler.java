@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -192,6 +193,8 @@ public class ChatHandler extends TextWebSocketHandler {
                 wsChatSession.setMessageList(chatSession.getMessages());
             }
         }
+
+        // 拼接message
         List<Message> messages = new ArrayList<>(wsChatSession.getMessageList());
 
         wsChatSession.getMessageList().add(Message.builder().content(wsChatMessage.getMessage()).role(Message.Role.USER).build());
@@ -201,6 +204,7 @@ public class ChatHandler extends TextWebSocketHandler {
         messages.add(0, Message.builder().content(role.getSystem()).role(Message.Role.SYSTEM).build());
         messages.add(Message.builder().content(wsChatMessage.getMessage()).role(Message.Role.USER).build());
 
+        // 构造chatCompletion
         ChatCompletion chatCompletion = ChatCompletion.builder()
                 .model(role.getModel())
                 .messages(messages)
@@ -211,10 +215,23 @@ public class ChatHandler extends TextWebSocketHandler {
                 .presencePenalty(role.getPresencePenalty())
                 .frequencyPenalty(role.getFrequencyPenalty())
                 .logitBias(JSONUtil.toBean(role.getLogitBias(), HashMap.class))
+                .stream(true)
                 .build();
 
         OpenAIWebSocketEventSourceListener eventSourceListener = new OpenAIWebSocketEventSourceListener(session);
-        openAIService.streamChatCompletion(chatCompletion, eventSourceListener);
+
+        try {
+            if (!CollectionUtils.isEmpty(role.getFileNames())) {
+                openAIService.streamChatCompletionWithFile(role.getFileNames(), chatCompletion, eventSourceListener);
+            } else {
+                openAIService.streamChatCompletion(chatCompletion, eventSourceListener);
+
+            }
+        } catch (MyServiceException e) {
+            session.sendMessage(new TextMessage("{{wbtkj_error}}:" + e.getMessage()));
+            return;
+        }
+
 
 
     }
