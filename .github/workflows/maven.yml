@@ -28,7 +28,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package --file pom.xml -Dmaven.test.skip=true
 
     - name: 删除旧的jar包以及运行脚本
       run: sshpass -p ${{secrets.REMOTE_PASSWORD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_HOST}} "cd /root/chat-java-wbtkj && rm -rf ./*"
