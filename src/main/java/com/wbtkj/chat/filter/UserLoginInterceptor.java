@@ -27,8 +27,7 @@ public class UserLoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        String uri = request.getRequestURI();
-        log.info("请求的uri: {}", uri);
+        log.info("请求的方法: {}, 请求的uri: {}", request.getMethod(),request.getRequestURI());
 
         //3.获取请求头中的令牌（token）。
         String token = request.getHeader("Authorization");

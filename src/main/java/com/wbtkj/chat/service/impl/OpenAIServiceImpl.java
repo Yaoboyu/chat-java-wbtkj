@@ -82,8 +82,9 @@ public class OpenAIServiceImpl implements OpenAIService {
     /**
      * 构造实例对象
      */
-    public OpenAIServiceImpl(@Value("${chatgpt.apiHost}") String apiHost) {
-        this.openAiAuthInterceptor = StaticContextAccessor.getBean(OpenAiAuthInterceptor.class);
+    public OpenAIServiceImpl(@Value("${chatgpt.apiHost}") String apiHost,
+                            OpenAiAuthInterceptor openAiAuthInterceptor) {
+        this.openAiAuthInterceptor = openAiAuthInterceptor;
 
         this.apiHost = apiHost;
 

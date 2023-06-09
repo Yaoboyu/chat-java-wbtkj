@@ -53,13 +53,13 @@ public class OpenAiAuthInterceptor implements Interceptor {
 
 
 
-    public OpenAiAuthInterceptor() {
-        thirdPartyModelKeyService = StaticContextAccessor.getBean(ThirdPartyModelKeyService.class);
+    public OpenAiAuthInterceptor(ThirdPartyModelKeyService thirdPartyModelKeyService) {
+        this.thirdPartyModelKeyService = thirdPartyModelKeyService;
 
-        gpt3Key = new CopyOnWriteArrayList<>(thirdPartyModelKeyService.getEnableGpt3Keys());
-        gpt4Key = new CopyOnWriteArrayList<>(thirdPartyModelKeyService.getEnableGpt4Keys());
-        gpt3KeyIndex = 0;
-        gpt4KeyIndex = 0;
+        this.gpt3Key = new CopyOnWriteArrayList<>(thirdPartyModelKeyService.getEnableGpt3Keys());
+        this.gpt4Key = new CopyOnWriteArrayList<>(thirdPartyModelKeyService.getEnableGpt4Keys());
+        this.gpt3KeyIndex = 0;
+        this.gpt4KeyIndex = 0;
     }
 
     public boolean addKey(String key, String model) {
