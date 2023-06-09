@@ -28,14 +28,14 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml -Dmaven.test.skip=true
+      run: mvn package -DskipTests=true
 
-    - name: 删除旧的jar包以及运行脚本
+    - name: 删除旧的jar包以及运行脚本root@${{secrets.REMOTE_HOST}}
       run: sshpass -p ${{secrets.REMOTE_PASSWORD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_HOST}} "cd /root/chat-java-wbtkj && rm -rf ./*"
  
-    - name: 上传jar包和启动脚本到服务器中
+    - name: 上传jar包和启动脚本到服务器中root@${{secrets.REMOTE_HOST}}
       run: sshpass -p ${{secrets.REMOTE_PASSWORD}} scp -r -o StrictHostKeyChecking=no ./target/chat-0.0.1-SNAPSHOT.jar ./run.sh root@${{secrets.REMOTE_HOST}}:/root/chat-java-wbtkj
  
-    - name: 启动项目
+    - name: 启动项目root@${{secrets.REMOTE_HOST}}
       run: sshpass -p ${{secrets.REMOTE_PASSWORD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_HOST}} "cd /root/chat-java-wbtkj && chmod +x run.sh && ./run.sh"
 
