@@ -1,6 +1,7 @@
 package com.wbtkj.chat.websocket;
 
 import cn.hutool.json.JSONUtil;
+import com.wbtkj.chat.constant.GeneralConstant;
 import com.wbtkj.chat.constant.RedisKeyConstant;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.filter.OpenAiAuthInterceptor;
@@ -11,7 +12,6 @@ import com.wbtkj.chat.mapper.UserRoleMapper;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.dto.role.WSChatSession;
-import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyValue;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.ChatSession;
 import com.wbtkj.chat.pojo.model.Role;
@@ -140,7 +140,7 @@ public class ChatHandler extends TextWebSocketHandler {
         }
 
         // 扣除用户余额
-        int point = ThirdPartyModelKeyValue.getValue(role.getModel());
+        int point = GeneralConstant.THIRD_MODEL_VALUE.get(role.getModel());
         int newBalance = userService.deductBalance(wsChatSession.getUserId(), point);
         session.sendMessage(new TextMessage("{{wbtkj_newBalance}}:" + newBalance));
         // 返现

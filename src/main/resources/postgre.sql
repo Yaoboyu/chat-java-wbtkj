@@ -70,7 +70,7 @@ CREATE TABLE "role" (
     "logit_bias" text,
     "stop" varchar(5),
     "is_market" bool NOT NULL,
-    "market_type" int4 NOT NULL,
+    "market_type" int4,
     "file_names" text[],
     "likes" int4 NOT NULL,
     "hot" int4 NOT NULL,

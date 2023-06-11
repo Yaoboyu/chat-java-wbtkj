@@ -45,6 +45,5 @@ chatgpt:
 chat-py-wbtkj:
   apiHost: http://localhost:10318/
 
-
 log:
   path: /var/log/chat-java-wbtkj

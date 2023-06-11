@@ -57,7 +57,7 @@ public class RoleInfoVO {
         if (avatar == null || nickname == null || greeting == null
                 || model == null || system == null || contextN == null || maxTokens == null
                 || temperature == null || topP == null || frequencyPenalty == null
-                || presencePenalty == null || isMarket == null || ( isMarket != null && marketType == null)) {
+                || presencePenalty == null || isMarket == null || ( isMarket && marketType == null)) {
             throw new MyServiceException("缺少参数");
         }
 

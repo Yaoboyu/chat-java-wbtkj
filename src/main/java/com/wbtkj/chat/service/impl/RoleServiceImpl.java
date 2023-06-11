@@ -109,6 +109,8 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public boolean addRole(RoleInfoVO roleInfo) {
+        checkRoleNum();
+
         Role role = roleInfo.toRole(ThreadLocalConfig.getUser().getId());
 
         // 如果上架，不能同名
@@ -177,14 +179,7 @@ public class RoleServiceImpl implements RoleService {
             throw new MyServiceException("该角色未上架");
         }
 
-        UserRoleExample userRoleExample = new UserRoleExample();
-        userRoleExample.createCriteria().andUserIdEqualTo(ThreadLocalConfig.getUser().getId());
-        List<UserRole> userRoles = userRoleMapper.selectByExample(userRoleExample);
-
-        if (userRoles.size() >= GeneralConstant.USER_NORMAL_MAX_ROLE) {
-            throw new MyServiceException("拥有的角色数量已达上限");
-        }
-        // TODO : vip
+        List<UserRole> userRoles = checkRoleNum();
 
         if (userRoles.stream().anyMatch(userRole -> userRole.getRoleId().equals(roleId))) {
             throw new MyServiceException("已拥有该角色");
@@ -324,5 +319,18 @@ public class RoleServiceImpl implements RoleService {
         }
         redisTemplate.opsForValue().set(RedisKeyConstant.role.getKey() + role.getId(), role,
                 RedisKeyConstant.role.getExp(), TimeUnit.MINUTES);
+    }
+
+    private List<UserRole> checkRoleNum() {
+        UserRoleExample userRoleExample = new UserRoleExample();
+        userRoleExample.createCriteria().andUserIdEqualTo(ThreadLocalConfig.getUser().getId());
+        List<UserRole> userRoles = userRoleMapper.selectByExample(userRoleExample);
+
+        if (userRoles.size() >= GeneralConstant.USER_NORMAL_MAX_ROLE) {
+            throw new MyServiceException("拥有的角色数量已达上限");
+        }
+        // TODO : vip
+
+        return userRoles;
     }
 }
