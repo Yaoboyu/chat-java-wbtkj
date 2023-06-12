@@ -76,8 +76,35 @@ pip3 install --upgrade pip
 pip3 -V
 ```
 
+nginx
+``` shell script
+yum install nginx
+
+vim /etc/nginx/nginx.conf
+# 修改配置文件
+server {
+    listen       80;
+    listen       [::]:80;
+    server_name  _;
+    root         /usr/share/nginx/html/;
+    index index.html;
+    
+    location / {
+            try_files $uri $uri/ /index.html;
+    }
+}
+
+# 启动 Nginx：
+systemctl start nginx
+# 重启 Nginx：
+systemctl restart nginx
+# 设置 Nginx 开机自启动：
+systemctl enable nginx
+```
+
 # 优化
 ## 后端
 1. UserRole表放入缓存
 2. 刷热度用消息队列
 3. 历史记录加缓存
+4. 手机号注册

@@ -2,6 +2,7 @@ package com.wbtkj.chat.constant;
 
 import cn.hutool.core.lang.Pair;
 import cn.hutool.core.map.MapUtil;
+import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,8 @@ public class GeneralConstant {
     public static final int USER_NORMAL_MAX_ROLE = 20; // 普通用户最多角色数
 
     public static Map<String, Integer> THIRD_MODEL_VALUE = new HashMap<>(); // 第三方模型价格
+
+    public static final int PARSE_FILE_VALUE = 5; // 处理文件价格
 
     static {
         THIRD_MODEL_VALUE.put("gpt-3.5-turbo", 1);

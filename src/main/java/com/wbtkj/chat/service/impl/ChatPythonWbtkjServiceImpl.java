@@ -1,6 +1,9 @@
 package com.wbtkj.chat.service.impl;
 
 import com.wbtkj.chat.api.ChatPythonWbtkjAPI;
+import com.wbtkj.chat.config.ThreadLocalConfig;
+import com.wbtkj.chat.constant.GeneralConstant;
+import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.mapper.FileEmbeddingMapper;
 import com.wbtkj.chat.pojo.dto.chatPythonWbtkj.ExtractUrl;
 import com.wbtkj.chat.pojo.dto.chatPythonWbtkj.FileContent;
@@ -11,8 +14,8 @@ import com.wbtkj.chat.pojo.model.FileEmbeddingExample;
 import com.wbtkj.chat.service.ChatPythonWbtkjService;
 import com.wbtkj.chat.service.FileService;
 import com.wbtkj.chat.service.OpenAIService;
+import com.wbtkj.chat.service.UserService;
 import io.reactivex.Single;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -20,11 +23,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -50,13 +51,15 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
     FileService fileService;
     @Resource
     OpenAIService openAIService;
+    @Resource
+    UserService userService;
 
     public ChatPythonWbtkjServiceImpl(@Value("${chat-py-wbtkj.apiHost}") String apiHost) {
         this.apiHost = apiHost;
 
         this.okHttpClient = new OkHttpClient
                 .Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(600, TimeUnit.SECONDS)
                 .readTimeout(600, TimeUnit.SECONDS)
                 .build();
@@ -71,13 +74,19 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
 
     @Override
     @Async
-    public void extractUrl(String url, long userFileId) {
+    public void extractUrl(String url, long userFileId, long userId) {
         ExtractUrl extractUrl = ExtractUrl.builder().url(url).build();
         Single<FileContentRes> resSingle = this.chatPythonWbtkjAPI.extractUrl(extractUrl);
         FileContentRes result = resSingle.blockingGet();
+        log.debug("url: {}, hashId: {}, content size: {}", extractUrl.getUrl(), result.getData().getHashId(), result.getData().getContents().size());
 
         try {
             storage(result.getData(), userFileId);
+            try {
+                userService.deductBalance(userId, GeneralConstant.PARSE_FILE_VALUE);
+            } catch (MyServiceException e) {
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
             storage(new FileContent(), userFileId);
@@ -88,7 +97,7 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
 
     @Override
     @Async
-    public void extractFile(MultipartFile multipartFile, long userFileId) {
+    public void extractFile(MultipartFile multipartFile, long userFileId, long userId) {
         if (multipartFile == null) {
             return;
         }
@@ -108,7 +117,15 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
             Single<FileContentRes> uploadFileResponse = this.chatPythonWbtkjAPI.extractFile(multipartBody);
             FileContentRes result = uploadFileResponse.blockingGet();
 
+            log.debug("文件名: {}, hashId: {}, content size: {}", fileName, result.getData().getHashId(), result.getData().getContents().size());
+
             storage(result.getData(), userFileId);
+
+            try {
+                userService.deductBalance(userId, GeneralConstant.PARSE_FILE_VALUE);
+            } catch (MyServiceException e) {
+
+            }
 
             return;
         } catch (Exception e) {

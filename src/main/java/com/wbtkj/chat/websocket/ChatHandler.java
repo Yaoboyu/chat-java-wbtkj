@@ -103,6 +103,11 @@ public class ChatHandler extends TextWebSocketHandler {
     @Override
     @Transactional
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+        // 心跳检测
+        if (message.getPayload().equals("{{wbtkj_heartbeat}}")) {
+            session.sendMessage(new TextMessage("{{wbtkj_heartbeat_ack}}"));
+            return;
+        }
         // 取wsChatSession
         String key = RedisKeyConstant.ws_chat_session.getKey() + session.getId();
         WSChatSession wsChatSession = (WSChatSession) redisTemplate.opsForValue().get(key);
@@ -111,7 +116,7 @@ public class ChatHandler extends TextWebSocketHandler {
             session.close();
             return;
         }
-        log.info("[链接:{}, 用户:{}] 收到消息:{}", session.getId(), wsChatSession.getUserId(), message.getPayload());
+        log.debug("[链接:{}, 用户:{}] 收到消息:{}", session.getId(), wsChatSession.getUserId(), message.getPayload());
         WSChatMessage wsChatMessage = JSONUtil.toBean(message.getPayload(), WSChatMessage.class);
 
         if (StringUtils.isBlank(wsChatMessage.getMessage())) {

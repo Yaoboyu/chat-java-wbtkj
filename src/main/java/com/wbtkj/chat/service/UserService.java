@@ -73,4 +73,12 @@ public interface UserService {
      * @return
      */
     int deductBalance(long userId, int point);
+
+    /**
+     * 检查用户余额
+     * @param userId
+     * @param point
+     * @return
+     */
+    boolean checkBalance(long userId, int point);
 }

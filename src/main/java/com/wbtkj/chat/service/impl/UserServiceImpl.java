@@ -266,4 +266,11 @@ public class UserServiceImpl implements UserService {
         return userInfo.getBalance();
     }
 
+    public boolean checkBalance(long userId, int point) {
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
+        if (userInfo.getBalance() - point < 0) {
+            return false;
+        }
+        return true;
+    }
 }

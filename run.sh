@@ -11,6 +11,6 @@ else
     kill $PID
 fi
 # 停5秒
-sleep 2s
+#sleep 2s
 # 运行项目
-nohup java -jar chat-0.0.1-SNAPSHOT.jar > /dev/null --spring.profiles.active=test 2>&1 &
+nohup java -jar chat-0.0.1-SNAPSHOT.jar > /dev/null --spring.profiles.active=staging 2>&1 &

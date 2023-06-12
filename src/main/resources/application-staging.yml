@@ -47,3 +47,4 @@ chat-py-wbtkj:
 
 log:
   path: /var/log/chat-java-wbtkj
+  level: debug

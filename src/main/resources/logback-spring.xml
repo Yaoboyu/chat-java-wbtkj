@@ -14,9 +14,8 @@
     <!-- 格式化输出：%date表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度 %msg：日志消息，%n是换行符-->
     <property name="LOG_PATTERN" value="%date{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
 
-    <property name="LOG_LEVEL" value="INFO" />
-
     <springProperty scope="context" name="LOG_HOME" source="log.path"/>
+    <springProperty scope="context" name="LOG_LEVEL" source="log.level"/>
 
     <!-- 控制台输出日志 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
@@ -70,25 +69,26 @@
     </appender>
 
     <!-- project default level -->
-    <logger name="net.sh.rgface.serive" level="${LOG_LEVEL}" />
-    <logger name="com.wm.springbootjpa01" level="${LOG_LEVEL}"/>
-    <logger name="org.apache.ibatis" level="${LOG_LEVEL}"/>
-    <logger name="org.springframework" level="${LOG_LEVEL}"/>
-    <logger name="java.sql.Connection" level="${LOG_LEVEL}"/>
-    <logger name="java.sql.Statement" level="${LOG_LEVEL}"/>
-    <logger name="java.sql.PreparedStatement" level="${LOG_LEVEL}"/>
+<!--    <logger name="net.sh.rgface.serive" level="${LOG_LEVEL}" />-->
+<!--    <logger name="com.wm.springbootjpa01" level="${LOG_LEVEL}"/>-->
+<!--    <logger name="org.apache.ibatis" level="${LOG_LEVEL}"/>-->
+<!--    <logger name="org.springframework" level="${LOG_LEVEL}"/>-->
+<!--    <logger name="java.sql.Connection" level="${LOG_LEVEL}"/>-->
+<!--    <logger name="java.sql.Statement" level="${LOG_LEVEL}"/>-->
+<!--    <logger name="java.sql.PreparedStatement" level="${LOG_LEVEL}"/>-->
+<!--    <logger name="org.mongodb.driver" level="info"/>-->
 
     <!--设置为OFF,即屏蔽; 留下sqltiming作为INFO级别输出-->
-    <logger name="jdbc.connection" level="OFF"/>
-    <logger name="jdbc.resultset" level="OFF"/>
-    <logger name="jdbc.resultsettable" level="OFF"/>
-    <logger name="jdbc.audit" level="OFF"/>
-    <logger name="jdbc.sqltiming" level="INFO"/>
-    <logger name="jdbc.sqlonly" level="OFF"/>
-
+<!--    <logger name="jdbc.connection" level="OFF"/>-->
+<!--    <logger name="jdbc.resultset" level="OFF"/>-->
+<!--    <logger name="jdbc.resultsettable" level="OFF"/>-->
+<!--    <logger name="jdbc.audit" level="OFF"/>-->
+<!--    <logger name="jdbc.sqltiming" level="INFO"/>-->
+<!--    <logger name="jdbc.sqlonly" level="OFF"/>-->
+    <logger name="com.wbtkj.chat" level="${LOG_LEVEL}"/>
 
     <!-- 日志输出级别 -->
-    <root level="${LOG_LEVEL}">
+    <root level="info">
         <appender-ref ref="asyncAppender" />
         <appender-ref ref="console" />
     </root>
