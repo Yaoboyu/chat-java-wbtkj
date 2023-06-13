@@ -10,9 +10,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "production" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "production" ]
 
 jobs:
   build:
@@ -31,11 +31,11 @@ jobs:
       run: mvn package -DskipTests=true
 
     - name: 删除旧的jar包以及运行脚本
-      run: sshpass -p ${{secrets.REMOTE_PASSWORD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_HOST}} "cd /root/chat-java-wbtkj && rm -rf ./*"
+      run: sshpass -p ${{secrets.PROD_PASSWORD}} ssh -o StrictHostKeyChecking=no root@${{secrets.PROD_HOST}} "cd /root/chat-java-wbtkj && rm -rf ./*"
  
     - name: 上传jar包和启动脚本到服务器中
-      run: sshpass -p ${{secrets.REMOTE_PASSWORD}} scp -r -o StrictHostKeyChecking=no ./target/chat-0.0.1-SNAPSHOT.jar ./run.sh root@${{secrets.REMOTE_HOST}}:/root/chat-java-wbtkj
+      run: sshpass -p ${{secrets.PROD_PASSWORD}} scp -r -o StrictHostKeyChecking=no ./target/chat-0.0.1-SNAPSHOT.jar ./run-prod.sh root@${{secrets.PROD_HOST}}:/root/chat-java-wbtkj
  
     - name: 启动项目
-      run: sshpass -p ${{secrets.REMOTE_PASSWORD}} ssh -o StrictHostKeyChecking=no root@${{secrets.REMOTE_HOST}} "cd /root/chat-java-wbtkj && chmod +x run.sh && ./run.sh"
+      run: sshpass -p ${{secrets.PROD_PASSWORD}} ssh -o StrictHostKeyChecking=no root@${{secrets.PROD_HOST}} "cd /root/chat-java-wbtkj && chmod +x run-prod.sh && ./run-prod.sh"
 

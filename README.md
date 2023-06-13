@@ -81,19 +81,49 @@ nginx
 yum install nginx
 
 vim /etc/nginx/nginx.conf
+```
+
+```
 # 修改配置文件
+upstream chat-java-wbtkj{
+    server 42.192.145.155:10317;
+}
 server {
     listen       80;
     listen       [::]:80;
     server_name  _;
     root         /usr/share/nginx/html/;
     index index.html;
-    
+
+    location ^~/api {
+        rewrite ^/api/(.*)$ /$1 break;
+        proxy_pass http://chat-java-wbtkj;
+    }
+
     location / {
-            try_files $uri $uri/ /index.html;
+        try_files $uri $uri/ /index.html;
     }
 }
+# WebSocket 配置
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
 
+server {
+    listen 8888;
+    server_name _;
+
+    location / {
+      proxy_pass http://chat-java-wbtkj;
+      proxy_http_version 1.1;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection $connection_upgrade;
+    }
+}
+```
+
+```shell script
 # 启动 Nginx：
 systemctl start nginx
 # 重启 Nginx：
