@@ -1,7 +1,6 @@
 package com.wbtkj.chat.service.impl;
 
 import com.wbtkj.chat.api.ChatPythonWbtkjAPI;
-import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.constant.GeneralConstant;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.mapper.FileEmbeddingMapper;
@@ -81,15 +80,10 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
         log.debug("url: {}, hashId: {}, content size: {}", extractUrl.getUrl(), result.getData().getHashId(), result.getData().getContents().size());
 
         try {
-            storage(result.getData(), userFileId);
-            try {
-                userService.deductBalance(userId, GeneralConstant.PARSE_FILE_VALUE);
-            } catch (MyServiceException e) {
-
-            }
+            storage(result.getData(), userFileId, userId);
         } catch (Exception e) {
             e.printStackTrace();
-            storage(new FileContent(), userFileId);
+            storage(new FileContent(), userFileId, userId);
         }
 
         return;
@@ -120,18 +114,12 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
 
             log.debug("文件名: {}, hashId: {}, content size: {}", fileName, result.getData().getHashId(), result.getData().getContents().size());
 
-            storage(result.getData(), userFileId);
-
-            try {
-                userService.deductBalance(userId, GeneralConstant.PARSE_FILE_VALUE);
-            } catch (MyServiceException e) {
-
-            }
+            storage(result.getData(), userFileId, userId);
 
             return;
         } catch (Exception e) {
             e.printStackTrace();
-            storage(new FileContent(), userFileId);
+            storage(new FileContent(), userFileId, userId);
 
         } finally {
             // 操作完上面的文件 需要删除在根目录下生成的临时文件
@@ -143,17 +131,17 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
 
     @Override
     @Transactional
-    public void storage(FileContent fileContent, long userFileId) {
+    public void storage(FileContent fileContent, long userFileId, long userId) {
+        if (CollectionUtils.isEmpty(fileContent.getContents())) { // 不支持解析此网页或文件
+            fileService.addNameAfterParse(userFileId, "error");
+            return;
+        }
+
         FileEmbeddingExample fileEmbeddingExample = new FileEmbeddingExample();
         fileEmbeddingExample.createCriteria().andNameEqualTo(genName(fileContent.getHashId(), fileContent.getLang()));
         List<FileEmbedding> fileEmbeddings = fileEmbeddingMapper.selectByExample(fileEmbeddingExample);
         if (!CollectionUtils.isEmpty(fileEmbeddings)) { // 已经解析过相同的文件
             fileService.addNameAfterParse(userFileId, genName(fileContent.getHashId(), fileContent.getLang()));
-            return;
-        }
-
-        if (CollectionUtils.isEmpty(fileContent.getContents())) { // 不支持解析此网页或文件
-            fileService.addNameAfterParse(userFileId, "error");
             return;
         }
 
@@ -174,6 +162,12 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
         }
 
         log.info("添加embedding完毕，name：{}", genName(fileContent.getHashId(), fileContent.getLang()));
+
+        try {
+            userService.deductBalance(userId, GeneralConstant.PARSE_FILE_VALUE);
+        } catch (MyServiceException e) {
+
+        }
     }
 
     private String genName(String hash, String lang) {

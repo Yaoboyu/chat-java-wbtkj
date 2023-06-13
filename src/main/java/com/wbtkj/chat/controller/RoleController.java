@@ -60,4 +60,11 @@ public class RoleController {
                        @RequestParam(required = false) String name) {
         return Result.success(roleService.getShopRole(page, pageSize, type, name));
     }
+
+    @GetMapping("/market/page")
+    Result getShopPage(@RequestParam Integer pageSize,
+                       @RequestParam(required = false) Integer type,
+                       @RequestParam(required = false) String name) {
+        return Result.success(roleService.getShopPage(pageSize, type, name));
+    }
 }

@@ -14,6 +14,7 @@ import com.wbtkj.chat.pojo.model.*;
 import com.wbtkj.chat.pojo.vo.role.RoleBriefVO;
 import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
+import com.wbtkj.chat.pojo.vo.role.ShopPageVO;
 import com.wbtkj.chat.service.RoleService;
 import com.wbtkj.chat.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,6 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -105,6 +105,25 @@ public class RoleServiceImpl implements RoleService {
         List<RoleBriefVO> res = roles.stream().map(RoleBriefVO::new).collect(Collectors.toList());
 
         return res;
+    }
+
+    @Override
+    public ShopPageVO getShopPage(Integer pageSize, Integer type, String name) {
+        if (pageSize < 1) {
+            throw new MyServiceException("参数错误");
+        }
+        RoleExample roleExample = new RoleExample();
+        RoleExample.Criteria criteria = roleExample.createCriteria();
+        criteria.andIsMarketEqualTo(true);
+        if (type != null) {
+            criteria.andMarketTypeEqualTo(type);
+        }
+        if (name != null) {
+            criteria.andNicknameLike("%" + name + "%");
+        }
+        int roleSize = roleMapper.countByExample(roleExample);
+
+        return ShopPageVO.builder().totalPage((int) Math.ceil(roleSize / (double)pageSize)).totalCount(roleSize).build();
     }
 
     @Override
@@ -257,6 +276,7 @@ public class RoleServiceImpl implements RoleService {
         Query query = new Query(Criteria.where("chatSessionId").is(chatSessionId));
         Update update = new Update();
         update.set("messages", messageList);
+        // TODO: 检测是否超过最大大小
         UpdateResult updateResult = mongoTemplate.updateFirst(query, update, ChatSession.class);
         return updateResult.getModifiedCount() == 1;
     }

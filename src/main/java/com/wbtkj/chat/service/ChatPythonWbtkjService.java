@@ -9,5 +9,5 @@ public interface ChatPythonWbtkjService {
 
     void extractFile(MultipartFile multipartFile, long userFileId, long userId);
 
-    void storage(FileContent fileContent, long userFileId);
+    void storage(FileContent fileContent, long userFileId, long userId);
 }

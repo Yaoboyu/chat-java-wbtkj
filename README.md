@@ -2,33 +2,110 @@
 
 # 部署
 
+## 后端服务器
 git
 ```shell script
+yum install git
+
 git config --global user.name "sofice98"
 git config --global user.email "773508803@qq.com"
- 
 ```
 
 MongoDB
 ```shell script
+# 下载地址：https://www.mongodb.com/try/download/community
+wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-6.0.6.tgz
+tar -zxvf mongodb-linux-x86_64-rhel70-6.0.6.tgz
+mv mongodb-linux-x86_64-rhel70-6.0.6 /usr/local/mongodb
+cd /usr/local/mongodb
+mkdir -p /usr/local/mongodb/log  # 日志目录
+mkdir -p /usr/local/mongodb/data  # 数据库目录
+mkdir -p /usr/local/mongodb/conf  # 配置目录
+touch /usr/local/mongodb/log/mongodb.log  # 创建日志文件
+chmod 755 /usr/local/mongodb/log
+chmod 755 /usr/local/mongodb/data
+
+vim /usr/local/mongodb/conf/mongodb.conf
+```
+```
+systemLog:
+  destination: file
+  path: /usr/local/mongodb/log/mongod.log # log path
+  logAppend: true
+storage:
+  dbPath: /usr/local/mongodb/data # data directory
+  engine: wiredTiger #存储引擎
+  journal: #是否启用journal日志
+    enabled: true
+net:
+  bindIp: 0.0.0.0
+  port: 27017 # port
+processManagement:
+  fork: true
+security:
+  authorization: enabled
+```
+
+
+```shell script
+export PATH=/usr/local/mongodb/bin:$PATH
+# 启动
+mongod --config /usr/local/mongodb/conf/mongodb.conf
+# 关闭
+mongod --config /usr/local/mongodb/conf/mongodb.conf --shutdown
 sysctl -w net.ipv4.tcp_keepalive_time=120
+```
+mongo shell
+```
+vim /etc/yum.repos.d/mongodb-org-4.4.repo
+[mongodb-org-4.4]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.4/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
+
+yum install mongodb-org-shell
+mongo
+use admin
+db.createUser({user: "wbtkj", pwd: "wbtkjjktbw", roles: [{role: "root", db: "chat-wbtkj"}]})
+exit
+```
+
+redis
+```shell script
+yum install redis
+
+vim /etc/redis.conf
+daemonize yes
+requirepass wbtkjjktbw
+
+systemctl start redis
+systemctl enable redis
+```
+
+jdk
+```shell script
+yum install java-1.8.0-openjdk
 ```
 
 PostgreSQL
 ```shell script
+yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 yum install postgresql15-server postgresql15-contrib
+/usr/pgsql-15/bin/postgresql-15-setup initdb
 
-vi /var/lib/pgsql/15/data/pg_hba.conf
+vim /var/lib/pgsql/15/data/pg_hba.conf
 # 修改
 # IPv4 local connections:
 host    all      all       0.0.0.0/0      scram-sha-256
 
-vi /var/lib/pgsql/15/data/postgresql.conf
+vim /var/lib/pgsql/15/data/postgresql.conf
 # 修改
 # - Connection Settings -
 listen_addresses = '*'   # what IP address(es) to listen on;
 
-/usr/pgsql-15/bin/postgresql-15-setup initdb
+
 systemctl start postgresql-15
 systemctl enable postgresql-15
 
@@ -74,6 +151,17 @@ python3 setup.py install
 sudo ln -s /usr/local/python3/bin/pip /usr/bin/pip3
 pip3 install --upgrade pip
 pip3 -V
+```
+
+
+## 前端服务器
+
+git
+```shell script
+yum install git
+
+git config --global user.name "sofice98"
+git config --global user.email "773508803@qq.com"
 ```
 
 nginx
@@ -132,7 +220,7 @@ systemctl restart nginx
 systemctl enable nginx
 ```
 
-# 优化
+# TODO
 ## 后端
 1. UserRole表放入缓存
 2. 刷热度用消息队列

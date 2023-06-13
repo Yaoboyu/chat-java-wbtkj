@@ -49,15 +49,7 @@ public class ChatHandler extends TextWebSocketHandler {
     @Resource
     private RoleService roleService;
     @Resource
-    private RoleMapper roleMapper;
-    @Resource
-    private UserInfoMapper userInfoMapper;
-    @Resource
-    private UserRoleMapper userRoleMapper;
-    @Resource
     private OpenAiAuthInterceptor openAiAuthInterceptor;
-    //    @Resource
-//    private MongoTemplate mongoTemplate;
     @Resource
     RedisTemplate<Object, Object> redisTemplate;
 
@@ -210,6 +202,7 @@ public class ChatHandler extends TextWebSocketHandler {
         messages.add(Message.builder().content(wsChatMessage.getMessage()).role(Message.Role.USER).build());
 
         // 构造chatCompletion
+        //TODO: logitBias修改
         ChatCompletion chatCompletion = ChatCompletion.builder()
                 .model(role.getModel())
                 .messages(messages)
@@ -219,7 +212,7 @@ public class ChatHandler extends TextWebSocketHandler {
                 .maxTokens(role.getMaxTokens())
                 .presencePenalty(role.getPresencePenalty())
                 .frequencyPenalty(role.getFrequencyPenalty())
-                .logitBias(JSONUtil.toBean(role.getLogitBias(), HashMap.class))
+//                .logitBias(JSONUtil.toBean(role.getLogitBias(), HashMap.class))
                 .stream(true)
                 .build();
 

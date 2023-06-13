@@ -75,7 +75,9 @@ public class CDKEYServiceImpl implements CDKEYService {
             userInfoMapper.updateByPrimaryKey(userInfo);
 
             // 返现
-            userService.cashBack(userInfo.getUseInvCode(), rechargeRecord.getValue(), GeneralConstant.CDKEY_CASH_RATE);
+            if (userInfo.getUseInvCode() != null) {
+                userService.cashBack(userInfo.getUseInvCode(), rechargeRecord.getValue(), GeneralConstant.CDKEY_CASH_RATE);
+            }
 
         } else if (cdkeyInfo.get("type").equals(RechargeRecordType.VIP.getType())) {
             //TODO：vip
