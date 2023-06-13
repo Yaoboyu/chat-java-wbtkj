@@ -8,6 +8,7 @@ import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyStatus;
 import com.wbtkj.chat.pojo.model.ThirdPartyModelKey;
 import com.wbtkj.chat.pojo.model.ThirdPartyModelKeyExample;
 import com.wbtkj.chat.service.ThirdPartyModelKeyService;
+import com.wbtkj.chat.utils.TimeUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +49,7 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
         thirdPartyModelKey.setModel(model);
         thirdPartyModelKey.setKey(key);
         thirdPartyModelKey.setStatus(ThirdPartyModelKeyStatus.ENABLED.getStatus());
-        Date date = new Date();
+        Date date = TimeUtils.getTimeGMT8();
         thirdPartyModelKey.setCreateTime(date);
         thirdPartyModelKey.setUpdateTime(date);
         int insert = thirdPartyModelKeyMapper.insert(thirdPartyModelKey);

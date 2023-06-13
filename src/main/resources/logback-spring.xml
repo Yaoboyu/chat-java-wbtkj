@@ -86,6 +86,7 @@
 <!--    <logger name="jdbc.sqltiming" level="INFO"/>-->
 <!--    <logger name="jdbc.sqlonly" level="OFF"/>-->
     <logger name="com.wbtkj.chat" level="${LOG_LEVEL}"/>
+    <logger name="com.wbtkj.chat.mapper" level="info"/>
 
     <!-- 日志输出级别 -->
     <root level="info">

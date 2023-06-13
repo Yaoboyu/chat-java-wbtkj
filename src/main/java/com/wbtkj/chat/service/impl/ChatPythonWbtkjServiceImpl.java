@@ -109,6 +109,7 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
         try {
             file = File.createTempFile(fileName, prefix);
             multipartFile.transferTo(file);
+            log.debug("文件：{} 复制成功", fileName);
 
             // 创建 RequestBody，用于封装构建RequestBody
             RequestBody fileBody = RequestBody.create(file, MediaType.parse("multipart/form-data"));

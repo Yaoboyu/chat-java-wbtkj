@@ -62,9 +62,18 @@ public interface UserService {
      * 返现
      * @param userId 增加返现的账户
      * @param point 返现点数
+     * @param rate 返现比例
      * @return
      */
-    boolean cashBack(Long userId, int point);
+    boolean cashBack(long userId, int point, double rate);
+
+    /**
+     * 增加用户余额
+     * @param userId
+     * @param point
+     * @return
+     */
+    int addBalance(long userId, int point);
 
     /**
      * 扣除用户余额

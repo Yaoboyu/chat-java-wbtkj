@@ -1,6 +1,7 @@
 package com.wbtkj.chat.service.impl;
 
 import com.wbtkj.chat.config.ThreadLocalConfig;
+import com.wbtkj.chat.constant.GeneralConstant;
 import com.wbtkj.chat.exception.MyException;
 import com.wbtkj.chat.mapper.RechargeRecordMapper;
 import com.wbtkj.chat.mapper.UserInfoMapper;
@@ -13,6 +14,7 @@ import com.wbtkj.chat.pojo.model.UserInfo;
 import com.wbtkj.chat.service.CDKEYService;
 import com.wbtkj.chat.service.UserService;
 import com.wbtkj.chat.utils.CardGenerator;
+import com.wbtkj.chat.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +65,7 @@ public class CDKEYServiceImpl implements CDKEYService {
         rechargeRecord.setType(cdkeyInfo.get("type"));
         rechargeRecord.setCdkey(cdkey);
         rechargeRecord.setValue(cdkeyInfo.get("value"));
-        rechargeRecord.setUseTime(new Date());
+        rechargeRecord.setUseTime(TimeUtils.getTimeGMT8());
         rechargeRecordMapper.insert(rechargeRecord);
 
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
@@ -73,7 +75,7 @@ public class CDKEYServiceImpl implements CDKEYService {
             userInfoMapper.updateByPrimaryKey(userInfo);
 
             // 返现
-            userService.cashBack(userInfo.getUseInvCode(), rechargeRecord.getValue());
+            userService.cashBack(userInfo.getUseInvCode(), rechargeRecord.getValue(), GeneralConstant.CDKEY_CASH_RATE);
 
         } else if (cdkeyInfo.get("type").equals(RechargeRecordType.VIP.getType())) {
             //TODO：vip

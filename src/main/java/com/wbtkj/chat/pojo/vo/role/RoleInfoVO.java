@@ -2,6 +2,7 @@ package com.wbtkj.chat.pojo.vo.role;
 
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.model.Role;
+import com.wbtkj.chat.utils.TimeUtils;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -67,8 +68,8 @@ public class RoleInfoVO {
         role.setStop("#####");
         role.setLikes(0);
         role.setHot(0);
-        role.setCreateTime(new Date());
-        role.setUpdateTime(new Date());
+        role.setCreateTime(TimeUtils.getTimeGMT8());
+        role.setUpdateTime(TimeUtils.getTimeGMT8());
         return role;
     }
 
@@ -94,7 +95,7 @@ public class RoleInfoVO {
         role.setIsMarket(this.isMarket);
         role.setFileNames(this.fileNames);
         role.setMarketType(this.marketType);
-        role.setUpdateTime(new Date());
+        role.setUpdateTime(TimeUtils.getTimeGMT8());
         return role;
     }
 }

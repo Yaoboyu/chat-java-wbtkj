@@ -15,6 +15,7 @@ import com.wbtkj.chat.pojo.vo.user.UserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 import com.wbtkj.chat.service.UserService;
 import com.wbtkj.chat.utils.JwtUtils;
+import com.wbtkj.chat.utils.TimeUtils;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
             throw new MyServiceException("账号已被注册!");
         }
 
-        if(userRegisterVO.getPwd().length() < 8) {
+        if(userRegisterVO.getPwd() == null || userRegisterVO.getPwd().length() < 8) {
             throw new MyServiceException("密码至少8位！");
         }
 
@@ -76,10 +77,12 @@ public class UserServiceImpl implements UserService {
             if(CollectionUtils.isEmpty(userInfoList)) {
                 throw new MyServiceException("邀请码错误！");
             }
-            useInvCode = userInfoList.get(0).getId();
+            UserInfo userInfo = userInfoList.get(0);
+            useInvCode = userInfo.getId();
+            addBalance(useInvCode, GeneralConstant.INVITE_GIFT_BALANCE);
         }
 
-        Date date = new Date();
+        Date date = TimeUtils.getTimeGMT8();
 
         UserInfo newUserInfo = new UserInfo();
         newUserInfo.setEmail(userRegisterVO.getEmail());
@@ -128,7 +131,7 @@ public class UserServiceImpl implements UserService {
         }
 
         newUserInfo.setPwd(MD5Utils.code(pwd + newUserInfo.getSalt()));
-        newUserInfo.setUpdateTime(new Date());
+        newUserInfo.setUpdateTime(TimeUtils.getTimeGMT8());
 
         userInfoMapper.updateByPrimaryKey(newUserInfo);
 
@@ -173,7 +176,7 @@ public class UserServiceImpl implements UserService {
             oldUserInfo.setRemark(userInfo.getRemark());
         }
 
-        oldUserInfo.setUpdateTime(new Date());
+        oldUserInfo.setUpdateTime(TimeUtils.getTimeGMT8());
 
         userInfoMapper.updateByPrimaryKey(oldUserInfo);
 
@@ -238,6 +241,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserInfoVO getUserInfo() {
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
         UserInfoVO userInfoVO = new UserInfoVO(userInfo);
@@ -245,17 +249,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean cashBack(Long userId, int point) {
-        if (userId == null) {
-            return false;
-        }
+    @Transactional
+    public boolean cashBack(long userId, int point, double rate) {
         UserInfo roleOwner = userInfoMapper.selectByPrimaryKey(userId);
-        roleOwner.setCash(roleOwner.getCash() + point * GeneralConstant.POINT_RATE * GeneralConstant.CASH_RATE);
+        roleOwner.setCash(roleOwner.getCash() + point * GeneralConstant.POINT_RATE * rate);
         userInfoMapper.updateByPrimaryKey(roleOwner);
         return true;
     }
 
     @Override
+    @Transactional
+    public int addBalance(long userId, int point) {
+        UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
+        userInfo.setBalance(userInfo.getBalance() + point);
+        userInfoMapper.updateByPrimaryKey(userInfo);
+        return userInfo.getBalance();
+    }
+
+
+    @Override
+    @Transactional
     public int deductBalance(long userId, int point) {
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
         if (userInfo.getBalance() - point < 0) {
@@ -266,6 +279,8 @@ public class UserServiceImpl implements UserService {
         return userInfo.getBalance();
     }
 
+    @Override
+    @Transactional
     public boolean checkBalance(long userId, int point) {
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
         if (userInfo.getBalance() - point < 0) {

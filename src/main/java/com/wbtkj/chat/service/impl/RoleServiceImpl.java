@@ -15,6 +15,7 @@ import com.wbtkj.chat.pojo.vo.role.RoleBriefVO;
 import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
 import com.wbtkj.chat.service.RoleService;
+import com.wbtkj.chat.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
@@ -230,7 +231,7 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public ChatSession addChatSession(long userId, long roleId) {
         ChatSession messages = ChatSession.builder()
-                .roleId(roleId).userId(userId).createDate(new Date())
+                .roleId(roleId).userId(userId).createDate(TimeUtils.getTimeGMT8())
                 .messages(new ArrayList<>())
                 .build();
         return mongoTemplate.save(messages);

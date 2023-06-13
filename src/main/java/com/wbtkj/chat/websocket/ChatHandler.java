@@ -150,7 +150,7 @@ public class ChatHandler extends TextWebSocketHandler {
         session.sendMessage(new TextMessage("{{wbtkj_newBalance}}:" + newBalance));
         // 返现
         if (role.getUserId() != 0 && !role.getUserId().equals(wsChatSession.getUserId())) { //不是官方角色并且不是角色主人
-            userService.cashBack(role.getUserId(), point);
+            userService.cashBack(role.getUserId(), 1, GeneralConstant.ROLE_CASH_RATE);
         }
         // 增加UserRoleUsed
         roleService.addUserRoleUsed(role.getId(), wsChatSession.getUserId(), point);

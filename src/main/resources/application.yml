@@ -11,16 +11,15 @@ spring:
   data:
     mongodb:
       uri: mongodb://wbtkj:wbtkjjktbw@42.192.145.155:27017/chat-wbtkj
-      authentication-database:
   redis:
     host: 42.192.145.155
     port: 6379
     password: wbtkjjktbw
   application:
     name: chat-java-wbtkj
-  servlet:
-    multipart:
-      max-file-size: 20MB
+    servlet:
+      multipart:
+        max-file-size: 50MB
 
 mybatis:
   configuration:
@@ -44,6 +43,3 @@ chatgpt:
 
 chat-py-wbtkj:
   apiHost: http://localhost:10318/
-
-log:
-  path: D:/ProgramData/Springbootlog

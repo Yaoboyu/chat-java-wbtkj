@@ -8,7 +8,7 @@ public enum RedisKeyConstant {
 
     verify_code("verify_code:", "验证码", 5),
     ws_chat_session("ws_chat_session:", "websocket chat session", -1),
-    role("role:", "角色", 60 * 12), // 定时任务刷新到数据库
+    role("role:", "角色", 60 * 6), // 定时任务刷新到数据库
     ;
 
     private String key;

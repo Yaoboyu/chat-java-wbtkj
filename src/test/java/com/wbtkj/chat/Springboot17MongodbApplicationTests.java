@@ -2,6 +2,7 @@ package com.wbtkj.chat;
 
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.model.ChatSession;
+import com.wbtkj.chat.utils.TimeUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +24,7 @@ class Springboot17MongodbApplicationTests {
     @Test
     void contextLoads() {
         ChatSession messages = ChatSession.builder()
-                .roleId(1l).userId(1l).createDate(new Date())
+                .roleId(1l).userId(1l).createDate(TimeUtils.getTimeGMT8())
                 .messages(Arrays.asList(new Message("user","你好",""), new Message("assistant","你好，有什么可以帮助你的？","")))
                 .build();
         mongoTemplate.save(messages);
