@@ -9,6 +9,7 @@ import com.wbtkj.chat.pojo.model.ThirdPartyModelKey;
 import com.wbtkj.chat.pojo.model.ThirdPartyModelKeyExample;
 import com.wbtkj.chat.service.ThirdPartyModelKeyService;
 import com.wbtkj.chat.utils.MyUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService {
     @Resource
     ThirdPartyModelKeyMapper thirdPartyModelKeyMapper;
@@ -117,6 +119,7 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
                 .andStatusEqualTo(ThirdPartyModelKeyStatus.ENABLED.getStatus());
         List<ThirdPartyModelKey> thirdPartyModelKeys = thirdPartyModelKeyMapper.selectByExample(thirdPartyModelKeyExample);
         List<String> res = thirdPartyModelKeys.stream().map(ThirdPartyModelKey::getKey).collect(Collectors.toList());
+        log.info("内存中GPT3.5 key个数: {}", res.size());
         return res;
     }
 
@@ -129,6 +132,7 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
                 .andStatusEqualTo(ThirdPartyModelKeyStatus.ENABLED.getStatus());
         List<ThirdPartyModelKey> thirdPartyModelKeys = thirdPartyModelKeyMapper.selectByExample(thirdPartyModelKeyExample);
         List<String> res = thirdPartyModelKeys.stream().map(ThirdPartyModelKey::getKey).collect(Collectors.toList());
+        log.info("内存中GPT4 key个数: {}", res.size());
         return res;
     }
 }

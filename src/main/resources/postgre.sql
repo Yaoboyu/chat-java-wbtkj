@@ -108,7 +108,12 @@ INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", contex
 VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=GPT&background=70a99b', '默认GPT3.5角色', '有什么需要帮助的？', 'GPT3.5', '', 10, 1000, 1, 1, 0, 0, null, null, true, 0, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
 INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
 VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=GPT&background=70a99b', '默认GPT4角色', '有什么需要帮助的？', 'GPT4', '', 10, 1000, 1, 1, 0, 0, null, null, true, 0, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
-
+INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=去重&background=70a99b', '论文去重', '请发给我要去重的句子', 'GPT3.5', '我希望你担任论文去重专家。我发送给你的句子，你应尽可能多地使用同义词替换其中的词语，例如避免改为规避，如果改为若是，每个句子必须保证13个字符不能相同，汉字算两个字符，英文单词算一个，不能仅通过删除、增加、修改一两个字符的方式，可以在无法替换的句子中间插入一些无意义又无影响的词语来规避，也可以在不影响其含义的情况下修改语序，可以使用缩写的方式，必须严格遵守这条规则。', 16, 1200, 0.5, 1, 0, 0, null, null, true, 6, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=抖音文案助手&background=70a99b', '抖音文案助手', '您需要什么产品的推广文案？', 'GPT3.5', '你是一个抖音视频的电商文案生成助手，可以自动生成产品名称以及优质的电商文案。', 6, 1000, 0.6, 1, 0, 0, null, null, true, 5, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=运势&background=70a99b', '让老夫给你算一卦', '您需要什么产品的推广文案？', 'GPT3.5', '你是一个抖音视频的电商文案生成助手，可以自动生成产品名称以及优质的电商文案。', 6, 1000, 0.6, 1, 0, 0, null, null, true, 5, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
 -- --------------------------------------
 drop table if exists "third_party_model_key";
 CREATE TABLE "third_party_model_key" (
@@ -133,10 +138,11 @@ COMMENT ON COLUMN "third_party_model_key"."create_time" IS '创建时间';
 COMMENT ON COLUMN "third_party_model_key"."update_time" IS '修改时间';
 
 INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
 
 -- --------------------------------------
 drop table if exists "user_info";

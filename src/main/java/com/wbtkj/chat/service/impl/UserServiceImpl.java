@@ -281,7 +281,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    @Async
     public boolean cashBack(long userId, int point, double rate) {
         UserInfo roleOwner = userInfoMapper.selectByPrimaryKey(userId);
         roleOwner.setCash(roleOwner.getCash() + point * GeneralConstant.POINT_RATE * rate);

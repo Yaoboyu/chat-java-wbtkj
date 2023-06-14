@@ -178,12 +178,12 @@ public class TikTokensUtil {
         int tokensPerMessage = 0;
         int tokensPerName = 0;
         //3.5统一处理
-        if (modelName.equals("gpt-3.5-turbo-0301") || modelName.equals("gpt-3.5-turbo")) {
+        if (modelName.equals("gpt-3.5-turbo-16k") || modelName.equals("gpt-3.5-turbo")) {
             tokensPerMessage = 4;
             tokensPerName = -1;
         }
         //4.0统一处理
-        if (modelName.equals("gpt-4") || modelName.equals("gpt-4-0314")) {
+        if (modelName.equals("gpt-4") || modelName.equals("gpt-4-32k")) {
             tokensPerMessage = 3;
             tokensPerName = 1;
         }

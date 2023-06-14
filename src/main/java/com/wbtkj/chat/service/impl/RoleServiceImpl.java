@@ -270,7 +270,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    @Async
     public boolean updateChatSession(String chatSessionId, List<Message> messageList) {
         if (StringUtils.isBlank(chatSessionId) || CollectionUtils.isEmpty(messageList)) {
             return false;
@@ -299,7 +298,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    @Async
     public int addUserRoleUsed(long roleId, long userId, int point) {
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andRoleIdEqualTo(roleId).andUserIdEqualTo(userId);
@@ -339,7 +337,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    @Async
     public void setRole(Role role){
         if (role == null) {
             return;

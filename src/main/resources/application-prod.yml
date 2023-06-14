@@ -20,4 +20,4 @@ log:
   level: info
 
 cros:
-  allow-host: 127.0.0.1
+  allow-host: 147.161.32.40

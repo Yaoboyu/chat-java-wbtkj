@@ -52,8 +52,7 @@ public class GeneralConstant {
     public static final int PARSE_FILE_VALUE = 5;
 
     static {
-        THIRD_MODEL_VALUE.put("gpt-3.5-turbo", 1);
-        THIRD_MODEL_VALUE.put("gpt-4", 30);
-        THIRD_MODEL_VALUE.put("gpt-4-32k", 30);
+        THIRD_MODEL_VALUE.put("GPT3.5", 1);
+        THIRD_MODEL_VALUE.put("GPT4", 30);
     }
 }
