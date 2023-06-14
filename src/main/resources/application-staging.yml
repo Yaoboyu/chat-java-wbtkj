@@ -1,3 +1,6 @@
 log:
   path: /var/log/chat-java-wbtkj
   level: debug
+
+cros:
+  allow-host: 127.0.0.1

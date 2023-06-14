@@ -18,3 +18,6 @@ chatgpt:
 log:
   path: /var/log/chat-java-wbtkj
   level: info
+
+cros:
+  allow-host: 127.0.0.1

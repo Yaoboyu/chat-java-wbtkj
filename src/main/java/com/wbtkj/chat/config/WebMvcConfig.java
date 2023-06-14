@@ -3,6 +3,7 @@ package com.wbtkj.chat.config;
 import com.wbtkj.chat.filter.AdminLoginInterceptor;
 import com.wbtkj.chat.filter.UserLoginInterceptor;
 import com.wbtkj.chat.filter.WebSocketInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -17,6 +18,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
     private UserLoginInterceptor userLoginInterceptor;
     @Resource
     private AdminLoginInterceptor adminLoginInterceptor;
+    @Value("${cros.allow-host}")
+    private String allowHost;
 
     /**
      * 注册拦截器
@@ -38,7 +41,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")      // 设置映射
-                .allowedOriginPatterns("*")        // 设置域
+                .allowedOriginPatterns(allowHost)        // 设置域
                 .allowedMethods("*")// 设置请求的方式GET、POST等
                 .allowCredentials(true)            // 设置是否携带cookie
                 .maxAge(3600)                      // 设置设置的有效期 秒单位

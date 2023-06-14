@@ -2,6 +2,7 @@ package com.wbtkj.chat.config;
 
 import com.wbtkj.chat.websocket.ChatHandler;
 import com.wbtkj.chat.filter.WebSocketInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -25,17 +26,14 @@ public class WebSocketConfig implements WebSocketConfigurer {
     private ChatHandler chatHandler;
     @Resource
     private WebSocketInterceptor webSocketInterceptor;
+    @Value("${cros.allow-host}")
+    private String allowHost;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
                 .addHandler(chatHandler, "/chat")
                 .addInterceptors(webSocketInterceptor)
-                .setAllowedOrigins("*");
+                .setAllowedOrigins(allowHost);
     }
-
-//    @Bean
-//    public ServerEndpointExporter serverEndpointExporter() {
-//        return new ServerEndpointExporter();
-//    }
 }
