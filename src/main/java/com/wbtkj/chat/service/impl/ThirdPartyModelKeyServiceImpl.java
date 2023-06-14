@@ -3,12 +3,12 @@ package com.wbtkj.chat.service.impl;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.filter.OpenAiAuthInterceptor;
 import com.wbtkj.chat.mapper.ThirdPartyModelKeyMapper;
-import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyStatus;
+import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyType;
 import com.wbtkj.chat.pojo.model.ThirdPartyModelKey;
 import com.wbtkj.chat.pojo.model.ThirdPartyModelKeyExample;
 import com.wbtkj.chat.service.ThirdPartyModelKeyService;
-import com.wbtkj.chat.utils.TimeUtils;
+import com.wbtkj.chat.utils.MyUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,11 +45,15 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
             throw new MyServiceException("第三方key已存在");
         }
 
+        if (!MyUtils.checkModel(model)) {
+            throw new MyServiceException("模型不可用");
+        }
+
         ThirdPartyModelKey thirdPartyModelKey = new ThirdPartyModelKey();
         thirdPartyModelKey.setModel(model);
         thirdPartyModelKey.setKey(key);
         thirdPartyModelKey.setStatus(ThirdPartyModelKeyStatus.ENABLED.getStatus());
-        Date date = TimeUtils.getTimeGMT8();
+        Date date = MyUtils.getTimeGMT8();
         thirdPartyModelKey.setCreateTime(date);
         thirdPartyModelKey.setUpdateTime(date);
         int insert = thirdPartyModelKeyMapper.insert(thirdPartyModelKey);
@@ -109,7 +113,7 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
     public List<String> getEnableGpt3Keys() {
         ThirdPartyModelKeyExample thirdPartyModelKeyExample = new ThirdPartyModelKeyExample();
         thirdPartyModelKeyExample.createCriteria()
-                .andModelEqualTo(ChatCompletion.Model.GPT_3_5_TURBO.getName())
+                .andModelEqualTo(ThirdPartyModelKeyType.GPT3_5.getName())
                 .andStatusEqualTo(ThirdPartyModelKeyStatus.ENABLED.getStatus());
         List<ThirdPartyModelKey> thirdPartyModelKeys = thirdPartyModelKeyMapper.selectByExample(thirdPartyModelKeyExample);
         List<String> res = thirdPartyModelKeys.stream().map(ThirdPartyModelKey::getKey).collect(Collectors.toList());
@@ -121,11 +125,10 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
     public List<String> getEnableGpt4Keys() {
         ThirdPartyModelKeyExample thirdPartyModelKeyExample = new ThirdPartyModelKeyExample();
         thirdPartyModelKeyExample.createCriteria()
-                .andModelEqualTo(ChatCompletion.Model.GPT_4.getName())
+                .andModelEqualTo(ThirdPartyModelKeyType.GPT4.getName())
                 .andStatusEqualTo(ThirdPartyModelKeyStatus.ENABLED.getStatus());
         List<ThirdPartyModelKey> thirdPartyModelKeys = thirdPartyModelKeyMapper.selectByExample(thirdPartyModelKeyExample);
         List<String> res = thirdPartyModelKeys.stream().map(ThirdPartyModelKey::getKey).collect(Collectors.toList());
         return res;
     }
-
 }

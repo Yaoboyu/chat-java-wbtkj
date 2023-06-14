@@ -7,6 +7,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.wbtkj.chat.config.StaticContextAccessor;
 import com.wbtkj.chat.exception.MyException;
+import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.dto.openai.CommonError;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.common.OpenAiResponse;
@@ -101,13 +102,18 @@ public class OpenAiAuthInterceptor implements Interceptor {
         Request original = chain.request();
         String model = original.header("model");
         if (!StringUtils.hasLength(model)) {
-            model = ChatCompletion.Model.GPT_3_5_TURBO.getName();
+            model = ChatCompletion.Model.DEFAULT_3_5.getName();
         }
         String key = null;
-        if(model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())) {
+        if(model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())
+        || model.equals(ChatCompletion.Model.GPT_3_5_TURBO_16K.getName())) {
             key = getGpt3Key();
-        } else if (model.equals(ChatCompletion.Model.GPT_4.getName())) {
+        } else if (model.equals(ChatCompletion.Model.GPT_4.getName())
+        || model.equals(ChatCompletion.Model.GPT_4_32K.getName())) {
             key = getGpt4Key();
+        }
+        if (key == null) {
+            throw new MyServiceException("不支持此模型");
         }
         Request request = this.auth(key, original);
         // 请求
@@ -178,7 +184,9 @@ public class OpenAiAuthInterceptor implements Interceptor {
                     "chat-java-wbtkj",
                     "[告警] gpt3 key 只剩" + gpt3Key.size() + "个");
             log.error(CommonError.NO_ACTIVE_API_KEYS.getMsg());
-            throw new MyException("gpt-3.5-turbo暂不可用");
+        }
+        if (gpt3Key.size() <= 0) {
+            throw new MyException("GPT3.5暂不可用");
         }
         return gpt3Key.get(getGpt3KeyIndex());
     }
@@ -189,15 +197,19 @@ public class OpenAiAuthInterceptor implements Interceptor {
 //                    "chat-java-wbtkj",
 //                    "[告警] gpt4 key 只剩" + gpt4Key.size() + "个");
             log.error(CommonError.NO_ACTIVE_API_KEYS.getMsg());
-            throw new MyException("gpt-4暂不可用");
+        }
+        if (gpt4Key.size() <= 0) {
+            throw new MyException("GPT4暂不可用");
         }
         return gpt4Key.get(getGpt4KeyIndex());
     }
 
     public boolean hasKey(String model) {
-        if (model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())) {
+        if (model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())
+        || model.equals(ChatCompletion.Model.GPT_3_5_TURBO_16K.getName())) {
             return !CollectionUtils.isEmpty(gpt3Key);
-        } else if ((model.equals(ChatCompletion.Model.GPT_4.getName()))) {
+        } else if (model.equals(ChatCompletion.Model.GPT_4.getName())
+        || model.equals(ChatCompletion.Model.GPT_4_32K.getName())) {
             return !CollectionUtils.isEmpty(gpt4Key);
         }
         return false;

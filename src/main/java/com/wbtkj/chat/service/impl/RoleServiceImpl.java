@@ -16,7 +16,7 @@ import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
 import com.wbtkj.chat.pojo.vo.PageInfoVO;
 import com.wbtkj.chat.service.RoleService;
-import com.wbtkj.chat.utils.TimeUtils;
+import com.wbtkj.chat.utils.MyUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
@@ -26,6 +26,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -250,7 +251,7 @@ public class RoleServiceImpl implements RoleService {
     @Transactional
     public ChatSession addChatSession(long userId, long roleId) {
         ChatSession messages = ChatSession.builder()
-                .roleId(roleId).userId(userId).createDate(TimeUtils.getTimeGMT8())
+                .roleId(roleId).userId(userId).createDate(MyUtils.getTimeGMT8())
                 .messages(new ArrayList<>())
                 .build();
         return mongoTemplate.save(messages);
@@ -269,6 +270,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
+    @Async
     public boolean updateChatSession(String chatSessionId, List<Message> messageList) {
         if (StringUtils.isBlank(chatSessionId) || CollectionUtils.isEmpty(messageList)) {
             return false;
@@ -297,6 +299,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
+    @Async
     public int addUserRoleUsed(long roleId, long userId, int point) {
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andRoleIdEqualTo(roleId).andUserIdEqualTo(userId);
@@ -320,6 +323,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public Role getRole(long roleId) {
         try {
             Role role = (Role) redisTemplate.opsForValue().get("Role:" + roleId);
@@ -334,6 +338,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
+    @Async
     public void setRole(Role role){
         if (role == null) {
             return;

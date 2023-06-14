@@ -7,14 +7,13 @@ import com.wbtkj.chat.mapper.RechargeRecordMapper;
 import com.wbtkj.chat.mapper.UserInfoMapper;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.dto.rechargeRecord.RechargeRecordType;
-import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.RechargeRecord;
 import com.wbtkj.chat.pojo.model.RechargeRecordExample;
 import com.wbtkj.chat.pojo.model.UserInfo;
 import com.wbtkj.chat.service.CDKEYService;
 import com.wbtkj.chat.service.UserService;
 import com.wbtkj.chat.utils.CardGenerator;
-import com.wbtkj.chat.utils.TimeUtils;
+import com.wbtkj.chat.utils.MyUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,7 +64,7 @@ public class CDKEYServiceImpl implements CDKEYService {
         rechargeRecord.setType(cdkeyInfo.get("type"));
         rechargeRecord.setCdkey(cdkey);
         rechargeRecord.setValue(cdkeyInfo.get("value"));
-        rechargeRecord.setUseTime(TimeUtils.getTimeGMT8());
+        rechargeRecord.setUseTime(MyUtils.getTimeGMT8());
         rechargeRecordMapper.insert(rechargeRecord);
 
         UserInfo userInfo = userInfoMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());

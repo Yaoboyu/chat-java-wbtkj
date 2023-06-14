@@ -105,7 +105,9 @@ COMMENT ON COLUMN "role"."create_time" IS '创建时间';
 COMMENT ON COLUMN "role"."update_time" IS '修改时间';
 
 INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
-VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=GPT&background=70a99b', '默认GPT3.5角色', '有什么需要帮助的？', 'gpt-3.5-turbo', '', 10, 1000, 1, 1, 0, 0, null, null, true, 9, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=GPT&background=70a99b', '默认GPT3.5角色', '有什么需要帮助的？', 'GPT3.5', '', 10, 1000, 1, 1, 0, 0, null, null, true, 0, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=GPT&background=70a99b', '默认GPT4角色', '有什么需要帮助的？', 'GPT4', '', 10, 1000, 1, 1, 0, 0, null, null, true, 0, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
 
 -- --------------------------------------
 drop table if exists "third_party_model_key";
@@ -130,12 +132,11 @@ COMMENT ON COLUMN "third_party_model_key"."status" IS '0启用，-1禁用，1余
 COMMENT ON COLUMN "third_party_model_key"."create_time" IS '创建时间';
 COMMENT ON COLUMN "third_party_model_key"."update_time" IS '修改时间';
 
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'gpt-3.5-turbo', 0, '2023-04-06 09:54:02', '2023-04-06 09:54:02');
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'gpt-3.5-turbo', 0, '2023-04-06 09:54:02', '2023-04-06 09:54:02');
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'gpt-4', 1, '2023-04-06 09:54:02', '2023-04-06 09:54:02');
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'gpt-3.5-turbo', 0, '2023-05-31 20:26:15', '2023-05-31 20:26:19');
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'gpt-3.5-turbo', 0, '2023-05-31 20:27:31', '2023-05-31 20:27:33');
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'gpt-3.5-turbo', 0, '2023-05-31 20:28:00', '2023-05-31 20:28:02');
+INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
 
 -- --------------------------------------
 drop table if exists "user_info";
@@ -179,9 +180,6 @@ COMMENT ON COLUMN "user_info"."use_inv_code" IS '使用的邀请码';
 COMMENT ON COLUMN "user_info"."create_time" IS '创建时间';
 COMMENT ON COLUMN "user_info"."update_time" IS '修改时间';
 
-INSERT INTO "user_info" (email, pwd, salt, status, vip_start_time, vip_end_time, balance, cash, remark, my_inv_code, use_inv_code, create_time, update_time)
-VALUES ('soficesi@163.com', '255db5f2d7246cba', '8F4FI', 0, null, null, 1000, 0, '', '40D1FB7', null, CURRENT_DATE, CURRENT_DATE);
-
 -- --------------------------------------
 drop table if exists "user_role";
 CREATE TABLE "user_role" (
@@ -208,7 +206,6 @@ COMMENT ON COLUMN "user_role"."used" IS '该用户在该角色上使用的点数
 COMMENT ON COLUMN "user_role"."status" IS '状态。0正常使用，-1软删除';
 COMMENT ON COLUMN "user_role"."top" IS '是否置顶。false不置顶，true置顶';
 
-INSERT INTO "user_role" (user_id, role_id, used, status, top) VALUES (1,1,0,0,false);
 
 -- --------------------------------------
 drop table if exists "user_file";

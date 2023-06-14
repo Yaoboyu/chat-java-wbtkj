@@ -17,10 +17,11 @@ import com.wbtkj.chat.pojo.vo.user.UserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 import com.wbtkj.chat.service.UserService;
 import com.wbtkj.chat.utils.JwtUtils;
-import com.wbtkj.chat.utils.TimeUtils;
+import com.wbtkj.chat.utils.MyUtils;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
             addBalance(useInvCode, GeneralConstant.INVITE_GIFT_BALANCE);
         }
 
-        Date date = TimeUtils.getTimeGMT8();
+        Date date = MyUtils.getTimeGMT8();
 
         UserInfo newUserInfo = new UserInfo();
         newUserInfo.setEmail(userRegisterVO.getEmail());
@@ -132,7 +133,7 @@ public class UserServiceImpl implements UserService {
         }
 
         newUserInfo.setPwd(MD5Utils.code(pwd + newUserInfo.getSalt()));
-        newUserInfo.setUpdateTime(TimeUtils.getTimeGMT8());
+        newUserInfo.setUpdateTime(MyUtils.getTimeGMT8());
 
         userInfoMapper.updateByPrimaryKey(newUserInfo);
 
@@ -177,7 +178,7 @@ public class UserServiceImpl implements UserService {
             oldUserInfo.setRemark(userInfo.getRemark());
         }
 
-        oldUserInfo.setUpdateTime(TimeUtils.getTimeGMT8());
+        oldUserInfo.setUpdateTime(MyUtils.getTimeGMT8());
 
         userInfoMapper.updateByPrimaryKey(oldUserInfo);
 
@@ -280,6 +281,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @Async
     public boolean cashBack(long userId, int point, double rate) {
         UserInfo roleOwner = userInfoMapper.selectByPrimaryKey(userId);
         roleOwner.setCash(roleOwner.getCash() + point * GeneralConstant.POINT_RATE * rate);

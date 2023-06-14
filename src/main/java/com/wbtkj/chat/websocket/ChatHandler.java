@@ -19,6 +19,7 @@ import com.wbtkj.chat.pojo.vo.role.WSChatMessage;
 import com.wbtkj.chat.service.OpenAIService;
 import com.wbtkj.chat.service.RoleService;
 import com.wbtkj.chat.service.UserService;
+import com.wbtkj.chat.utils.MyUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -131,7 +132,7 @@ public class ChatHandler extends TextWebSocketHandler {
             return;
         }
 
-        if (!openAiAuthInterceptor.hasKey(role.getModel())) {
+        if (!openAiAuthInterceptor.hasKey(MyUtils.getRealModel(role.getModel()))) {
             session.sendMessage(new TextMessage("{{wbtkj_error}}:" + role.getModel() + "暂不可用"));
             return;
         }
@@ -204,7 +205,7 @@ public class ChatHandler extends TextWebSocketHandler {
         // 构造chatCompletion
         //TODO: logitBias修改
         ChatCompletion chatCompletion = ChatCompletion.builder()
-                .model(role.getModel())
+                .model(MyUtils.getRealModel(role.getModel()))
                 .messages(messages)
                 .temperature(role.getTemperature())
                 .topP(role.getTopP())
@@ -247,10 +248,8 @@ public class ChatHandler extends TextWebSocketHandler {
         // 用户退出，移除缓存
         WsSessionManager.remove(session.getId());
 
-
         String key = RedisKeyConstant.ws_chat_session.getKey() + session.getId();
         WSChatSession wsChatSession = (WSChatSession) redisTemplate.opsForValue().getAndDelete(key);
-        roleService.updateChatSession(wsChatSession.getChatSessionId(), wsChatSession.getMessageList());
         if (wsChatSession != null) {
             roleService.updateChatSession(wsChatSession.getChatSessionId(), wsChatSession.getMessageList());
         }
