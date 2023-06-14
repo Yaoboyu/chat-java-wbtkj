@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://43.163.238.17:5432/wbtkj_chat
+    username: postgres
+    password: wbtkjjktbw
+  data:
+    mongodb:
+      uri: mongodb://wbtkj:wbtkjjktbw@43.163.238.17:27017/chat-wbtkj
+  redis:
+    host: 43.163.238.17
+    port: 6379
+    password: wbtkjjktbw
+
+chatgpt:
+  apiHost: https://api.openai.com/
+
+log:
+  path: /var/log/chat-java-wbtkj
+  level: info

@@ -110,10 +110,10 @@ public class CDKEYServiceImpl implements CDKEYService {
     }
 
     @Override
+    @Transactional
     public List<RechargeRecord> getRechargeRecord() {
-        UserLocalDTO user = ThreadLocalConfig.getUser();
         RechargeRecordExample rechargeRecordExample = new RechargeRecordExample();
-        rechargeRecordExample.createCriteria().andUserIdEqualTo(user.getId());
+        rechargeRecordExample.createCriteria().andUserIdEqualTo(ThreadLocalConfig.getUser().getId());
         List<RechargeRecord> cdkeys = rechargeRecordMapper.selectByExample(rechargeRecordExample);
         return cdkeys;
     }

@@ -25,7 +25,8 @@ COMMENT ON COLUMN "admin"."salt" IS '密码盐';
 COMMENT ON COLUMN "admin"."create_time" IS '创建时间';
 COMMENT ON COLUMN "admin"."update_time" IS '修改时间';
 
-INSERT INTO "admin" (username, pwd, salt, create_time, update_time) VALUES ('admin','45be07bc1f199c69','68723','2019-09-03 13:31:20','2023-04-06 09:54:02');
+# wbtkj wbtkj@0317
+INSERT INTO "admin" (username, pwd, salt, create_time, update_time) VALUES ('wbtkj','ff09c585cf74ef54','68723','2019-09-03 13:31:20','2023-04-06 09:54:02');
 
 -- --------------------------------------
 drop table if exists "recharge_record";
@@ -104,7 +105,7 @@ COMMENT ON COLUMN "role"."create_time" IS '创建时间';
 COMMENT ON COLUMN "role"."update_time" IS '修改时间';
 
 INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
-VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=GPT&background=70a99b', '默认GPT3.5角色', '有什么需要帮助的？', 'gpt-3.5-turbo', '', 10, 1000, 1, 1, 0, 0, null, null, true, 0, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=GPT&background=70a99b', '默认GPT3.5角色', '有什么需要帮助的？', 'gpt-3.5-turbo', '', 10, 1000, 1, 1, 0, 0, null, null, true, 9, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
 
 -- --------------------------------------
 drop table if exists "third_party_model_key";

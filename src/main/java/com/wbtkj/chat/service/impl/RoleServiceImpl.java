@@ -14,7 +14,7 @@ import com.wbtkj.chat.pojo.model.*;
 import com.wbtkj.chat.pojo.vo.role.RoleBriefVO;
 import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
-import com.wbtkj.chat.pojo.vo.role.ShopPageVO;
+import com.wbtkj.chat.pojo.vo.PageInfoVO;
 import com.wbtkj.chat.service.RoleService;
 import com.wbtkj.chat.utils.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -108,7 +108,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public ShopPageVO getShopPage(Integer pageSize, Integer type, String name) {
+    public PageInfoVO getShopPage(Integer pageSize, Integer type, String name) {
         if (pageSize < 1) {
             throw new MyServiceException("参数错误");
         }
@@ -123,7 +123,7 @@ public class RoleServiceImpl implements RoleService {
         }
         int roleSize = roleMapper.countByExample(roleExample);
 
-        return ShopPageVO.builder().totalPage((int) Math.ceil(roleSize / (double)pageSize)).totalCount(roleSize).build();
+        return PageInfoVO.builder().totalPage((int) Math.ceil(roleSize / (double)pageSize)).totalCount(roleSize).build();
     }
 
     @Override

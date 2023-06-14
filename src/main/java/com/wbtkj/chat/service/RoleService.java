@@ -6,7 +6,7 @@ import com.wbtkj.chat.pojo.model.Role;
 import com.wbtkj.chat.pojo.vo.role.RoleBriefVO;
 import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
-import com.wbtkj.chat.pojo.vo.role.ShopPageVO;
+import com.wbtkj.chat.pojo.vo.PageInfoVO;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface RoleService {
      */
     List<RoleBriefVO> getShopRole(Integer page, Integer pageSize, Integer type, String name);
 
-    ShopPageVO getShopPage(Integer pageSize, Integer type, String name);
+    PageInfoVO getShopPage(Integer pageSize, Integer type, String name);
 
     /**
      * 添加角色

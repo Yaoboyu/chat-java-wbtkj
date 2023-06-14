@@ -30,6 +30,12 @@ public class AdminController {
         return Result.success(adminService.login(adminLoginVO.getUsername(), adminLoginVO.getPassword()));
     }
 
+    @GetMapping("/user/page")
+    Result getUsersPage(@RequestParam int pageSize,
+                    @RequestParam(required = false) String email){
+        return Result.success(userService.getUsersPage(pageSize, email));
+    }
+
     @GetMapping("/user")
     Result getUsers(@RequestParam int page,
                     @RequestParam int pageSize,

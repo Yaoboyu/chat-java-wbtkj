@@ -1,16 +1,18 @@
 package com.wbtkj.chat.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.wbtkj.chat.config.ThreadLocalConfig;
+import com.wbtkj.chat.mapper.RechargeRecordMapper;
 import com.wbtkj.chat.mapper.UserInfoMapper;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.mapper.UserRoleMapper;
 import com.wbtkj.chat.pojo.dto.role.UserRoleStatus;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.dto.user.UserStatus;
-import com.wbtkj.chat.pojo.model.UserInfo;
-import com.wbtkj.chat.pojo.model.UserInfoExample;
-import com.wbtkj.chat.pojo.model.UserRole;
+import com.wbtkj.chat.pojo.model.*;
+import com.wbtkj.chat.pojo.vo.PageInfoVO;
+import com.wbtkj.chat.pojo.vo.admin.AdminUserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 import com.wbtkj.chat.service.UserService;
@@ -22,10 +24,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.wbtkj.chat.constant.GeneralConstant;
 import com.wbtkj.chat.utils.MD5Utils;
@@ -40,6 +39,8 @@ public class UserServiceImpl implements UserService {
     private UserInfoMapper userInfoMapper;
     @Resource
     private UserRoleMapper userRoleMapper;
+    @Resource
+    private RechargeRecordMapper rechargeRecordMapper;
 
     @Override
     public String login(String email, String pwd) {
@@ -224,7 +225,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public List<UserInfo> getUsersByPage(int page, int pageSize, String email) {
+    public List<AdminUserInfoVO> getUsersByPage(int page, int pageSize, String email) {
         if (page < 1 || pageSize < 1) {
             throw new MyServiceException("参数错误");
         }
@@ -237,7 +238,36 @@ public class UserServiceImpl implements UserService {
         RowBounds rowBounds = new RowBounds((page-1)*pageSize, pageSize);
         List<UserInfo> userInfos = userInfoMapper.selectByExampleWithRowbounds(userInfoExample, rowBounds);
 
-        return userInfos;
+        List<AdminUserInfoVO> res = new ArrayList<>();
+
+        for (UserInfo userInfo : userInfos) {
+            AdminUserInfoVO adminUserInfoVO = new AdminUserInfoVO();
+            BeanUtil.copyProperties(userInfo, adminUserInfoVO, false);
+
+            RechargeRecordExample rechargeRecordExample = new RechargeRecordExample();
+            rechargeRecordExample.createCriteria().andUserIdEqualTo(userInfo.getId());
+            List<RechargeRecord> rechargeRecords = rechargeRecordMapper.selectByExample(rechargeRecordExample);
+            adminUserInfoVO.setRechargeHistorys(rechargeRecords);
+            res.add(adminUserInfoVO);
+        }
+
+        return res;
+    }
+
+    @Override
+    public PageInfoVO getUsersPage(int pageSize, String email) {
+        if (pageSize < 1) {
+            throw new MyServiceException("参数错误");
+        }
+        UserInfoExample userInfoExample = new UserInfoExample();
+        if(StringUtils.hasLength(email)) {
+            userInfoExample.createCriteria().andEmailLike("%" + email + "%");
+        }
+
+        int userSize = userInfoMapper.countByExample(userInfoExample);
+
+        return PageInfoVO.builder().totalPage((int) Math.ceil(userSize / (double)pageSize)).totalCount(userSize).build();
+
     }
 
     @Override

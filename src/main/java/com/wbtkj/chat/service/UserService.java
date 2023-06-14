@@ -3,6 +3,8 @@ package com.wbtkj.chat.service;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
 import com.wbtkj.chat.pojo.model.UserInfo;
+import com.wbtkj.chat.pojo.vo.PageInfoVO;
+import com.wbtkj.chat.pojo.vo.admin.AdminUserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserInfoVO;
 import com.wbtkj.chat.pojo.vo.user.UserRegisterVO;
 
@@ -24,6 +26,11 @@ public interface UserService {
      */
     boolean register(UserRegisterVO userRegisterVO);
 
+    /**
+     * 修改密码
+     * @param pwd
+     * @return
+     */
     boolean changePwd(String pwd);
 
     /**
@@ -48,14 +55,26 @@ public interface UserService {
     UserLocalDTO checkToken(String token) throws MyServiceException;
 
     /**
-     * 分页并模糊查询email
+     * 管理员分页并模糊查询email
      * @param page
      * @param pageSize
      * @param email
      * @return
      */
-    List<UserInfo> getUsersByPage(int page, int pageSize, String email);
+    List<AdminUserInfoVO> getUsersByPage(int page, int pageSize, String email);
 
+    /**
+     * 管理员获取用户分页信息
+     * @param pageSize
+     * @param email
+     * @return
+     */
+    PageInfoVO getUsersPage(int pageSize, String email);
+
+    /**
+     * 用户获取用户信息
+     * @return
+     */
     UserInfoVO getUserInfo();
 
     /**

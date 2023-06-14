@@ -9,6 +9,8 @@ yum install git
 
 git config --global user.name "sofice98"
 git config --global user.email "773508803@qq.com"
+
+ssh-keygen
 ```
 
 MongoDB
@@ -162,6 +164,8 @@ yum install git
 
 git config --global user.name "sofice98"
 git config --global user.email "773508803@qq.com"
+
+ssh-keygen
 ```
 
 nginx
