@@ -112,6 +112,7 @@ public class UserServiceImpl implements UserService {
         userRole.setUsed(0);
         userRole.setStatus(UserRoleStatus.ENABLED.getStatus());
         userRole.setTop(false);
+        userRole.setUpdateTime(MyUtils.getTimeGMT8());
         userRoleMapper.insert(userRole);
 
         return true;
@@ -252,6 +253,7 @@ public class UserServiceImpl implements UserService {
         if(StringUtils.hasLength(email)) {
             userInfoExample.createCriteria().andEmailLike("%" + email + "%");
         }
+        userInfoExample.setOrderByClause("id");
 
         RowBounds rowBounds = new RowBounds((page-1)*pageSize, pageSize);
         List<UserInfo> userInfos = userInfoMapper.selectByExampleWithRowbounds(userInfoExample, rowBounds);

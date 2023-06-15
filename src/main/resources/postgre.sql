@@ -114,6 +114,8 @@ INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", contex
 VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=抖音文案助手&background=70a99b', '抖音文案助手', '您需要什么产品的推广文案？', 'GPT3.5', '你是一个抖音视频的电商文案生成助手，可以自动生成产品名称以及优质的电商文案。', 6, 1000, 0.6, 1, 0, 0, null, null, true, 5, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
 INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
 VALUES (0, 'https://ui-avatars.com/api/?rounded=true&name=运势&background=70a99b', '让老夫给你算一卦', '您需要什么产品的推广文案？', 'GPT3.5', '你是一个抖音视频的电商文案生成助手，可以自动生成产品名称以及优质的电商文案。', 6, 1000, 0.6, 1, 0, 0, null, null, true, 5, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+
+
 -- --------------------------------------
 drop table if exists "third_party_model_key";
 CREATE TABLE "third_party_model_key" (
@@ -194,7 +196,8 @@ CREATE TABLE "user_role" (
      "role_id" int8 NOT NULL,
      "used" int4 NOT NULL,
      "status" int4 NOT NULL,
-     "top" bool NOT NULL
+     "top" bool NOT NULL,
+     "update_time" timestamp NOT NULL
 );
 CREATE INDEX "user_role_idx_user_id_status_top" ON "user_role" USING btree (
     "user_id",
@@ -211,6 +214,7 @@ COMMENT ON COLUMN "user_role"."role_id" IS '角色id';
 COMMENT ON COLUMN "user_role"."used" IS '该用户在该角色上使用的点数';
 COMMENT ON COLUMN "user_role"."status" IS '状态。0正常使用，-1软删除';
 COMMENT ON COLUMN "user_role"."top" IS '是否置顶。false不置顶，true置顶';
+COMMENT ON COLUMN "user_role"."update_time" IS '修改时间';
 
 
 -- --------------------------------------

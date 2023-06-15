@@ -6,9 +6,6 @@ import com.wbtkj.chat.constant.RedisKeyConstant;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.filter.OpenAiAuthInterceptor;
 import com.wbtkj.chat.listener.OpenAIWebSocketEventSourceListener;
-import com.wbtkj.chat.mapper.RoleMapper;
-import com.wbtkj.chat.mapper.UserInfoMapper;
-import com.wbtkj.chat.mapper.UserRoleMapper;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.dto.role.WSChatSession;
@@ -33,7 +30,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -146,7 +142,7 @@ public class ChatHandler extends TextWebSocketHandler {
             userService.cashBack(role.getUserId(), 1, GeneralConstant.ROLE_CASH_RATE);
         }
         // 增加UserRoleUsed
-        roleService.addUserRoleUsed(role.getId(), wsChatSession.getUserId(), point);
+        roleService.augmentUserRoleUsed(role.getId(), wsChatSession.getUserId(), point);
         // 增加角色热度
         role.setHot(role.getHot() + 1);
         roleService.setRole(role);

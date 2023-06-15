@@ -57,7 +57,7 @@ public class RoleServiceImpl implements RoleService {
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andUserIdEqualTo(ThreadLocalConfig.getUser().getId())
                 .andStatusEqualTo(UserRoleStatus.ENABLED.getStatus());
-        userRoleExample.setOrderByClause("top desc");
+        userRoleExample.setOrderByClause("top desc, update_time desc, id");
 
         List<UserRole> userRoles = userRoleMapper.selectByExample(userRoleExample);
         // 用户拥有的角色ids
@@ -99,7 +99,7 @@ public class RoleServiceImpl implements RoleService {
         if (name != null) {
             criteria.andNicknameLike("%" + name + "%");
         }
-        roleExample.setOrderByClause("hot desc, update_time desc");
+        roleExample.setOrderByClause("hot desc, id");
 
         RowBounds rowBounds = new RowBounds((page-1)*pageSize, pageSize);
         List<Role> roles = roleMapper.selectByExampleWithRowbounds(roleExample, rowBounds);
@@ -212,6 +212,7 @@ public class RoleServiceImpl implements RoleService {
         userRole.setTop(false);
         userRole.setStatus(UserRoleStatus.ENABLED.getStatus());
         userRole.setUsed(0);
+        userRole.setUpdateTime(MyUtils.getTimeGMT8());
         userRoleMapper.insert(userRole);
 
         return true;
@@ -298,7 +299,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public int addUserRoleUsed(long roleId, long userId, int point) {
+    public int augmentUserRoleUsed(long roleId, long userId, int point) {
         UserRoleExample userRoleExample = new UserRoleExample();
         userRoleExample.createCriteria().andRoleIdEqualTo(roleId).andUserIdEqualTo(userId);
         List<UserRole> userRoles = userRoleMapper.selectByExample(userRoleExample);
@@ -307,6 +308,7 @@ public class RoleServiceImpl implements RoleService {
         }
         UserRole userRole = userRoles.get(0);
         userRole.setUsed(userRole.getUsed() + point);
+        userRole.setUpdateTime(MyUtils.getTimeGMT8());
         userRoleMapper.updateByPrimaryKey(userRole);
         return userRole.getUsed();
     }

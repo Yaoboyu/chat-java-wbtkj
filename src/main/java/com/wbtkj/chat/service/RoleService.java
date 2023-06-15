@@ -105,7 +105,7 @@ public interface RoleService {
      * @param point
      * @return
      */
-    int addUserRoleUsed(long roleId, long userId, int point);
+    int augmentUserRoleUsed(long roleId, long userId, int point);
 
     /**
      * 检查UserRole表是否存在roleId和userId对

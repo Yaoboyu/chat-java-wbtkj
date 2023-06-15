@@ -113,6 +113,7 @@ public class CDKEYServiceImpl implements CDKEYService {
     public List<RechargeRecord> getRechargeRecord() {
         RechargeRecordExample rechargeRecordExample = new RechargeRecordExample();
         rechargeRecordExample.createCriteria().andUserIdEqualTo(ThreadLocalConfig.getUser().getId());
+        rechargeRecordExample.setOrderByClause("use_time desc");
         List<RechargeRecord> cdkeys = rechargeRecordMapper.selectByExample(rechargeRecordExample);
         return cdkeys;
     }

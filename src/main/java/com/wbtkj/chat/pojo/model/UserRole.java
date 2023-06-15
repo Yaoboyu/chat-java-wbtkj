@@ -1,6 +1,7 @@
 package com.wbtkj.chat.pojo.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class UserRole implements Serializable {
     private Long id;
@@ -14,6 +15,8 @@ public class UserRole implements Serializable {
     private Integer status;
 
     private Boolean top;
+
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -65,6 +68,14 @@ public class UserRole implements Serializable {
         this.top = top;
     }
 
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -77,6 +88,7 @@ public class UserRole implements Serializable {
         sb.append(", used=").append(used);
         sb.append(", status=").append(status);
         sb.append(", top=").append(top);
+        sb.append(", updateTime=").append(updateTime);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");
         return sb.toString();
