@@ -1,14 +1,14 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://43.163.238.17:5432/wbtkj_chat
+    url: jdbc:postgresql://127.0.0.1:5432/wbtkj_chat
     username: postgres
     password: wbtkjjktbw
   data:
     mongodb:
-      uri: mongodb://wbtkj:wbtkjjktbw@43.163.238.17:27017/chat-wbtkj
+      uri: mongodb://wbtkj:wbtkjjktbw@127.0.0.1:27017/chat-wbtkj
   redis:
-    host: 43.163.238.17
+    host: 127.0.0.1
     port: 6379
     password: wbtkjjktbw
 
