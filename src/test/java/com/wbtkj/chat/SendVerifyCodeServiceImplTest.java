@@ -2,7 +2,6 @@ package com.wbtkj.chat;
 
 
 import com.wbtkj.chat.service.SendVerifyCodeService;
-import com.wbtkj.chat.utils.MD5Utils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +23,7 @@ public class SendVerifyCodeServiceImplTest {
 
     @Test
     public void checkCodeIsExpiredTest(){
-        System.out.println(sendVerifyCodeService.checkCodeIsExist("soficesi@163.com"));
+        System.out.println(sendVerifyCodeService.checkCanSendCode("soficesi@163.com"));
     }
 
     @Test

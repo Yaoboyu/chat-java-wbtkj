@@ -2,7 +2,6 @@ package com.wbtkj.chat.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import com.wbtkj.chat.constant.RedisKeyConstant;
-import com.wbtkj.chat.exception.MyException;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.service.SendVerifyCodeService;
 import com.wbtkj.chat.utils.MailUtils;
@@ -20,8 +19,8 @@ public class SendVerifyCodeServiceImpl implements SendVerifyCodeService {
 
     @Override
     public void sendMail(String email){
-        if(checkCodeIsExist(email)) {
-            throw new MyServiceException("请勿重复获取验证码");
+        if(!checkCanSendCode(email)) {
+            throw new MyServiceException("请勿重复获取验证码，1分钟之后再试");
         }
 
         String code = RandomUtil.randomNumbers(6);
@@ -30,15 +29,15 @@ public class SendVerifyCodeServiceImpl implements SendVerifyCodeService {
         redisTemplate.opsForValue().set(key, code, RedisKeyConstant.verify_code.getExp(), TimeUnit.MINUTES);
         boolean res = MailUtils.SendCodeMail(email, code, RedisKeyConstant.verify_code.getExp());
         if(!res) {
-            throw new MyException();
+            throw new MyServiceException("邮件发送失败，请稍后再试");
         }
     }
 
     @Override
-    public boolean checkCodeIsExist(String email) {
+    public boolean checkCanSendCode(String email) {
         String key = RedisKeyConstant.verify_code.getKey() + email;
-        String code = redisTemplate.opsForValue().get(key);
-        return !StringUtils.isBlank(code);
+        Long expire = redisTemplate.getExpire(key, TimeUnit.MINUTES);
+        return expire == null || expire <= 3;
     }
 
     @Override

@@ -123,14 +123,31 @@ public class UserServiceImpl implements UserService {
             throw new MyServiceException("密码至少8位！");
         }
 
-        UserInfoExample userInfoExample = new UserInfoExample();
-        userInfoExample.createCriteria().andIdEqualTo(ThreadLocalConfig.getUser().getId());
-
         UserInfo newUserInfo = userInfoMapper.selectByPrimaryKey(ThreadLocalConfig.getUser().getId());
 
         if(newUserInfo.getPwd().equals(MD5Utils.code(pwd + newUserInfo.getSalt()))) {
             throw new MyServiceException("新密码与原密码不能相同！");
         }
+
+        newUserInfo.setPwd(MD5Utils.code(pwd + newUserInfo.getSalt()));
+        newUserInfo.setUpdateTime(MyUtils.getTimeGMT8());
+
+        userInfoMapper.updateByPrimaryKey(newUserInfo);
+
+        return true;
+    }
+
+    @Override
+    public boolean changePwd(String email, String pwd) {
+        UserInfoExample userInfoExample = new UserInfoExample();
+        userInfoExample.createCriteria().andEmailEqualTo(email);
+
+        List<UserInfo> userInfos = userInfoMapper.selectByExample(userInfoExample);
+
+        if (CollectionUtils.isEmpty(userInfos)) {
+            throw new MyServiceException("用户不存在");
+        }
+        UserInfo newUserInfo = userInfos.get(0);
 
         newUserInfo.setPwd(MD5Utils.code(pwd + newUserInfo.getSalt()));
         newUserInfo.setUpdateTime(MyUtils.getTimeGMT8());

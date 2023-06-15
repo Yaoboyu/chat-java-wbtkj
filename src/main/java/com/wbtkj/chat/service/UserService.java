@@ -34,6 +34,14 @@ public interface UserService {
     boolean changePwd(String pwd);
 
     /**
+     * 修改密码
+     * @param email
+     * @param pwd
+     * @return
+     */
+    boolean changePwd(String email, String pwd);
+
+    /**
      * 可以修改密码，状态，会员有效期，余额，备注
      * @param userInfo
      * @return

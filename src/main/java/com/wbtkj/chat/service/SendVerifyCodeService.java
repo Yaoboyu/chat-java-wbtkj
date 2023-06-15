@@ -13,7 +13,7 @@ public interface SendVerifyCodeService {
      * @param email
      * @return
      */
-    boolean checkCodeIsExist(String email);
+    boolean checkCanSendCode(String email);
 
     /**
      * 根据手机号获取验证码

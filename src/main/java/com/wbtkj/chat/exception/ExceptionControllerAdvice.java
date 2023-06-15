@@ -20,7 +20,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler
     @ResponseBody
     public Result handlerMyServiceException(MyServiceException e){
-        log.warn("业务异常：{}",e.getMessage());
+        log.debug("业务异常：{}",e.getMessage());
         return Result.error(e.getMessage());
     }
 
@@ -38,7 +38,7 @@ public class ExceptionControllerAdvice {
     public Result handlerException(Exception e){
         log.error("其它异常",e);
         e.printStackTrace();
-        return Result.error(e.getMessage());
+        return Result.error();
     }
 
 

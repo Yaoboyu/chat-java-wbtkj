@@ -35,6 +35,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/admin/**")
                 .excludePathPatterns("/login")
                 .excludePathPatterns("/register")
+                .excludePathPatterns("/changePwd")
                 .excludePathPatterns("/utils/**");
     }
 

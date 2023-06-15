@@ -9,7 +9,7 @@ public class GeneralConstant {
     /**
      * 用户初始余额
      */
-    public static final int USER_INIT_BALANCE = 60;
+    public static final int USER_INIT_BALANCE = 66;
 
     /**
      * 用户每天赠送余额
@@ -53,6 +53,6 @@ public class GeneralConstant {
 
     static {
         THIRD_MODEL_VALUE.put("GPT3.5", 1);
-        THIRD_MODEL_VALUE.put("GPT4", 30);
+        THIRD_MODEL_VALUE.put("GPT4", 20);
     }
 }
