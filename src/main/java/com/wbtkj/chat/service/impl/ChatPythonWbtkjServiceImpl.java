@@ -77,7 +77,7 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
         ExtractUrl extractUrl = ExtractUrl.builder().url(url).build();
         Single<FileContentRes> resSingle = this.chatPythonWbtkjAPI.extractUrl(extractUrl);
         FileContentRes result = resSingle.blockingGet();
-        log.debug("url: {}, hashId: {}, content size: {}", extractUrl.getUrl(), result.getData().getHashId(), result.getData().getContents().size());
+        log.info("url: {}, hashId: {}, content size: {}", extractUrl.getUrl(), result.getData().getHashId(), result.getData().getContents().size());
 
         try {
             storage(result.getData(), userFileId, userId);
@@ -101,9 +101,11 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
 
         File file = null;
         try {
+            log.info("start file {}", fileName);
             file = File.createTempFile(fileName, prefix);
+            log.info("created file {}", fileName);
             multipartFile.transferTo(file);
-            log.debug("文件：{} 复制成功", fileName);
+            log.info("copyed file {}", fileName);
 
             // 创建 RequestBody，用于封装构建RequestBody
             RequestBody fileBody = RequestBody.create(file, MediaType.parse("multipart/form-data"));
@@ -112,7 +114,7 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
             Single<FileContentRes> uploadFileResponse = this.chatPythonWbtkjAPI.extractFile(multipartBody);
             FileContentRes result = uploadFileResponse.blockingGet();
 
-            log.debug("文件名: {}, hashId: {}, content size: {}", fileName, result.getData().getHashId(), result.getData().getContents().size());
+            log.info("文件名: {}, hashId: {}, content size: {}", fileName, result.getData().getHashId(), result.getData().getContents().size());
 
             storage(result.getData(), userFileId, userId);
 
@@ -145,9 +147,11 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
             return;
         }
 
+        // 获得embeddings
         List<TextAndEmbedding> embeddings = openAIService.embeddings(fileContent.getContents());
-
+        // TODO：添加消息队列重试
         if (CollectionUtils.isEmpty(embeddings)) {
+            fileService.addNameAfterParse(userFileId, genName(fileContent.getHashId(), fileContent.getLang()));
             return;
         }
 
