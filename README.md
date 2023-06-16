@@ -3,7 +3,7 @@
 # 部署
 
 ## 后端服务器
-git
+### git
 ```shell script
 yum install git
 
@@ -13,7 +13,7 @@ git config --global user.email "773508803@qq.com"
 ssh-keygen
 ```
 
-MongoDB
+### MongoDB
 ```shell script
 # 下载地址：https://www.mongodb.com/try/download/community
 wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-rhel70-6.0.6.tgz
@@ -74,7 +74,7 @@ db.createUser({user: "wbtkj", pwd: "wbtkjjktbw", roles: [{role: "root", db: "cha
 exit
 ```
 
-redis
+### redis
 ```shell script
 yum install redis
 
@@ -86,12 +86,12 @@ systemctl start redis
 systemctl enable redis
 ```
 
-jdk
+### jdk
 ```shell script
 yum install java-1.8.0-openjdk
 ```
 
-PostgreSQL
+### PostgreSQL
 ```shell script
 yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
 yum install postgresql15-server postgresql15-contrib
@@ -158,7 +158,7 @@ pip3 -V
 
 ## 前端服务器
 
-git
+### git
 ```shell script
 yum install git
 
@@ -168,7 +168,7 @@ git config --global user.email "773508803@qq.com"
 ssh-keygen
 ```
 
-nginx
+### nginx
 ``` shell script
 yum install nginx
 
@@ -182,8 +182,7 @@ upstream chat-java-wbtkj{
 }
 server {
     listen       80;
-    listen       [::]:80;
-    server_name  _;
+    server_name  chat.wbtkj.top 147.161.32.40;
     root         /usr/share/nginx/html/dist;
     index index.html;
 
@@ -204,7 +203,7 @@ map $http_upgrade $connection_upgrade {
 
 server {
     listen 8888;
-    server_name _;
+    server_name chat.wbtkj.top 147.161.32.40;
 
     location / {
       proxy_pass http://chat-java-wbtkj;
@@ -222,6 +221,81 @@ systemctl start nginx
 systemctl restart nginx
 # 设置 Nginx 开机自启动：
 systemctl enable nginx
+```
+
+http服务配置
+
+1.签发证书
+```shell script
+yum install epel-release
+yum install certbot
+yum install certbot-nginx
+certbot certonly --nginx
+
+# 1. 打开定时任务配置
+ crontab -e
+# 2. 增加定时刷新的配置
+30 3 * */2 * /usr/bin/certbot renew --post-hook "service nginx restart" --quiet >> /var/log/cerbot.log
+```
+2.配置conf
+```
+vim /etc/nginx/nginx.conf
+
+server {
+       listen       80; #监听端口
+       server_name  chat.wbtkj.top 147.161.32.40; #请求域名
+       return      301 https://$host$request_uri; #重定向至https访问。
+}
+upstream chat-java-wbtkj{
+    server 43.163.238.17:10317;
+}
+# WebSocket 配置
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
+server {
+        listen       443 ssl;
+        server_name  chat.wbtkj.top 147.161.32.40;
+
+        #error_log logs/xxx_error.log;#错误日志文件
+        #access_log logs/xxx_access.log;#访问日志文件
+
+		#ssl证书
+        ssl_certificate           /etc/letsencrypt/live/chat.wbtkj.top/fullchain.pem;
+        ssl_certificate_key       /etc/letsencrypt/live/chat.wbtkj.top/privkey.pem;
+        ssl_session_timeout       5m;
+        ssl_protocols             TLSv1 TLSv1.1 TLSv1.2;
+        ssl_ciphers               ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA;
+        ssl_session_cache         shared:SSL:50m;
+        ssl_prefer_server_ciphers on;
+
+        root /usr/share/nginx/html/dist;
+        index index.html;
+        
+        location ^~/api {
+            rewrite ^/api/(.*)$ /$1 break;
+            proxy_pass http://chat-java-wbtkj;
+            proxy_http_version 1.1; #代理使用的http协议
+            proxy_set_header Host $host; #header添加请求host信息
+            proxy_set_header X-Real-IP $remote_addr; # header增加请求来源IP信息
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; # 增加代理记录
+        }
+
+        # 拦截websocket请求
+        location /websocket {
+           rewrite ^/websocket/(.*)$ /$1 break;
+           proxy_pass http://chat-java-wbtkj;
+           proxy_http_version 1.1;
+           proxy_set_header Upgrade $http_upgrade;
+           proxy_set_header Connection $connection_upgrade;
+        }
+    
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+}
+
 ```
 
 # TODO
