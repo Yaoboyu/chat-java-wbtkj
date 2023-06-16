@@ -26,14 +26,11 @@ public class WebSocketConfig implements WebSocketConfigurer {
     private ChatHandler chatHandler;
     @Resource
     private WebSocketInterceptor webSocketInterceptor;
-    @Value("${cros.allow-host}")
-    private String allowHost;
-
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry
                 .addHandler(chatHandler, "/chat")
                 .addInterceptors(webSocketInterceptor)
-                .setAllowedOrigins(allowHost);
+                .setAllowedOrigins("*");
     }
 }
