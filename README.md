@@ -70,18 +70,28 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.4.asc
 yum install mongodb-org-shell
 mongo
 use admin
-db.createUser({user: "wbtkj", pwd: "wbtkjjktbw", roles: [{role: "root", db: "chat-wbtkj"}]})
+# db.createUser({user: "admin", pwd: "wbtkjjktbw", roles: [{role: "root", db: "admin"}]})
+db.createUser({user: "wbtkj", pwd: "wbtkjjktbw", roles: [{role: "dbOwner", db: "chat-wbtkj"}]})
+
 exit
 ```
 
 ### redis
 ```shell script
-yum install redis
+wget http://download.redis.io/releases/redis-6.2.6.tar.gz
+tar xzf redis-6.2.6.tar.gz
+cd redis-6.2.6
+make
+make install
+cp redis.conf /etc/redis.conf
+
 
 vim /etc/redis.conf
 daemonize yes
 requirepass wbtkjjktbw
 
+redis-server /etc/redis.conf
+redis-cli ping
 systemctl start redis
 systemctl enable redis
 ```
@@ -274,7 +284,7 @@ server {
         index index.html;
         
         location ^~/api {
-            rewrite ^/api/(.*)$ /$1 break;
+            rewrite /api/(.*)$ /$1 break;
             proxy_pass http://chat-java-wbtkj;
             proxy_http_version 1.1; #代理使用的http协议
             proxy_set_header Host $host; #header添加请求host信息
@@ -283,8 +293,8 @@ server {
         }
 
         # 拦截websocket请求
-        location /websocket {
-           rewrite ^/websocket/(.*)$ /$1 break;
+        location ^~/websocket {
+           rewrite /websocket/(.*)$ /$1 break;
            proxy_pass http://chat-java-wbtkj;
            proxy_http_version 1.1;
            proxy_set_header Upgrade $http_upgrade;
@@ -297,17 +307,3 @@ server {
 }
 
 ```
-
-# TODO
-## 后端
-1. UserRole表放入缓存
-2. 刷热度用消息队列
-3. 历史记录加缓存
-4. 手机号注册
-5. 私有角色分享
-6. vip
-7. 历史记录保留时长一个月
-
-## 前端
-
-1. 适配手机端

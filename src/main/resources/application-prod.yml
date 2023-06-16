@@ -19,5 +19,5 @@ log:
   path: /var/log/chat-java-wbtkj
   level: info
 
-#cros:
-#  allow-host: 147.161.32.40
+cros:
+  allow-host: 147.161.32.40
