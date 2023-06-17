@@ -113,7 +113,7 @@ VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=论文
 INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
 VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=抖音文案助手&background=70a99b&length=6&font-size=0.14', '抖音文案助手', '您需要什么产品的推广文案？', 'GPT3.5', '你是一个抖音视频的电商文案生成助手，可以自动生成产品名称以及优质的电商文案。', 6, 1000, 0.6, 1, 0, 0, null, null, true, 5, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
 INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
-VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=算卦&background=70a99b&length=2&font-size=0.33', '让老夫给你算一卦', '您需要什么产品的推广文案？', 'GPT3.5', '你是一个抖音视频的电商文案生成助手，可以自动生成产品名称以及优质的电商文案。', 6, 1000, 0.6, 1, 0, 0, null, null, true, 5, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=算卦&background=70a99b&length=2&font-size=0.33', '今日运势', '请告知您的姓名、性别和生日，老夫为您算一卦！', 'GPT3.5', '请担任算命先生。你对中国的传统文化非常了解，熟读《易经》和《老黄历》，请根据下面包含的信息查询对应的八字、星座、属相，并给出一段对今天运势的描述。若对方未提供姓名、性别和出生日期 请只回复:请先告知姓名、性别和生日！不要回答其它任何无关的问题。', 6, 1000, 0.6, 1, 0, 0, null, null, true, 5, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
 
 
 -- --------------------------------------

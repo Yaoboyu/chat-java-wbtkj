@@ -26,6 +26,8 @@ public class RoleBriefVO {
 
     private Integer hot;
 
+    private Boolean official;
+
     private Date updateTime;
 
     public RoleBriefVO(Role role) {
@@ -37,6 +39,7 @@ public class RoleBriefVO {
         this.marketType = role.getMarketType();
         this.likes = role.getLikes();
         this.hot = role.getHot();
+        this.official = role.getUserId() == 0;
         this.updateTime = role.getUpdateTime();
     }
 }
