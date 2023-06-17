@@ -1,5 +1,6 @@
 package com.wbtkj.chat.service.impl;
 
+import cn.hutool.core.lang.UUID;
 import com.wbtkj.chat.api.ChatPythonWbtkjAPI;
 import com.wbtkj.chat.constant.GeneralConstant;
 import com.wbtkj.chat.exception.MyServiceException;
@@ -96,16 +97,13 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
             return;
         }
 
-        String fileName = multipartFile.getOriginalFilename();
-        String prefix = fileName.substring(fileName.lastIndexOf("."));
+        String originalFilename = multipartFile.getOriginalFilename();
+        String prefix = originalFilename.substring(originalFilename.lastIndexOf("."));
 
         File file = null;
         try {
-            log.info("start file {}", fileName);
-            file = File.createTempFile(fileName, prefix);
-            log.info("created file {}", fileName);
+            file = File.createTempFile(UUID.fastUUID().toString(), prefix);
             multipartFile.transferTo(file);
-            log.info("copyed file {}", fileName);
 
             // 创建 RequestBody，用于封装构建RequestBody
             RequestBody fileBody = RequestBody.create(file, MediaType.parse("multipart/form-data"));
@@ -114,19 +112,21 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
             Single<FileContentRes> uploadFileResponse = this.chatPythonWbtkjAPI.extractFile(multipartBody);
             FileContentRes result = uploadFileResponse.blockingGet();
 
-            log.info("文件名: {}, hashId: {}, content size: {}", fileName, result.getData().getHashId(), result.getData().getContents().size());
+            log.info("文件名: {}, hashId: {}, content size: {}", originalFilename, result.getData().getHashId(), result.getData().getContents().size());
 
             storage(result.getData(), userFileId, userId);
 
             return;
         } catch (Exception e) {
-            log.info("exception {}", e.getMessage());
+            log.info("file parse exception: {}", e.getMessage());
             e.printStackTrace();
             storage(new FileContent(), userFileId, userId);
 
         } finally {
             // 操作完上面的文件 需要删除在根目录下生成的临时文件
-            file.delete();
+            if (file != null) {
+                file.delete();
+            }
         }
 
         return;
