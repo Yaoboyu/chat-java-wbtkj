@@ -120,6 +120,7 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
 
             return;
         } catch (Exception e) {
+            log.info("exception {}", e.getMessage());
             e.printStackTrace();
             storage(new FileContent(), userFileId, userId);
 
