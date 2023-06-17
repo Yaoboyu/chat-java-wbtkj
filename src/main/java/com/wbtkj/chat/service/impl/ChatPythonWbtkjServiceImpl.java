@@ -151,7 +151,7 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
         List<TextAndEmbedding> embeddings = openAIService.embeddings(fileContent.getContents());
         // TODO：添加消息队列重试
         if (CollectionUtils.isEmpty(embeddings)) {
-            fileService.addNameAfterParse(userFileId, genName(fileContent.getHashId(), fileContent.getLang()));
+            fileService.addNameAfterParse(userFileId, "error");
             return;
         }
 
