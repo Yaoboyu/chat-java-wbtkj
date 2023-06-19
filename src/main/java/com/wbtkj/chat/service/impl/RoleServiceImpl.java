@@ -11,6 +11,7 @@ import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.dto.role.UserRoleStatus;
 import com.wbtkj.chat.pojo.dto.role.WSChatSession;
 import com.wbtkj.chat.pojo.model.*;
+import com.wbtkj.chat.pojo.vo.admin.RoleCheckVO;
 import com.wbtkj.chat.pojo.vo.role.RoleBriefVO;
 import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
@@ -26,7 +27,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -92,7 +92,7 @@ public class RoleServiceImpl implements RoleService {
 
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria criteria = roleExample.createCriteria();
-        criteria.andIsMarketEqualTo(true);
+        criteria.andIsMarketEqualTo(true).andMarketStatusIsNotNull();
         if (type != null) {
             criteria.andMarketTypeEqualTo(type);
         }
@@ -115,7 +115,7 @@ public class RoleServiceImpl implements RoleService {
         }
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria criteria = roleExample.createCriteria();
-        criteria.andIsMarketEqualTo(true);
+        criteria.andIsMarketEqualTo(true).andMarketStatusIsNotNull();
         if (type != null) {
             criteria.andMarketTypeEqualTo(type);
         }
@@ -132,20 +132,11 @@ public class RoleServiceImpl implements RoleService {
     public boolean addRole(RoleInfoVO roleInfo) {
         checkRoleNum();
 
-        Role role = roleInfo.toRole(ThreadLocalConfig.getUser().getId());
-
-        // 如果上架，不能同名
-        if (role.getIsMarket()) {
-            RoleExample roleExample = new RoleExample();
-            roleExample.createCriteria().andIsMarketEqualTo(true).andNicknameEqualTo(role.getNickname());
-            if (roleMapper.countByExample(roleExample) > 0) {
-                throw new MyServiceException("已存在同名角色，请修改角色昵称或选择不上架市场");
-            }
-        }
+        Role role = roleInfo.newRole(ThreadLocalConfig.getUser().getId());
 
         roleMapper.insert(role);
 
-        addRoleById(role.getId(), true);
+        addRoleById(role.getId());
 
         return true;
     }
@@ -153,31 +144,11 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public boolean updateRole(RoleInfoVO roleInfo) {
-        Role newRole = roleInfo.toRole();
-        if (newRole.getId() == null) {
-            throw new MyServiceException("id不能为空");
-        }
+        Role newRole = roleInfo.updateRole();
 
         Role oldRole = roleMapper.selectByPrimaryKey(newRole.getId());
-
         if (!oldRole.getUserId().equals(ThreadLocalConfig.getUser().getId())) {
             throw new MyServiceException("角色的拥有者才能修改角色");
-        }
-
-        if (oldRole.getIsMarket() == true && newRole.getIsMarket() == false) {
-            throw new MyServiceException("已上架角色不能下架");
-        } else if (newRole.getIsMarket() == true) { // 如果上架，不能同名
-            if (newRole.getNickname() == null) {
-                newRole.setNickname(oldRole.getNickname());
-            }
-            RoleExample roleExample = new RoleExample();
-            roleExample.createCriteria()
-                    .andIsMarketEqualTo(true)
-                    .andNicknameEqualTo(newRole.getNickname())
-                    .andIdNotEqualTo(newRole.getId());
-            if (roleMapper.countByExample(roleExample) > 0) {
-                throw new MyServiceException("已存在同名角色，请修改角色昵称或选择不上架市场");
-            }
         }
 
         roleMapper.updateByPrimaryKeySelective(newRole);
@@ -189,14 +160,14 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public boolean addRoleById(long roleId, boolean isNew) {
+    public boolean addRoleById(long roleId) {
         Role role = roleMapper.selectByPrimaryKey(roleId);
 
         if (role == null) {
             throw new MyServiceException("该角色不存在");
         }
 
-        if (!role.getIsMarket() && !isNew) {
+        if (!role.getIsMarket() || role.getMarketStatus() == null) {
             throw new MyServiceException("该角色未上架");
         }
 
@@ -230,6 +201,33 @@ public class RoleServiceImpl implements RoleService {
         }
 
         userRoleMapper.deleteByPrimaryKey(userRoles.get(0).getId());
+
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public boolean shelfRole(RoleInfoVO roleInfo) {
+        Role newShelfRole = roleInfo.shelfRole(ThreadLocalConfig.getUser().getId());
+
+        // 已经提交，等待审核
+        Role originRole = roleMapper.selectByPrimaryKey(roleInfo.getOriginRoleId());
+        if (originRole.getMarketStatus() != null && originRole.getMarketStatus().equals("等待审核")) {
+            throw new MyServiceException("勿重复提交上架，请等待审核...");
+        }
+
+        // 不能同名
+        RoleExample roleExample = new RoleExample();
+        roleExample.createCriteria().andIsMarketEqualTo(true).andNicknameEqualTo(newShelfRole.getNickname());
+        if (roleMapper.countByExample(roleExample) > 0) {
+            throw new MyServiceException("角色商城中已存在同名角色，请修改角色昵称");
+        }
+
+        roleMapper.insert(newShelfRole);
+
+        originRole.setMarketStatus("等待审核");
+        roleMapper.updateByPrimaryKey(originRole);
+        setRole(originRole);
 
         return true;
     }
@@ -340,11 +338,47 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public void setRole(Role role){
-        if (role == null) {
+        if (role == null || role.getId() == null) {
             return;
         }
         redisTemplate.opsForValue().set(RedisKeyConstant.role.getKey() + role.getId(), role,
                 RedisKeyConstant.role.getExp(), TimeUnit.MINUTES);
+    }
+
+    @Override
+    public List<Role> getRoleCheck() {
+        RoleExample roleExample = new RoleExample();
+        roleExample.createCriteria().andIsMarketEqualTo(true).andMarketStatusIsNull();
+        List<Role> checkRoles = roleMapper.selectByExample(roleExample);
+
+        return checkRoles;
+    }
+
+    @Override
+    public boolean updateRoleCheck(RoleCheckVO roleCheckVO) {
+        if (!roleCheckVO.getCanShelf() && StringUtils.isBlank(roleCheckVO.getRemark())) {
+            throw new MyServiceException("缺少审核不通过理由");
+        }
+
+        Role checkRole = roleMapper.selectByPrimaryKey(roleCheckVO.getRoleId());
+        Role originRole = roleMapper.selectByPrimaryKey(checkRole.getOriginRoleId());
+
+        if (roleCheckVO.getCanShelf()) { // 通过
+            checkRole.setMarketStatus("已上架");
+            originRole.setMarketStatus("审核通过，已上架");
+            roleMapper.updateByPrimaryKey(checkRole);
+            roleMapper.updateByPrimaryKey(originRole);
+            setRole(checkRole);
+            setRole(originRole);
+
+        } else { // 不通过
+            originRole.setMarketStatus(roleCheckVO.getRemark());
+            roleMapper.deleteByPrimaryKey(checkRole.getId());
+            roleMapper.updateByPrimaryKey(originRole);
+            setRole(originRole);
+        }
+
+        return true;
     }
 
     private List<UserRole> checkRoleNum() {

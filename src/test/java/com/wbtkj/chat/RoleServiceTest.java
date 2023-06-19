@@ -3,7 +3,6 @@ package com.wbtkj.chat;
 import com.wbtkj.chat.config.ThreadLocalConfig;
 import com.wbtkj.chat.mapper.RoleMapper;
 import com.wbtkj.chat.pojo.dto.user.UserLocalDTO;
-import com.wbtkj.chat.pojo.model.Role;
 import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
 import com.wbtkj.chat.service.RoleService;
@@ -12,7 +11,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.List;
 
 @SpringBootTest
@@ -64,7 +62,7 @@ public class RoleServiceTest {
     @Test
     public void addRoleByIdTest(){
         ThreadLocalConfig.setUser(UserLocalDTO.builder().id(1l).email("123@qq.com").build());
-        roleService.addRoleById(2, false);
+        roleService.addRoleById(2);
     }
 
     @Test

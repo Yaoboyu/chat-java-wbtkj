@@ -43,39 +43,21 @@ public class RoleInfoVO {
 
     private Boolean isMarket;
 
+    private String marketStatus;
+
     private Integer marketType;
 
     private List<String> fileNames;
 
-    /**
-     * 新增
-     * @param userId
-     * @return
-     */
-    public Role toRole(Long userId) {
-        if (avatar == null || nickname == null || greeting == null
-                || model == null || system == null || contextN == null || maxTokens == null
-                || temperature == null || topP == null || frequencyPenalty == null
-                || presencePenalty == null || isMarket == null || ( isMarket && marketType == null)) {
-            throw new MyServiceException("缺少参数");
-        }
+    private Long originRoleId;
 
-        Role role = toRole();
-        role.setId(null);
-        role.setUserId(userId);
-        role.setStop("#####");
-        role.setLikes(0);
-        role.setHot(0);
-        role.setCreateTime(MyUtils.getTimeGMT8());
-        role.setUpdateTime(MyUtils.getTimeGMT8());
-        return role;
-    }
+
 
     /**
      * 修改
      * @return
      */
-    public Role toRole() {
+    private Role toRole() {
         if (!MyUtils.checkModel(this.model)) {
             throw new MyServiceException("模型不可用");
         }
@@ -95,9 +77,77 @@ public class RoleInfoVO {
         role.setPresencePenalty(this.presencePenalty);
         role.setLogitBias(this.logitBias);
         role.setIsMarket(this.isMarket);
+        role.setMarketStatus(this.marketStatus);
         role.setFileNames(this.fileNames);
         role.setMarketType(this.marketType);
         role.setUpdateTime(MyUtils.getTimeGMT8());
+        return role;
+    }
+
+    /**
+     * 新增
+     * @param userId
+     * @return
+     */
+    public Role newRole(Long userId) {
+        if (avatar == null || nickname == null || greeting == null
+                || model == null || system == null || contextN == null || maxTokens == null
+                || temperature == null || topP == null || frequencyPenalty == null
+                || presencePenalty == null || isMarket == null) {
+            throw new MyServiceException("缺少参数");
+        }
+
+        Role role = toRole();
+        role.setId(null);
+        role.setUserId(userId);
+        role.setStop(null);
+        role.setIsMarket(false);
+        role.setMarketType(null);
+        role.setMarketStatus(null);
+        role.setLikes(0);
+        role.setHot(0);
+        role.setCreateTime(MyUtils.getTimeGMT8());
+        return role;
+    }
+
+    /**
+     * 修改
+     * @return
+     */
+    public Role updateRole() {
+        if (this.id == null) {
+            throw new MyServiceException("id不能为空");
+        }
+
+        Role role = toRole();
+        role.setIsMarket(null);
+        role.setMarketType(null);
+        role.setMarketStatus(null);
+        return role;
+    }
+
+    /**
+     * 上架的角色
+     * @return
+     */
+    public Role shelfRole(Long userId) {
+        if (avatar == null || nickname == null || greeting == null
+                || model == null || system == null || contextN == null || maxTokens == null
+                || temperature == null || topP == null || frequencyPenalty == null
+                || presencePenalty == null || isMarket == null || marketType == null || originRoleId == null) {
+            throw new MyServiceException("缺少参数");
+        }
+
+        Role role = toRole();
+        role.setId(null);
+        role.setUserId(userId);
+        role.setStop(null);
+        role.setIsMarket(true);
+        role.setMarketStatus(null);
+        role.setOriginRoleId(this.originRoleId);
+        role.setLikes(0);
+        role.setHot(0);
+        role.setCreateTime(MyUtils.getTimeGMT8());
         return role;
     }
 }

@@ -40,7 +40,7 @@ public class RoleController {
 
     @PostMapping("/{roleId}")
     Result addRoleById(@PathVariable Long roleId) {
-        return Result.success(roleService.addRoleById(roleId, false));
+        return Result.success(roleService.addRoleById(roleId));
     }
 
     @PutMapping("")
@@ -66,5 +66,10 @@ public class RoleController {
                        @RequestParam(required = false) Integer type,
                        @RequestParam(required = false) String name) {
         return Result.success(roleService.getShopPage(pageSize, type, name));
+    }
+
+    @PostMapping("/shelf")
+    Result shelfRole(@RequestBody RoleInfoVO roleInfoVO) {
+        return Result.success(roleService.shelfRole(roleInfoVO));
     }
 }

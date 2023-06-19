@@ -71,7 +71,9 @@ CREATE TABLE "role" (
     "logit_bias" text,
     "stop" varchar(5),
     "is_market" bool NOT NULL,
+    "market_status" text,
     "market_type" int4,
+    "origin_role_id" int8,
     "file_names" text[],
     "likes" int4 NOT NULL,
     "hot" int4 NOT NULL,
@@ -79,7 +81,7 @@ CREATE TABLE "role" (
     "update_time" timestamp NOT NULL
 );
 CREATE INDEX "role_idx_is_market" ON "role" USING btree (
-    "is_market"
+    "is_market", "market_status", "market_type"
     );
 COMMENT ON COLUMN "role"."id" IS '自增主键';
 COMMENT ON COLUMN "role"."user_id" IS '所属用户id';
@@ -97,23 +99,25 @@ COMMENT ON COLUMN "role"."presence_penalty" IS '话题属性。-2.0-2.0的小数
 COMMENT ON COLUMN "role"."logit_bias" IS '词汇权重。给词汇添加-100到100的权重，表示其偏差值。像-1和1之间的值应该会轻微减少或增加选择的可能性；像-100或100这样的值会导致相关词汇的禁止或独占选择。';
 COMMENT ON COLUMN "role"."stop" IS '停止符';
 COMMENT ON COLUMN "role"."is_market" IS '是否上架应用市场';
+COMMENT ON COLUMN "role"."market_status" IS '上架状态。null不需要上架；等待审核；上架成功；需要修改后重新提交上架审核';
 COMMENT ON COLUMN "role"."market_type" IS '应用市场上的分类';
+COMMENT ON COLUMN "role"."origin_role_id" IS '从哪个角色生成的副本';
 COMMENT ON COLUMN "role"."file_names" IS '使用的数据集';
 COMMENT ON COLUMN "role"."likes" IS '点赞数';
 COMMENT ON COLUMN "role"."hot" IS '热度（有人对话一次热度就加1）';
 COMMENT ON COLUMN "role"."create_time" IS '创建时间';
 COMMENT ON COLUMN "role"."update_time" IS '修改时间';
 
-INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
-VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=GPT3.5&background=70a99b&length=6&font-size=0.14', '默认GPT3.5角色', '有什么需要帮助的？', 'GPT3.5', '', 10, 1000, 1, 1, 0, 0, null, null, true, 0, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
-VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=GPT4&background=70a99b&length=4&font-size=0.20', '默认GPT4角色', '有什么需要帮助的？', 'GPT4', '', 10, 1000, 1, 1, 0, 0, null, null, true, 0, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
-VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=论文去重&background=70a99b&length=4&font-size=0.20', '论文去重', '请发给我要去重的句子', 'GPT3.5', '我希望你担任论文去重专家。我发送给你的句子，你应尽可能多地使用同义词替换其中的词语，例如避免改为规避，如果改为若是，每个句子必须保证13个字符不能相同，汉字算两个字符，英文单词算一个，不能仅通过删除、增加、修改一两个字符的方式，可以在无法替换的句子中间插入一些无意义又无影响的词语来规避，也可以在不影响其含义的情况下修改语序，可以使用缩写的方式，必须严格遵守这条规则。', 16, 1200, 0.5, 1, 0, 0, null, null, true, 6, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
-VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=抖音文案助手&background=70a99b&length=6&font-size=0.14', '抖音文案助手', '您需要什么产品的推广文案？', 'GPT3.5', '你是一个抖音视频的电商文案生成助手，可以自动生成产品名称以及优质的电商文案。', 6, 1000, 0.6, 1, 0, 0, null, null, true, 5, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_type, file_names, likes, hot, create_time, update_time)
-VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=算卦&background=70a99b&length=2&font-size=0.33', '今日运势', '请告知您的姓名、性别和生日，老夫为您算一卦！', 'GPT3.5', '请担任算命先生。你对中国的传统文化非常了解，熟读《易经》和《老黄历》，请根据下面包含的信息查询对应的八字、星座、属相，并给出一段对今天运势的描述。若对方未提供姓名、性别和出生日期 请只回复:请先告知姓名、性别和生日！不要回答其它任何无关的问题。', 6, 1000, 0.6, 1, 0, 0, null, null, true, 5, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_status, market_type, origin_role_id, file_names, likes, hot, create_time, update_time)
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=GPT3.5&background=70a99b&length=6&font-size=0.14', '默认GPT3.5角色', '有什么需要帮助的？', 'GPT3.5', '', 10, 1000, 1, 1, 0, 0, null, null, true, '已上架', 0, null, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_status, market_type, origin_role_id, file_names, likes, hot, create_time, update_time)
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=GPT4&background=70a99b&length=4&font-size=0.20', '默认GPT4角色', '有什么需要帮助的？', 'GPT4', '', 10, 1000, 1, 1, 0, 0, null, null, true, '已上架', 0, null, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_status, market_type, origin_role_id, file_names, likes, hot, create_time, update_time)
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=论文去重&background=70a99b&length=4&font-size=0.20', '论文去重', '请发给我要去重的句子', 'GPT3.5', '我希望你担任论文去重专家。我发送给你的句子，你应尽可能多地使用同义词替换其中的词语，例如避免改为规避，如果改为若是，每个句子必须保证13个字符不能相同，汉字算两个字符，英文单词算一个，不能仅通过删除、增加、修改一两个字符的方式，可以在无法替换的句子中间插入一些无意义又无影响的词语来规避，也可以在不影响其含义的情况下修改语序，可以使用缩写的方式，必须严格遵守这条规则。', 16, 1200, 0.5, 1, 0, 0, null, null, true, '已上架', 6, null, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_status, market_type, origin_role_id, file_names, likes, hot, create_time, update_time)
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=抖音文案助手&background=70a99b&length=6&font-size=0.14', '抖音文案助手', '您需要什么产品的推广文案？', 'GPT3.5', '你是一个抖音视频的电商文案生成助手，可以自动生成产品名称以及优质的电商文案。', 6, 1000, 0.6, 1, 0, 0, null, null, true, '已上架', 5, null, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "role" (user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, market_status, market_type, origin_role_id, file_names, likes, hot, create_time, update_time)
+VALUES (0, 'https://ui-avatars.com/api/?rounded=true&uppercase=false&name=算卦&background=70a99b&length=2&font-size=0.33', '今日运势', '请告知您的姓名、性别和生日，老夫为您算一卦！', 'GPT3.5', '请担任算命先生。你对中国的传统文化非常了解，熟读《易经》和《老黄历》，请根据下面包含的信息查询对应的八字、星座、属相，并给出一段对今天运势的描述。若对方未提供姓名、性别和出生日期 请只回复:请先告知姓名、性别和生日！不要回答其它任何无关的问题。', 6, 1000, 0.6, 1, 0, 0, null, null, true, '已上架', 5, null, null, 0, 0, CURRENT_DATE, CURRENT_DATE);
 
 
 -- --------------------------------------

@@ -18,7 +18,9 @@
     <result column="logit_bias" property="logitBias" jdbcType="VARCHAR" />
     <result column="stop" property="stop" jdbcType="VARCHAR" />
     <result column="is_market" property="isMarket" jdbcType="BIT" />
+    <result column="market_status" property="marketStatus" jdbcType="VARCHAR" />
     <result column="market_type" property="marketType" jdbcType="INTEGER" />
+    <result column="origin_role_id" property="originRoleId" jdbcType="BIGINT" />
     <result column="file_names" property="fileNames" jdbcType="ARRAY" typeHandler="com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler" />
     <result column="likes" property="likes" jdbcType="INTEGER" />
     <result column="hot" property="hot" jdbcType="INTEGER" />
@@ -124,7 +126,8 @@
   <sql id="Base_Column_List" >
     id, user_id, avatar, nickname, greeting, model, "system", context_n, max_tokens, 
     temperature, top_p, frequency_penalty, presence_penalty, logit_bias, stop, is_market, 
-    market_type, file_names, likes, hot, create_time, update_time
+    market_status, market_type, origin_role_id, file_names, likes, hot, create_time, 
+    update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.wbtkj.chat.pojo.model.RoleExample" >
     select
@@ -162,7 +165,8 @@
       context_n, max_tokens, temperature, 
       top_p, frequency_penalty, presence_penalty, 
       logit_bias, stop, is_market, 
-      market_type, file_names, 
+      market_status, market_type, origin_role_id, 
+      file_names, 
       likes, hot, create_time, 
       update_time)
     values (#{userId,jdbcType=BIGINT}, #{avatar,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
@@ -170,7 +174,8 @@
       #{contextN,jdbcType=INTEGER}, #{maxTokens,jdbcType=INTEGER}, #{temperature,jdbcType=DOUBLE}, 
       #{topP,jdbcType=DOUBLE}, #{frequencyPenalty,jdbcType=DOUBLE}, #{presencePenalty,jdbcType=DOUBLE}, 
       #{logitBias,jdbcType=VARCHAR}, #{stop,jdbcType=VARCHAR}, #{isMarket,jdbcType=BIT}, 
-      #{marketType,jdbcType=INTEGER}, #{fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler}, 
+      #{marketStatus,jdbcType=VARCHAR}, #{marketType,jdbcType=INTEGER}, #{originRoleId,jdbcType=BIGINT}, 
+      #{fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler}, 
       #{likes,jdbcType=INTEGER}, #{hot,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -222,8 +227,14 @@
       <if test="isMarket != null" >
         is_market,
       </if>
+      <if test="marketStatus != null" >
+        market_status,
+      </if>
       <if test="marketType != null" >
         market_type,
+      </if>
+      <if test="originRoleId != null" >
+        origin_role_id,
       </if>
       <if test="fileNames != null" >
         file_names,
@@ -287,8 +298,14 @@
       <if test="isMarket != null" >
         #{isMarket,jdbcType=BIT},
       </if>
+      <if test="marketStatus != null" >
+        #{marketStatus,jdbcType=VARCHAR},
+      </if>
       <if test="marketType != null" >
         #{marketType,jdbcType=INTEGER},
+      </if>
+      <if test="originRoleId != null" >
+        #{originRoleId,jdbcType=BIGINT},
       </if>
       <if test="fileNames != null" >
         #{fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler},
@@ -364,8 +381,14 @@
       <if test="record.isMarket != null" >
         is_market = #{record.isMarket,jdbcType=BIT},
       </if>
+      <if test="record.marketStatus != null" >
+        market_status = #{record.marketStatus,jdbcType=VARCHAR},
+      </if>
       <if test="record.marketType != null" >
         market_type = #{record.marketType,jdbcType=INTEGER},
+      </if>
+      <if test="record.originRoleId != null" >
+        origin_role_id = #{record.originRoleId,jdbcType=BIGINT},
       </if>
       <if test="record.fileNames != null" >
         file_names = #{record.fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler},
@@ -405,7 +428,9 @@
       logit_bias = #{record.logitBias,jdbcType=VARCHAR},
       stop = #{record.stop,jdbcType=VARCHAR},
       is_market = #{record.isMarket,jdbcType=BIT},
+      market_status = #{record.marketStatus,jdbcType=VARCHAR},
       market_type = #{record.marketType,jdbcType=INTEGER},
+      origin_role_id = #{record.originRoleId,jdbcType=BIGINT},
       file_names = #{record.fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler},
       likes = #{record.likes,jdbcType=INTEGER},
       hot = #{record.hot,jdbcType=INTEGER},
@@ -463,8 +488,14 @@
       <if test="isMarket != null" >
         is_market = #{isMarket,jdbcType=BIT},
       </if>
+      <if test="marketStatus != null" >
+        market_status = #{marketStatus,jdbcType=VARCHAR},
+      </if>
       <if test="marketType != null" >
         market_type = #{marketType,jdbcType=INTEGER},
+      </if>
+      <if test="originRoleId != null" >
+        origin_role_id = #{originRoleId,jdbcType=BIGINT},
       </if>
       <if test="fileNames != null" >
         file_names = #{fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler},
@@ -501,7 +532,9 @@
       logit_bias = #{logitBias,jdbcType=VARCHAR},
       stop = #{stop,jdbcType=VARCHAR},
       is_market = #{isMarket,jdbcType=BIT},
+      market_status = #{marketStatus,jdbcType=VARCHAR},
       market_type = #{marketType,jdbcType=INTEGER},
+      origin_role_id = #{originRoleId,jdbcType=BIGINT},
       file_names = #{fileNames,jdbcType=ARRAY,typeHandler=com.wbtkj.chat.mapper.typeHandler.StringListTypeHandler},
       likes = #{likes,jdbcType=INTEGER},
       hot = #{hot,jdbcType=INTEGER},

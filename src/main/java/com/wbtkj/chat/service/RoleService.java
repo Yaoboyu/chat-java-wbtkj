@@ -3,6 +3,7 @@ package com.wbtkj.chat.service;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.model.ChatSession;
 import com.wbtkj.chat.pojo.model.Role;
+import com.wbtkj.chat.pojo.vo.admin.RoleCheckVO;
 import com.wbtkj.chat.pojo.vo.role.RoleBriefVO;
 import com.wbtkj.chat.pojo.vo.role.RoleHistoryVO;
 import com.wbtkj.chat.pojo.vo.role.RoleInfoVO;
@@ -47,10 +48,9 @@ public interface RoleService {
     /**
      * 在应用市场通过id添加role
      * @param roleId
-     * @param isNew 是否是addRole函数调用此函数
      * @return
      */
-    boolean addRoleById(long roleId, boolean isNew);
+    boolean addRoleById(long roleId);
 
     /**
      * 删除role，只删除UserRole表
@@ -58,6 +58,13 @@ public interface RoleService {
      * @return
      */
     boolean deleteRole(long roleId);
+
+    /**
+     * 上架角色
+     * @param roleInfo
+     * @return
+     */
+    boolean shelfRole(RoleInfoVO roleInfo);
 
     /**
      * 获取role的对话历史
@@ -127,4 +134,17 @@ public interface RoleService {
      * @param role
      */
     void setRole(Role role);
+
+    /**
+     * 获取需要审核上架的列表
+     * @return
+     */
+    List<Role> getRoleCheck();
+
+    /**
+     * 上架审核
+     * @param roleCheckVO
+     * @return
+     */
+    boolean updateRoleCheck(RoleCheckVO roleCheckVO);
 }

@@ -1169,6 +1169,76 @@ public class RoleExample {
             return (Criteria) this;
         }
 
+        public Criteria andMarketStatusIsNull() {
+            addCriterion("market_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusIsNotNull() {
+            addCriterion("market_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusEqualTo(String value) {
+            addCriterion("market_status =", value, "marketStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusNotEqualTo(String value) {
+            addCriterion("market_status <>", value, "marketStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusGreaterThan(String value) {
+            addCriterion("market_status >", value, "marketStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusGreaterThanOrEqualTo(String value) {
+            addCriterion("market_status >=", value, "marketStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusLessThan(String value) {
+            addCriterion("market_status <", value, "marketStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusLessThanOrEqualTo(String value) {
+            addCriterion("market_status <=", value, "marketStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusLike(String value) {
+            addCriterion("market_status like", value, "marketStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusNotLike(String value) {
+            addCriterion("market_status not like", value, "marketStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusIn(List<String> values) {
+            addCriterion("market_status in", values, "marketStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusNotIn(List<String> values) {
+            addCriterion("market_status not in", values, "marketStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusBetween(String value1, String value2) {
+            addCriterion("market_status between", value1, value2, "marketStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andMarketStatusNotBetween(String value1, String value2) {
+            addCriterion("market_status not between", value1, value2, "marketStatus");
+            return (Criteria) this;
+        }
+
         public Criteria andMarketTypeIsNull() {
             addCriterion("market_type is null");
             return (Criteria) this;
@@ -1226,6 +1296,66 @@ public class RoleExample {
 
         public Criteria andMarketTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("market_type not between", value1, value2, "marketType");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdIsNull() {
+            addCriterion("origin_role_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdIsNotNull() {
+            addCriterion("origin_role_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdEqualTo(Long value) {
+            addCriterion("origin_role_id =", value, "originRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdNotEqualTo(Long value) {
+            addCriterion("origin_role_id <>", value, "originRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdGreaterThan(Long value) {
+            addCriterion("origin_role_id >", value, "originRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("origin_role_id >=", value, "originRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdLessThan(Long value) {
+            addCriterion("origin_role_id <", value, "originRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdLessThanOrEqualTo(Long value) {
+            addCriterion("origin_role_id <=", value, "originRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdIn(List<Long> values) {
+            addCriterion("origin_role_id in", values, "originRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdNotIn(List<Long> values) {
+            addCriterion("origin_role_id not in", values, "originRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdBetween(Long value1, Long value2) {
+            addCriterion("origin_role_id between", value1, value2, "originRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOriginRoleIdNotBetween(Long value1, Long value2) {
+            addCriterion("origin_role_id not between", value1, value2, "originRoleId");
             return (Criteria) this;
         }
 

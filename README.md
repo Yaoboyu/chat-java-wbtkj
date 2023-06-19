@@ -307,3 +307,15 @@ server {
 }
 
 ```
+
+
+### python
+
+```shell script
+# chorm https://chromium.cypress.io/linux/stable/109.0.5414.119
+
+# driver http://npm.taobao.org/mirrors/chromedriver/
+wget https://registry.npmmirror.com/-/binary/chromedriver/109.0.5414.74/chromedriver_linux64.zip
+unzip chromedriver_linux64.zip
+mv chromedriver /usr/bin
+```

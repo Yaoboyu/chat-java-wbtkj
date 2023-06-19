@@ -37,7 +37,11 @@ public class Role implements Serializable {
 
     private Boolean isMarket;
 
+    private String marketStatus;
+
     private Integer marketType;
+
+    private Long originRoleId;
 
     private List<String> fileNames;
 
@@ -179,12 +183,28 @@ public class Role implements Serializable {
         this.isMarket = isMarket;
     }
 
+    public String getMarketStatus() {
+        return marketStatus;
+    }
+
+    public void setMarketStatus(String marketStatus) {
+        this.marketStatus = marketStatus == null ? null : marketStatus.trim();
+    }
+
     public Integer getMarketType() {
         return marketType;
     }
 
     public void setMarketType(Integer marketType) {
         this.marketType = marketType;
+    }
+
+    public Long getOriginRoleId() {
+        return originRoleId;
+    }
+
+    public void setOriginRoleId(Long originRoleId) {
+        this.originRoleId = originRoleId;
     }
 
     public List<String> getFileNames() {
@@ -249,7 +269,9 @@ public class Role implements Serializable {
         sb.append(", logitBias=").append(logitBias);
         sb.append(", stop=").append(stop);
         sb.append(", isMarket=").append(isMarket);
+        sb.append(", marketStatus=").append(marketStatus);
         sb.append(", marketType=").append(marketType);
+        sb.append(", originRoleId=").append(originRoleId);
         sb.append(", fileNames=").append(fileNames);
         sb.append(", likes=").append(likes);
         sb.append(", hot=").append(hot);

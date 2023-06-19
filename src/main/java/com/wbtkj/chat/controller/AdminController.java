@@ -3,6 +3,7 @@ package com.wbtkj.chat.controller;
 import com.wbtkj.chat.pojo.model.UserInfo;
 import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.pojo.vo.admin.AdminLoginVO;
+import com.wbtkj.chat.pojo.vo.admin.RoleCheckVO;
 import com.wbtkj.chat.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class AdminController {
     @Resource
     ThirdPartyModelKeyService thirdPartyModelKeyService;
     @Resource
-    SendVerifyCodeService sendVerifyCodeService;
+    RoleService roleService;
 
     @PostMapping("/login")
     public Result adminLogin(@RequestBody AdminLoginVO adminLoginVO){
@@ -79,4 +80,13 @@ public class AdminController {
         return Result.success(thirdPartyModelKeyService.getAllKey());
     }
 
+    @GetMapping("/role/check")
+    public Result getRoleCheck(){
+        return Result.success(roleService.getRoleCheck());
+    }
+
+    @PostMapping("/role/check")
+    public Result updateRoleCheck(@RequestBody RoleCheckVO roleCheckVO){
+        return Result.success(roleService.updateRoleCheck(roleCheckVO));
+    }
 }
