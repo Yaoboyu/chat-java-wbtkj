@@ -136,7 +136,7 @@ public class RoleServiceImpl implements RoleService {
 
         roleMapper.insert(role);
 
-        addRoleById(role.getId());
+        addRoleById(role.getId(), true);
 
         return true;
     }
@@ -160,14 +160,14 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Transactional
-    public boolean addRoleById(long roleId) {
+    public boolean addRoleById(long roleId, boolean isNew) {
         Role role = roleMapper.selectByPrimaryKey(roleId);
 
         if (role == null) {
             throw new MyServiceException("该角色不存在");
         }
 
-        if (!role.getIsMarket() || role.getMarketStatus() == null) {
+        if (!isNew && (!role.getIsMarket() || role.getMarketStatus() == null)) {
             throw new MyServiceException("该角色未上架");
         }
 

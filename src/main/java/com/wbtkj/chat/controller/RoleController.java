@@ -40,7 +40,7 @@ public class RoleController {
 
     @PostMapping("/{roleId}")
     Result addRoleById(@PathVariable Long roleId) {
-        return Result.success(roleService.addRoleById(roleId));
+        return Result.success(roleService.addRoleById(roleId, false));
     }
 
     @PutMapping("")

@@ -62,7 +62,7 @@ public class RoleServiceTest {
     @Test
     public void addRoleByIdTest(){
         ThreadLocalConfig.setUser(UserLocalDTO.builder().id(1l).email("123@qq.com").build());
-        roleService.addRoleById(2);
+        roleService.addRoleById(2, false);
     }
 
     @Test

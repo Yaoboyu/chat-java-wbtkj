@@ -48,9 +48,10 @@ public interface RoleService {
     /**
      * 在应用市场通过id添加role
      * @param roleId
+     * @param isNew
      * @return
      */
-    boolean addRoleById(long roleId);
+    boolean addRoleById(long roleId, boolean isNew);
 
     /**
      * 删除role，只删除UserRole表
