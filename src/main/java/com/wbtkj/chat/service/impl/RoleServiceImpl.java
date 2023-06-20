@@ -73,7 +73,7 @@ public class RoleServiceImpl implements RoleService {
         List<Object> res = new ArrayList<>();
         for (UserRole userRole : userRoles) {
             Role role = roleMap.get(userRole.getRoleId());
-            if(role.getUserId().equals(ThreadLocalConfig.getUser().getId())) {
+            if(role.getUserId().equals(ThreadLocalConfig.getUser().getId()) && !role.getIsMarket()) {
                 res.add(role);
             } else {
                 res.add(new RoleBriefVO(role));

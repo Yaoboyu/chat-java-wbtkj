@@ -120,6 +120,7 @@ public class RoleInfoVO {
         }
 
         Role role = toRole();
+        // 不能修改的
         role.setIsMarket(null);
         role.setMarketType(null);
         role.setMarketStatus(null);
