@@ -12,6 +12,7 @@ import com.wbtkj.chat.pojo.dto.openai.CommonError;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.common.OpenAiResponse;
 import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyStatus;
+import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyType;
 import com.wbtkj.chat.service.ThirdPartyModelKeyService;
 import com.wbtkj.chat.utils.MailUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -64,9 +65,9 @@ public class OpenAiAuthInterceptor implements Interceptor {
     }
 
     public boolean addKey(String key, String model) {
-        if(model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())) {
+        if(model.equals(ThirdPartyModelKeyType.GPT3_5.getName())) {
             return gpt3Key.addIfAbsent(key);
-        } else if(model.equals(ChatCompletion.Model.GPT_4.getName())) {
+        } else if(model.equals(ThirdPartyModelKeyType.GPT4.getName())) {
             return gpt4Key.addIfAbsent(key);
         } else {
             return false;
@@ -74,9 +75,9 @@ public class OpenAiAuthInterceptor implements Interceptor {
     }
 
     public boolean delKey(String key, String model) {
-        if(model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())) {
+        if(model.equals(ThirdPartyModelKeyType.GPT3_5.getName())) {
             return gpt3Key.removeIf(Predicate.isEqual(key));
-        } else if(model.equals(ChatCompletion.Model.GPT_4.getName())) {
+        } else if(model.equals(ThirdPartyModelKeyType.GPT4.getName())) {
             return gpt4Key.removeIf(Predicate.isEqual(key));
         } else {
             return false;

@@ -86,6 +86,7 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
         }
 
         thirdPartyModelKey.setStatus(status);
+        thirdPartyModelKey.setUpdateTime(MyUtils.getTimeGMT8());
         thirdPartyModelKeyMapper.updateByPrimaryKey(thirdPartyModelKey);
         if (status == ThirdPartyModelKeyStatus.ENABLED.getStatus()) {
             openAiAuthInterceptor.addKey(thirdPartyModelKey.getKey(), thirdPartyModelKey.getModel());

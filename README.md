@@ -127,6 +127,8 @@ sudo -u postgres psql
 
 ALTER USER postgres WITH PASSWORD 'wbtkjjktbw';
 CREATE EXTENSION vector;
+
+psql -U postgres -d wbtkj_chat
 ```
 
 python
