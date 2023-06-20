@@ -40,6 +40,7 @@ server:
 
 chatgpt:
   apiHost: https://openai.wbtkj.top/
+  gpt4apiHost: https://api.openai.myhispread.com/
 
 chat-py-wbtkj:
   apiHost: http://localhost:10318/

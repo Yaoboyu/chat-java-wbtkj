@@ -49,10 +49,10 @@ public class GeneralConstant {
     /**
      * 处理文件价格
      */
-    public static final int PARSE_FILE_VALUE = 5;
+    public static final int PARSE_FILE_VALUE = 50;
 
     static {
-        THIRD_MODEL_VALUE.put("GPT3.5", 1);
-        THIRD_MODEL_VALUE.put("GPT4", 20);
+        THIRD_MODEL_VALUE.put("GPT3.5", 2);
+        THIRD_MODEL_VALUE.put("GPT4", 30);
     }
 }

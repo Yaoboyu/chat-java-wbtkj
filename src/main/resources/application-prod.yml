@@ -14,6 +14,7 @@ spring:
 
 chatgpt:
   apiHost: https://api.openai.com/
+  gpt4apiHost: https://api.openai.myhispread.com/
 
 log:
   path: /var/log/chat-java-wbtkj
