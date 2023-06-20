@@ -37,6 +37,8 @@ server:
     encoding:
       charset: UTF-8
   port: 10317
+  tomcat:
+    max-swallow-size: 50MB
 
 chatgpt:
   apiHost: https://openai.wbtkj.top/
