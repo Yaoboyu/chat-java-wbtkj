@@ -113,7 +113,7 @@ public class ChatCompletion implements Serializable {
     @AllArgsConstructor
     public enum Model {
         DEFAULT_3_5("gpt-3.5-turbo-16k"),
-        DEFAULT_4("gpt-4-32k"),
+        DEFAULT_4("gpt-4"),
         /**
          * gpt-3.5-turbo
          */
