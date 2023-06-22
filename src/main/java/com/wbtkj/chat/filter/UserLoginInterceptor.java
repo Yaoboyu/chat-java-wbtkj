@@ -27,16 +27,14 @@ public class UserLoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        log.info("请求源: {}, 方法: {}, uri: {}", request.getHeader("X-Real-IP"), request.getMethod(),request.getRequestURI());
-
-        //3.获取请求头中的令牌（token）。
+        // 获取请求头中的令牌（token）。
         String token = request.getHeader("Authorization");
 
-        //4.解析token
+        // 解析token
         try{
             userService.checkToken(token);
+            log.info("email: {}, method: {}, uri: {}", ThreadLocalConfig.getUser().getEmail(), request.getMethod(),request.getRequestURI());
         } catch (MyServiceException e) {
-            log.info(e.getMessage());
             Result error = Result.error(e.getMessage());
             response.setHeader("Content-Type", "text/html;charset=UTF-8");
             response.getWriter().write(JSONObject.toJSONString(error));
