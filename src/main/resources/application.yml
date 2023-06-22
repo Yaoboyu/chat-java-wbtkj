@@ -17,9 +17,11 @@ spring:
     password: wbtkjjktbw
   application:
     name: chat-java-wbtkj
-    servlet:
-      multipart:
-        max-file-size: 50MB
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+
 
 mybatis:
   configuration:

@@ -181,12 +181,13 @@ ssh-keygen
 ```
 
 ### nginx
-``` shell script
+```shell script
 yum install nginx
 
 vim /etc/nginx/nginx.conf
 ```
 
+http配置
 ```
 # 修改配置文件
 upstream chat-java-wbtkj{
@@ -252,6 +253,8 @@ certbot certonly --nginx
 2.配置conf
 ```
 vim /etc/nginx/nginx.conf
+
+client_max_body_size 1024m;
 
 server {
        listen       80; #监听端口
