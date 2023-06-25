@@ -8,6 +8,8 @@ public class ThirdPartyModelKey implements Serializable {
 
     private String key;
 
+    private String host;
+
     private String model;
 
     private Integer status;
@@ -32,6 +34,14 @@ public class ThirdPartyModelKey implements Serializable {
 
     public void setKey(String key) {
         this.key = key == null ? null : key.trim();
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host == null ? null : host.trim();
     }
 
     public String getModel() {
@@ -74,6 +84,7 @@ public class ThirdPartyModelKey implements Serializable {
         sb.append("Hash = ").append(hashCode());
         sb.append(", id=").append(id);
         sb.append(", key=").append(key);
+        sb.append(", host=").append(host);
         sb.append(", model=").append(model);
         sb.append(", status=").append(status);
         sb.append(", createTime=").append(createTime);

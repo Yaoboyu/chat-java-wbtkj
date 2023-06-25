@@ -131,6 +131,7 @@ drop table if exists "third_party_model_key";
 CREATE TABLE "third_party_model_key" (
      "id" bigserial PRIMARY KEY,
      "key" varchar(255) NOT NULL,
+     "host" varchar(255) NOT NULL,
      "model" varchar(255) NOT NULL,
      "status" int4 NOT NULL,
      "create_time" timestamp NOT NULL,
@@ -144,17 +145,20 @@ CREATE INDEX "third_party_model_key_idx_status_key" ON "third_party_model_key" U
     );
 COMMENT ON COLUMN "third_party_model_key"."id" IS '自增主键';
 COMMENT ON COLUMN "third_party_model_key"."key" IS 'apikey';
+COMMENT ON COLUMN "third_party_model_key"."host" IS 'host';
 COMMENT ON COLUMN "third_party_model_key"."model" IS '调用的模型';
 COMMENT ON COLUMN "third_party_model_key"."status" IS '0启用，-1禁用，1余额耗尽或过期';
 COMMENT ON COLUMN "third_party_model_key"."create_time" IS '创建时间';
 COMMENT ON COLUMN "third_party_model_key"."update_time" IS '修改时间';
 
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
-INSERT INTO "third_party_model_key" (key, model, status, create_time, update_time) VALUES ('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', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, host, model, status, create_time, update_time) VALUES ('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', 'https://openai.wbtkj.top/', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, host, model, status, create_time, update_time) VALUES ('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', 'https://openai.wbtkj.top/', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, host, model, status, create_time, update_time) VALUES ('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', 'https://openai.wbtkj.top/', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, host, model, status, create_time, update_time) VALUES ('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', 'https://openai.wbtkj.top/', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, host, model, status, create_time, update_time) VALUES ('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', 'https://openai.wbtkj.top/', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, host, model, status, create_time, update_time) VALUES ('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', 'https://openai.wbtkj.top/', 'GPT3.5', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, host, model, status, create_time, update_time) VALUES ('sk-pIdcT4VqXRjEw533Bzst9PH9xZ7nPCsgTGLIEF354VsH0TZ6', 'https://api.openai.myhispread.com/', 'GPT4', 0, CURRENT_DATE, CURRENT_DATE);
+INSERT INTO "third_party_model_key" (key, host, model, status, create_time, update_time) VALUES ('sk-pv9qGjOEI58C2WI4733mp17u8C5ih4w6SEjlf0I192kD6g94', 'https://api.openai.myhispread.com/', 'GPT4', 0, CURRENT_DATE, CURRENT_DATE);
 
 -- --------------------------------------
 drop table if exists "user_info";
@@ -234,7 +238,8 @@ CREATE TABLE "user_file" (
      "user_id" int8 NOT NULL,
      "type" int4 NOT NULL,
      "original_name" text NOT NULL,
-     "name" varchar(255)
+     "name" varchar(255),
+     "create_time" timestamp
 );
 CREATE INDEX "user_file_idx_user_id" ON "user_file" USING btree (
     "user_id"
@@ -244,6 +249,7 @@ COMMENT ON COLUMN "user_file"."user_id" IS '用户id';
 COMMENT ON COLUMN "user_file"."type" IS '类型，0文件，1url';
 COMMENT ON COLUMN "user_file"."original_name" IS '原始文件名或url';
 COMMENT ON COLUMN "user_file"."name" IS 'uuid文件名或uuid url';
+COMMENT ON COLUMN "user_file"."create_time" IS '创建时间';
 
 -- --------------------------------------
 drop table if exists "file_embedding";

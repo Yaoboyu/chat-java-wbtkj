@@ -28,7 +28,7 @@ public class ChatCompletion implements Serializable {
 
     @NonNull
     @Builder.Default
-    private String model = Model.GPT_3_5_TURBO.getName();
+    private String model = Model.DEFAULT_3_5.getName();
     /**
      * 问题描述
      */
@@ -106,6 +106,20 @@ public class ChatCompletion implements Serializable {
             return 0;
         }
         return TikTokensUtil.tokens(this.model, this.messages);
+    }
+
+    public int maxTokenLen() {
+        if (model.equals("gpt-3.5-turbo")) {
+            return 4096;
+        } else if (model.equals("gpt-3.5-turbo-16k")) {
+            return 16384;
+        } else if (model.equals("gpt-4")) {
+            return 8192;
+        } else if (model.equals("gpt-4-32k")) {
+            return 32768;
+        } else {
+            return -1;
+        }
     }
 
 

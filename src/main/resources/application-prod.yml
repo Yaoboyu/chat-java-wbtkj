@@ -12,10 +12,6 @@ spring:
     port: 6379
     password: wbtkjjktbw
 
-chatgpt:
-  apiHost: https://api.openai.com/
-  gpt4apiHost: https://api.openai.myhispread.com/
-
 log:
   path: /var/log/chat-java-wbtkj
   level: info

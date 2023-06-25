@@ -6,6 +6,7 @@ import com.wbtkj.chat.pojo.dto.file.UserFileType;
 import com.wbtkj.chat.pojo.model.UserFile;
 import com.wbtkj.chat.pojo.model.UserFileExample;
 import com.wbtkj.chat.service.FileService;
+import com.wbtkj.chat.utils.MyUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ public class FileServiceImpl implements FileService {
         userFile.setUserId(ThreadLocalConfig.getUser().getId());
         userFile.setType(type.getType());
         userFile.setOriginalName(originalName);
+        userFile.setCreateTime(MyUtils.getTimeGMT8());
 
         userFileMapper.insert(userFile);
 
@@ -47,6 +49,7 @@ public class FileServiceImpl implements FileService {
     public List<UserFile> getUserFile() {
         UserFileExample userFileExample = new UserFileExample();
         userFileExample.createCriteria().andUserIdEqualTo(ThreadLocalConfig.getUser().getId());
+        userFileExample.setOrderByClause("create_time desc, id");
         List<UserFile> userFiles = userFileMapper.selectByExample(userFileExample);
         return userFiles;
     }

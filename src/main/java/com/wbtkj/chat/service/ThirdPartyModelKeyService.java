@@ -1,5 +1,6 @@
 package com.wbtkj.chat.service;
 
+import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.KeyAndHost;
 import com.wbtkj.chat.pojo.model.ThirdPartyModelKey;
 
 import java.util.List;
@@ -8,7 +9,7 @@ public interface ThirdPartyModelKeyService {
 
     List<ThirdPartyModelKey> getAllKey();
 
-    boolean addKey(String key, String model);
+    boolean addKey(ThirdPartyModelKey thirdPartyModelKeyVO);
 
     boolean delKey(long id);
 
@@ -16,8 +17,8 @@ public interface ThirdPartyModelKeyService {
 
     boolean changeStatus(String key, int status);
 
-    List<String> getEnableGpt3Keys();
+    List<KeyAndHost> getEnableGpt3Keys();
 
-    List<String> getEnableGpt4Keys();
+    List<KeyAndHost> getEnableGpt4Keys();
 
 }

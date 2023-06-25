@@ -235,6 +235,76 @@ public class ThirdPartyModelKeyExample {
             return (Criteria) this;
         }
 
+        public Criteria andHostIsNull() {
+            addCriterion("\"host\" is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostIsNotNull() {
+            addCriterion("\"host\" is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostEqualTo(String value) {
+            addCriterion("\"host\" =", value, "host");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostNotEqualTo(String value) {
+            addCriterion("\"host\" <>", value, "host");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostGreaterThan(String value) {
+            addCriterion("\"host\" >", value, "host");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostGreaterThanOrEqualTo(String value) {
+            addCriterion("\"host\" >=", value, "host");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostLessThan(String value) {
+            addCriterion("\"host\" <", value, "host");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostLessThanOrEqualTo(String value) {
+            addCriterion("\"host\" <=", value, "host");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostLike(String value) {
+            addCriterion("\"host\" like", value, "host");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostNotLike(String value) {
+            addCriterion("\"host\" not like", value, "host");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostIn(List<String> values) {
+            addCriterion("\"host\" in", values, "host");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostNotIn(List<String> values) {
+            addCriterion("\"host\" not in", values, "host");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostBetween(String value1, String value2) {
+            addCriterion("\"host\" between", value1, value2, "host");
+            return (Criteria) this;
+        }
+
+        public Criteria andHostNotBetween(String value1, String value2) {
+            addCriterion("\"host\" not between", value1, value2, "host");
+            return (Criteria) this;
+        }
+
         public Criteria andModelIsNull() {
             addCriterion("model is null");
             return (Criteria) this;

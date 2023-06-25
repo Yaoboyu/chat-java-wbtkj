@@ -3,6 +3,7 @@ package com.wbtkj.chat.service.impl;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.filter.OpenAiAuthInterceptor;
 import com.wbtkj.chat.mapper.ThirdPartyModelKeyMapper;
+import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.KeyAndHost;
 import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyStatus;
 import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyType;
 import com.wbtkj.chat.pojo.model.ThirdPartyModelKey;
@@ -16,9 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -34,33 +35,32 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
     public List<ThirdPartyModelKey> getAllKey() {
         ThirdPartyModelKeyExample thirdPartyModelKeyExample = new ThirdPartyModelKeyExample();
         thirdPartyModelKeyExample.createCriteria();
+        thirdPartyModelKeyExample.setOrderByClause("id");
         List<ThirdPartyModelKey> keys = thirdPartyModelKeyMapper.selectByExample(thirdPartyModelKeyExample);
         return keys;
     }
 
     @Override
     @Transactional
-    public boolean addKey(String key, String model) {
+    public boolean addKey(ThirdPartyModelKey thirdPartyModelKeyVO) {
         ThirdPartyModelKeyExample thirdPartyModelKeyExample = new ThirdPartyModelKeyExample();
-        thirdPartyModelKeyExample.createCriteria().andKeyEqualTo(key).andModelEqualTo(model);
+        thirdPartyModelKeyExample.createCriteria().andKeyEqualTo(thirdPartyModelKeyVO.getKey()).andModelEqualTo(thirdPartyModelKeyVO.getModel());
         if(thirdPartyModelKeyMapper.countByExample(thirdPartyModelKeyExample) > 0) {
             throw new MyServiceException("第三方key已存在");
         }
 
-        if (!MyUtils.checkModel(model)) {
+        if (!MyUtils.checkModel(thirdPartyModelKeyVO.getModel())) {
             throw new MyServiceException("模型不可用");
         }
 
-        ThirdPartyModelKey thirdPartyModelKey = new ThirdPartyModelKey();
-        thirdPartyModelKey.setModel(model);
-        thirdPartyModelKey.setKey(key);
-        thirdPartyModelKey.setStatus(ThirdPartyModelKeyStatus.ENABLED.getStatus());
-        Date date = MyUtils.getTimeGMT8();
-        thirdPartyModelKey.setCreateTime(date);
-        thirdPartyModelKey.setUpdateTime(date);
-        int insert = thirdPartyModelKeyMapper.insert(thirdPartyModelKey);
 
-        openAiAuthInterceptor.addKey(thirdPartyModelKey.getKey(), thirdPartyModelKey.getModel());
+        thirdPartyModelKeyVO.setStatus(ThirdPartyModelKeyStatus.ENABLED.getStatus());
+        Date date = MyUtils.getTimeGMT8();
+        thirdPartyModelKeyVO.setCreateTime(date);
+        thirdPartyModelKeyVO.setUpdateTime(date);
+        int insert = thirdPartyModelKeyMapper.insert(thirdPartyModelKeyVO);
+
+        openAiAuthInterceptor.addKey(thirdPartyModelKeyVO.getKey(), thirdPartyModelKeyVO.getHost(), thirdPartyModelKeyVO.getModel());
         return insert != 0;
     }
 
@@ -89,7 +89,7 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
         thirdPartyModelKey.setUpdateTime(MyUtils.getTimeGMT8());
         thirdPartyModelKeyMapper.updateByPrimaryKey(thirdPartyModelKey);
         if (status == ThirdPartyModelKeyStatus.ENABLED.getStatus()) {
-            openAiAuthInterceptor.addKey(thirdPartyModelKey.getKey(), thirdPartyModelKey.getModel());
+            openAiAuthInterceptor.addKey(thirdPartyModelKey.getKey(), thirdPartyModelKey.getHost(), thirdPartyModelKey.getModel());
         } else {
             openAiAuthInterceptor.delKey(thirdPartyModelKey.getKey(), thirdPartyModelKey.getModel());
         }
@@ -113,26 +113,32 @@ public class ThirdPartyModelKeyServiceImpl implements ThirdPartyModelKeyService 
 
     @Override
     @Transactional
-    public List<String> getEnableGpt3Keys() {
+    public List<KeyAndHost> getEnableGpt3Keys() {
         ThirdPartyModelKeyExample thirdPartyModelKeyExample = new ThirdPartyModelKeyExample();
         thirdPartyModelKeyExample.createCriteria()
                 .andModelEqualTo(ThirdPartyModelKeyType.GPT3_5.getName())
                 .andStatusEqualTo(ThirdPartyModelKeyStatus.ENABLED.getStatus());
         List<ThirdPartyModelKey> thirdPartyModelKeys = thirdPartyModelKeyMapper.selectByExample(thirdPartyModelKeyExample);
-        List<String> res = thirdPartyModelKeys.stream().map(ThirdPartyModelKey::getKey).collect(Collectors.toList());
+        List<KeyAndHost> res = new ArrayList<>();
+        for (ThirdPartyModelKey thirdPartyModelKey : thirdPartyModelKeys) {
+            res.add(KeyAndHost.builder().key(thirdPartyModelKey.getKey()).host(thirdPartyModelKey.getHost()).build());
+        }
         log.info("内存中GPT3.5 key个数: {}", res.size());
         return res;
     }
 
     @Override
     @Transactional
-    public List<String> getEnableGpt4Keys() {
+    public List<KeyAndHost> getEnableGpt4Keys() {
         ThirdPartyModelKeyExample thirdPartyModelKeyExample = new ThirdPartyModelKeyExample();
         thirdPartyModelKeyExample.createCriteria()
                 .andModelEqualTo(ThirdPartyModelKeyType.GPT4.getName())
                 .andStatusEqualTo(ThirdPartyModelKeyStatus.ENABLED.getStatus());
         List<ThirdPartyModelKey> thirdPartyModelKeys = thirdPartyModelKeyMapper.selectByExample(thirdPartyModelKeyExample);
-        List<String> res = thirdPartyModelKeys.stream().map(ThirdPartyModelKey::getKey).collect(Collectors.toList());
+        List<KeyAndHost> res = new ArrayList<>();
+        for (ThirdPartyModelKey thirdPartyModelKey : thirdPartyModelKeys) {
+            res.add(KeyAndHost.builder().key(thirdPartyModelKey.getKey()).host(thirdPartyModelKey.getHost()).build());
+        }
         log.info("内存中GPT4 key个数: {}", res.size());
         return res;
     }

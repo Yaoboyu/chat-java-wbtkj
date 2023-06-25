@@ -59,9 +59,6 @@ import java.util.concurrent.TimeUnit;
 @Getter
 @Service
 public class OpenAIServiceImpl implements OpenAIService {
-
-    private String apiHost;
-    private String gpt4apiHost;
     /**
      * 自定义的okHttpClient
      */
@@ -83,13 +80,8 @@ public class OpenAIServiceImpl implements OpenAIService {
     /**
      * 构造实例对象
      */
-    public OpenAIServiceImpl(@Value("${chatgpt.apiHost}") String apiHost,
-                            @Value("${chatgpt.gpt4apiHost}") String gpt4apiHost,
-                            OpenAiAuthInterceptor openAiAuthInterceptor) {
+    public OpenAIServiceImpl(OpenAiAuthInterceptor openAiAuthInterceptor) {
         this.openAiAuthInterceptor = openAiAuthInterceptor;
-
-        this.apiHost = apiHost;
-        this.gpt4apiHost = gpt4apiHost;
 
         this.okHttpClient = new OkHttpClient
                 .Builder()
@@ -101,7 +93,7 @@ public class OpenAIServiceImpl implements OpenAIService {
 
 
         this.openAIAPI = new Retrofit.Builder()
-                .baseUrl(apiHost)
+                .baseUrl("https://api.openai.com/")
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(JacksonConverterFactory.create())
@@ -110,11 +102,10 @@ public class OpenAIServiceImpl implements OpenAIService {
 
 
     public void streamChatCompletion(ChatCompletion chatCompletion, EventSourceListener eventSourceListener) {
-        if (chatCompletion.tokens() > 4096) {
+        if (chatCompletion.tokens() > chatCompletion.maxTokenLen()) {
             throw new MyServiceException("超出最大单词限制，请减少上下文数或减少最大回复数");
         }
         if (Objects.isNull(eventSourceListener)) {
-            log.error("参数异常：EventSourceListener不能为空，可以参考：com.unfbx.chatgpt.sse.ConsoleEventSourceListener");
             throw new MyException();
         }
         try {
@@ -122,7 +113,7 @@ public class OpenAIServiceImpl implements OpenAIService {
             ObjectMapper mapper = new ObjectMapper();
             String requestBody = mapper.writeValueAsString(chatCompletion);
             Request request = new Request.Builder()
-                    .url(getOpenAIHost(chatCompletion.getModel()) + "v1/chat/completions")
+                    .url("https://api.openai.com/v1/chat/completions")
                     .post(RequestBody.create(requestBody, MediaType.parse(ContentType.JSON.getValue())))
                     .addHeader("model", chatCompletion.getModel())
                     .build();
@@ -134,16 +125,6 @@ public class OpenAIServiceImpl implements OpenAIService {
             throw new MyException();
         }
     }
-
-    private String getOpenAIHost(String model) {
-        if (ChatCompletion.Model.DEFAULT_3_5.getName().equals(model)) {
-            return this.apiHost;
-        } else {
-            return this.gpt4apiHost;
-        }
-    }
-
-
 
     public void streamChatCompletion(List<Message> messages, EventSourceListener eventSourceListener) {
         ChatCompletion chatCompletion = ChatCompletion.builder()

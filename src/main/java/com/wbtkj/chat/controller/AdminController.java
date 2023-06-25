@@ -1,5 +1,6 @@
 package com.wbtkj.chat.controller;
 
+import com.wbtkj.chat.pojo.model.ThirdPartyModelKey;
 import com.wbtkj.chat.pojo.model.UserInfo;
 import com.wbtkj.chat.pojo.vo.Result;
 import com.wbtkj.chat.pojo.vo.admin.AdminLoginVO;
@@ -60,9 +61,9 @@ public class AdminController {
         return Result.success(cdkeyService.getRechargeRecord(cdkey));
     }
 
-    @PostMapping("/thirdPartyModelKey/{key}/{model}")
-    public Result addOpenAiKey(@PathVariable String key, @PathVariable String model){
-        return Result.success(thirdPartyModelKeyService.addKey(key, model));
+    @PostMapping("/thirdPartyModelKey")
+    public Result addOpenAiKey(@RequestBody ThirdPartyModelKey thirdPartyModelKeyVO){
+        return Result.success(thirdPartyModelKeyService.addKey(thirdPartyModelKeyVO));
     }
 
     @DeleteMapping("/thirdPartyModelKey/{id}")

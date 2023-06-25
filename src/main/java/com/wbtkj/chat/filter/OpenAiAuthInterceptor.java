@@ -1,16 +1,14 @@
 package com.wbtkj.chat.filter;
 
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.http.ContentType;
 import cn.hutool.http.Header;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.wbtkj.chat.config.StaticContextAccessor;
 import com.wbtkj.chat.exception.MyException;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.pojo.dto.openai.CommonError;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletion;
 import com.wbtkj.chat.pojo.dto.openai.common.OpenAiResponse;
+import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.KeyAndHost;
 import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyStatus;
 import com.wbtkj.chat.pojo.dto.thirdPartyModelKey.ThirdPartyModelKeyType;
 import com.wbtkj.chat.service.ThirdPartyModelKeyService;
@@ -23,9 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
@@ -37,8 +33,8 @@ public class OpenAiAuthInterceptor implements Interceptor {
     /**
      * key 集合
      */
-    private CopyOnWriteArrayList<String> gpt3Key;
-    private CopyOnWriteArrayList<String> gpt4Key;
+    private CopyOnWriteArrayList<KeyAndHost> gpt3Key;
+    private CopyOnWriteArrayList<KeyAndHost> gpt4Key;
     private int gpt3KeyIndex;
     private int gpt4KeyIndex;
 
@@ -64,11 +60,12 @@ public class OpenAiAuthInterceptor implements Interceptor {
         this.gpt4KeyIndex = 0;
     }
 
-    public boolean addKey(String key, String model) {
+    public boolean addKey(String key, String host, String model) {
+        KeyAndHost build = KeyAndHost.builder().key(key).host(host).build();
         if(model.equals(ThirdPartyModelKeyType.GPT3_5.getName())) {
-            return gpt3Key.addIfAbsent(key);
+            return gpt3Key.addIfAbsent(build);
         } else if(model.equals(ThirdPartyModelKeyType.GPT4.getName())) {
-            return gpt4Key.addIfAbsent(key);
+            return gpt4Key.addIfAbsent(build);
         } else {
             return false;
         }
@@ -105,18 +102,18 @@ public class OpenAiAuthInterceptor implements Interceptor {
         if (!StringUtils.hasLength(model)) {
             model = ChatCompletion.Model.DEFAULT_3_5.getName();
         }
-        String key = null;
+        KeyAndHost keyAndHost = null;
         if(model.equals(ChatCompletion.Model.GPT_3_5_TURBO.getName())
-        || model.equals(ChatCompletion.Model.GPT_3_5_TURBO_16K.getName())) {
-            key = getGpt3Key();
+                || model.equals(ChatCompletion.Model.GPT_3_5_TURBO_16K.getName())) {
+            keyAndHost = getGpt3Key();
         } else if (model.equals(ChatCompletion.Model.GPT_4.getName())
-        || model.equals(ChatCompletion.Model.GPT_4_32K.getName())) {
-            key = getGpt4Key();
+                || model.equals(ChatCompletion.Model.GPT_4_32K.getName())) {
+            keyAndHost = getGpt4Key();
         }
-        if (key == null) {
+        if (keyAndHost == null) {
             throw new MyServiceException("不支持此模型");
         }
-        Request request = this.auth(key, original);
+        Request request = this.auth(keyAndHost.getKey(), keyAndHost.getHost(), original);
         // 请求
         Response response = chain.proceed(request);
 
@@ -132,7 +129,7 @@ public class OpenAiAuthInterceptor implements Interceptor {
                 log.error("--------> 请求异常：{}", errorMsg);
                 //账号被封或者key不正确就移除掉
                 if (ACCOUNT_DEACTIVATED.equals(errorCode) || INVALID_API_KEY.equals(errorCode)) {
-                    thirdPartyModelKeyService.changeStatus(key, ThirdPartyModelKeyStatus.INVALID.getStatus());
+                    thirdPartyModelKeyService.changeStatus(keyAndHost.getKey(), ThirdPartyModelKeyStatus.INVALID.getStatus());
                 }
                 // 其他情况尝试其他key
                 return intercept(chain, depth + 1);
@@ -153,7 +150,8 @@ public class OpenAiAuthInterceptor implements Interceptor {
             throw new MyException();
         }
 
-        log.info("model:{}, key:{}, 递归次数:{} ==== 内存中gpt3 key个数:{}, gpt4 key个数:{}", model, key, depth, gpt3Key.size(), gpt4Key.size());
+        log.info("model:{}, key:{}, host:{}, depth:{} ==== GPT3 key size:{}, GPT4 key size:{}",
+                model, keyAndHost.getKey(), keyAndHost.getHost(), depth, gpt3Key.size(), gpt4Key.size());
         return response;
     }
 
@@ -179,7 +177,7 @@ public class OpenAiAuthInterceptor implements Interceptor {
      *
      * @return key
      */
-    public String getGpt3Key() {
+    public KeyAndHost getGpt3Key() {
         if (gpt3Key.size() < 2) {
             MailUtils.SendMail("773508803@qq.com",
                     "chat-java-wbtkj",
@@ -192,7 +190,7 @@ public class OpenAiAuthInterceptor implements Interceptor {
         return gpt3Key.get(getGpt3KeyIndex());
     }
 
-    public String getGpt4Key() {
+    public KeyAndHost getGpt4Key() {
         if (gpt4Key.size() < 2) {
 //            MailUtils.SendMail("773508803@qq.com",
 //                    "chat-java-wbtkj",
@@ -230,11 +228,13 @@ public class OpenAiAuthInterceptor implements Interceptor {
      * 默认的鉴权处理方法
      *
      * @param key      api key
+     * @param host
      * @param original 源请求体
      * @return 请求体
      */
-    private Request auth(String key, Request original) {
+    private Request auth(String key, String host, Request original) {
         Request request = original.newBuilder()
+                .url(host + original.url().toString().substring(23))
                 .header(Header.AUTHORIZATION.getValue(), "Bearer " + key)
                 .header(Header.CONTENT_TYPE.getValue(), ContentType.JSON.getValue())
                 .method(original.method(), original.body())
