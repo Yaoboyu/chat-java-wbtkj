@@ -119,6 +119,9 @@ public class OpenAiAuthInterceptor implements Interceptor {
 
         if (!response.isSuccessful()) {
             String errorMsg = response.body().string();
+            if (errorMsg.equals("")) {
+                return intercept(chain, depth + 1);
+            }
             OpenAiResponse openAiResponse = JSONUtil.toBean(errorMsg, OpenAiResponse.class);
             String errorCode = openAiResponse.getError().getCode();
             // apikey失效

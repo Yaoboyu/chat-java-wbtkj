@@ -2,9 +2,12 @@ package com.wbtkj.chat.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wbtkj.chat.config.StaticContextAccessor;
+import com.wbtkj.chat.constant.GeneralConstant;
 import com.wbtkj.chat.pojo.dto.openai.chat.ChatCompletionResponse;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
+import com.wbtkj.chat.pojo.model.Role;
 import com.wbtkj.chat.service.RoleService;
+import com.wbtkj.chat.service.UserService;
 import com.wbtkj.chat.service.impl.RoleServiceImpl;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -34,10 +37,18 @@ public class OpenAIWebSocketEventSourceListener extends EventSourceListener {
 
     private StringBuilder message;
 
+    private Role role;
 
-    public OpenAIWebSocketEventSourceListener(WebSocketSession session) {
+    private Long userId;
+
+
+    public OpenAIWebSocketEventSourceListener(WebSocketSession session,
+                                              Role role,
+                                              Long userId) {
         this.session = session;
         this.message = new StringBuilder();
+        this.role = role;
+        this.userId = userId;
     }
 
     /**
@@ -58,6 +69,21 @@ public class OpenAIWebSocketEventSourceListener extends EventSourceListener {
             session.sendMessage(new TextMessage("[DONE]"));
             RoleService roleService = StaticContextAccessor.getBean(RoleService.class);
             roleService.addReturnToWSChatSessionMessageList(session.getId(), message.toString());
+
+            UserService userService = StaticContextAccessor.getBean(UserService.class);
+            // 扣除用户余额
+            int point = GeneralConstant.THIRD_MODEL_VALUE.get(role.getModel());
+            int newBalance = userService.deductBalance(userId, point);
+            session.sendMessage(new TextMessage("{{wbtkj_newBalance}}:" + newBalance));
+            // 返现
+            if (role.getUserId() != 0 && !role.getUserId().equals(userId)) { //不是官方角色并且不是角色主人
+                userService.cashBack(role.getUserId(), 1, GeneralConstant.ROLE_CASH_RATE);
+            }
+            // 增加UserRoleUsed
+            roleService.augmentUserRoleUsed(role.getId(), userId, point);
+            // 增加角色热度
+            role.setHot(role.getHot() + 1);
+            roleService.setRole(role);
             return;
         }
         ObjectMapper mapper = new ObjectMapper();
