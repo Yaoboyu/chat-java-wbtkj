@@ -129,7 +129,8 @@ public class OpenAiAuthInterceptor implements Interceptor {
 
         if (!response.isSuccessful()) {
             String errorMsg = response.body().string();
-            if (errorMsg.equals("")) {
+            if (errorMsg.equals("")) { // gpt4 api失效
+                thirdPartyModelKeyService.changeStatus(keyAndHost.getKey(), ThirdPartyModelKeyStatus.INVALID.getStatus());
                 return intercept(chain, depth + 1);
             }
             OpenAiResponse openAiResponse = JSONUtil.toBean(errorMsg, OpenAiResponse.class);
