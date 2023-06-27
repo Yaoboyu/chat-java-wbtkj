@@ -63,9 +63,19 @@ public class OpenAiAuthInterceptor implements Interceptor {
     public boolean addKey(String key, String host, String model) {
         KeyAndHost build = KeyAndHost.builder().key(key).host(host).build();
         if(model.equals(ThirdPartyModelKeyType.GPT3_5.getName())) {
-            return gpt3Key.addIfAbsent(build);
+            if (!gpt3Key.stream().anyMatch(k -> k.getKey().equals(key))) {
+                gpt3Key.add(build);
+                return true;
+            } else {
+                return false;
+            }
         } else if(model.equals(ThirdPartyModelKeyType.GPT4.getName())) {
-            return gpt4Key.addIfAbsent(build);
+            if (!gpt4Key.stream().anyMatch(k -> k.getKey().equals(key))) {
+                gpt4Key.add(build);
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
@@ -73,9 +83,9 @@ public class OpenAiAuthInterceptor implements Interceptor {
 
     public boolean delKey(String key, String model) {
         if(model.equals(ThirdPartyModelKeyType.GPT3_5.getName())) {
-            return gpt3Key.removeIf(Predicate.isEqual(key));
+            return gpt3Key.removeIf(keyAndHost -> keyAndHost.getKey().equals(key));
         } else if(model.equals(ThirdPartyModelKeyType.GPT4.getName())) {
-            return gpt4Key.removeIf(Predicate.isEqual(key));
+            return gpt4Key.removeIf(keyAndHost -> keyAndHost.getKey().equals(key));
         } else {
             return false;
         }

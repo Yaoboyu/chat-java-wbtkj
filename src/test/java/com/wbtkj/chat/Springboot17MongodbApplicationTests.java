@@ -1,5 +1,6 @@
 package com.wbtkj.chat;
 
+import com.wbtkj.chat.config.ScheduledConfig;
 import com.wbtkj.chat.pojo.dto.openai.chat.Message;
 import com.wbtkj.chat.pojo.model.ChatSession;
 import com.wbtkj.chat.utils.MyUtils;
@@ -20,13 +21,11 @@ import java.util.List;
 class Springboot17MongodbApplicationTests {
     @Resource
     private MongoTemplate mongoTemplate;
+    @Resource
+    ScheduledConfig scheduledConfig;
     @Test
     void contextLoads() {
-        ChatSession messages = ChatSession.builder()
-                .roleId(1l).userId(1l).createDate(MyUtils.getTimeGMT8())
-                .messages(Arrays.asList(new Message("user","你好",""), new Message("assistant","你好，有什么可以帮助你的？","")))
-                .build();
-        mongoTemplate.save(messages);
+        scheduledConfig.delHistory();
     }
     @Test
     void find(){
