@@ -144,7 +144,7 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
         fileEmbeddingExample.createCriteria().andNameEqualTo(genName(fileContent.getHashId(), fileContent.getLang()));
         List<FileEmbedding> fileEmbeddings = fileEmbeddingMapper.selectByExample(fileEmbeddingExample);
         if (!CollectionUtils.isEmpty(fileEmbeddings)) { // 已经解析过相同的文件
-            fileService.addNameAfterParse(userFileId, "已经解析过内容相同的网页或文件");
+            fileService.addNameAfterParse(userFileId, genName(fileContent.getHashId(), fileContent.getLang()));
             return;
         }
 
