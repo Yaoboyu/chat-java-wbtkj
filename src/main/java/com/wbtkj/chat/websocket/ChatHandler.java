@@ -181,7 +181,7 @@ public class ChatHandler extends TextWebSocketHandler {
         wsChatSession.getMessageList().add(Message.builder().content(wsChatMessage.getMessage()).role(Message.Role.USER).build());
         redisTemplate.opsForValue().set(key, wsChatSession);
 
-        messages = messages.subList(Math.max(0, messages.size() - role.getContextN()*2), messages.size());
+        messages = messages.subList(Math.max(0, messages.size() - role.getContextN()), messages.size());
         messages.add(0, Message.builder().content(role.getSystem()).role(Message.Role.SYSTEM).build());
         messages.add(Message.builder().content(wsChatMessage.getMessage()).role(Message.Role.USER).build());
 
