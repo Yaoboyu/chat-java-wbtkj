@@ -9,5 +9,11 @@ public interface ChatPythonWbtkjService {
 
     void extractFile(MultipartFile multipartFile, long userFileId, long userId);
 
+    /**
+     * embedding python返回的内容并存储
+     * @param fileContent 返回的内容
+     * @param userFileId user_file表的id列
+     * @param userId
+     */
     void storage(FileContent fileContent, long userFileId, long userId);
 }

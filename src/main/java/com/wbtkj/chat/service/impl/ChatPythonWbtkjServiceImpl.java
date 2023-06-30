@@ -5,12 +5,14 @@ import com.wbtkj.chat.api.ChatPythonWbtkjAPI;
 import com.wbtkj.chat.constant.GeneralConstant;
 import com.wbtkj.chat.exception.MyServiceException;
 import com.wbtkj.chat.mapper.FileEmbeddingMapper;
+import com.wbtkj.chat.mapper.UserFileMapper;
 import com.wbtkj.chat.pojo.dto.chatPythonWbtkj.ExtractUrl;
 import com.wbtkj.chat.pojo.dto.chatPythonWbtkj.FileContent;
 import com.wbtkj.chat.pojo.dto.chatPythonWbtkj.FileContentRes;
 import com.wbtkj.chat.pojo.dto.openai.embeddings.TextAndEmbedding;
 import com.wbtkj.chat.pojo.model.FileEmbedding;
 import com.wbtkj.chat.pojo.model.FileEmbeddingExample;
+import com.wbtkj.chat.pojo.model.UserFileExample;
 import com.wbtkj.chat.service.ChatPythonWbtkjService;
 import com.wbtkj.chat.service.FileService;
 import com.wbtkj.chat.service.OpenAIService;
@@ -53,6 +55,8 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
     OpenAIService openAIService;
     @Resource
     UserService userService;
+    @Resource
+    UserFileMapper userFileMapper;
 
     public ChatPythonWbtkjServiceImpl(@Value("${chat-py-wbtkj.apiHost}") String apiHost) {
         this.apiHost = apiHost;
@@ -143,8 +147,14 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
         FileEmbeddingExample fileEmbeddingExample = new FileEmbeddingExample();
         fileEmbeddingExample.createCriteria().andNameEqualTo(genName(fileContent.getHashId(), fileContent.getLang()));
         List<FileEmbedding> fileEmbeddings = fileEmbeddingMapper.selectByExample(fileEmbeddingExample);
-        if (!CollectionUtils.isEmpty(fileEmbeddings)) { // 已经解析过相同的文件
-            fileService.addNameAfterParse(userFileId, genName(fileContent.getHashId(), fileContent.getLang()));
+        if (!CollectionUtils.isEmpty(fileEmbeddings)) { // 已经解析过相同的文件，不同用户上传的文件内容一样不再解析，直接使用
+            UserFileExample userFileExample = new UserFileExample();
+            userFileExample.createCriteria().andUserIdEqualTo(userId).andNameEqualTo(genName(fileContent.getHashId(), fileContent.getLang()));
+            if (userFileMapper.countByExample(userFileExample) > 0) {
+                fileService.addNameAfterParse(userFileId, "已经解析过相同内容的网页或文件");
+            } else {
+                fileService.addNameAfterParse(userFileId, genName(fileContent.getHashId(), fileContent.getLang()));
+            }
             return;
         }
 
