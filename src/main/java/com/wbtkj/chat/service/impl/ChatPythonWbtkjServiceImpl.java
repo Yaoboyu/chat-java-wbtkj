@@ -136,7 +136,7 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
     @Transactional
     public void storage(FileContent fileContent, long userFileId, long userId) {
         if (CollectionUtils.isEmpty(fileContent.getContents())) { // 不支持解析此网页或文件
-            fileService.addNameAfterParse(userFileId, "error");
+            fileService.addNameAfterParse(userFileId, "不支持解析此网页或文件");
             return;
         }
 
@@ -144,7 +144,7 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
         fileEmbeddingExample.createCriteria().andNameEqualTo(genName(fileContent.getHashId(), fileContent.getLang()));
         List<FileEmbedding> fileEmbeddings = fileEmbeddingMapper.selectByExample(fileEmbeddingExample);
         if (!CollectionUtils.isEmpty(fileEmbeddings)) { // 已经解析过相同的文件
-            fileService.addNameAfterParse(userFileId, genName(fileContent.getHashId(), fileContent.getLang()));
+            fileService.addNameAfterParse(userFileId, "已经解析过内容相同的网页或文件");
             return;
         }
 
@@ -152,7 +152,7 @@ public class ChatPythonWbtkjServiceImpl implements ChatPythonWbtkjService {
         List<TextAndEmbedding> embeddings = openAIService.embeddings(fileContent.getContents());
         // TODO：添加消息队列重试
         if (CollectionUtils.isEmpty(embeddings)) {
-            fileService.addNameAfterParse(userFileId, "error");
+            fileService.addNameAfterParse(userFileId, "不支持解析此网页或文件");
             return;
         }
 
